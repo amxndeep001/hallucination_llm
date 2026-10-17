@@ -1,0 +1,12 @@
+datasets
+pandas
+sympy
+latex2sympy2
+regex
+tqdm
+transformers
+torch
+sentence-transformers
+faiss-cpu
+scikit-learn
+xgboost
