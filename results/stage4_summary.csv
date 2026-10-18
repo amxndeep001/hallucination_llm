@@ -1,5 +1,5 @@
 split,n_erroneous,n_correct,flagged_pct,exact_first_step_pct,earlier,later,ceiling_pct,false_alarm_pct,precision_pct,eq_pass,eq_fail,eq_skip
 gsm8k,207,193,8.2,7.2,0,2,61.8,0.0,100.0,974,18,172
-math,594,406,16.5,7.9,4,47,56.6,0.5,98.0,1879,163,3803
+math,594,406,16.3,7.9,3,47,56.6,0.5,98.0,1880,162,3803
 olympiadbench,661,339,10.6,2.9,4,47,52.0,1.8,92.1,2224,152,6634
-omnimath,759,241,11.1,4.9,3,44,44.4,2.1,94.4,1884,179,4811
+omnimath,759,241,11.1,4.9,3,44,44.4,2.1,94.4,1886,179,4809

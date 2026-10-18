@@ -70,12 +70,12 @@ A step fails if any of its equations fails. The first failing step is the predic
 Stage 2 (GSM8K, 400 problems × 5 samples): low agreement between the samples and the original
 answer detects a process error with **AUROC 0.916**.
 
-Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`, stable across runs):
+Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`; byte-identical across repeated runs and across Python 3.9 and 3.13 with the pinned SymPy 1.14.0):
 
 | Split | Erroneous flagged | Exact first-step match | Ceiling | False alarms on correct | Precision |
 |---|---|---|---|---|---|
 | GSM8K (400) | 8.2% | 7.2% | 61.8% | 0.0% | 100.0% |
-| MATH (1,000) | 16.5% | 7.9% | 56.6% | 0.5% | 98.0% |
+| MATH (1,000) | 16.3% | 7.9% | 56.6% | 0.5% | 98.0% |
 | OlympiadBench (1,000) | 10.6% | 2.9% | 52.0% | 1.8% | 92.1% |
 | Omni-MATH (1,000) | 11.1% | 4.9% | 44.4% | 2.1% | 94.4% |
 
