@@ -11,8 +11,10 @@ split a problem. AUROC = mean over the 10 repeats; 95% CI = bootstrap over probl
 out-of-fold predictions averaged over the repeats. Chance: AUROC 0.5, average precision = base rate.
 
 Usage:
-  python src/stage7_evaluate.py data/processed/s7_gsm8k.jsonl [--results-dir results]
-Writes results/stage7_ablation_<split>.csv.
+  python src/stage7_evaluate.py data/processed/s7_gsm8k.jsonl [--results-dir results] \
+         [--s3 data/processed/s3_gsm8k.jsonl]
+Writes results/stage7_ablation_<split>.csv. With --s3, also adds the Stage 3 feature sets (same target and
+CV protocol) and writes all rows to results/stage7_ablation_<split>_with_s3.csv; the first file is unchanged.
 """
 import argparse, csv, json, os, re, warnings
 import numpy as np
@@ -35,6 +37,12 @@ ABLATION = [("Stage 4 only", S4),
             ("ALL", ALL),
             ("ALL minus semantic_entropy", [f for f in ALL if f != "semantic_entropy"]),
             ("ALL minus Stage 4", S7)]                         # same set as 'Stage 7 only'
+S3 = ["s3_min_support", "s3_first_low_step", "s3_n_low_steps", "s3_mean_support",
+      "s3_n_steps_with_signal", "s3_frac_steps_with_signal"]
+ABLATION_S3 = [("Stage 3 only", S3),
+               ("Stage 4 + agreement + Stage 3", S4 + ["agree_with_original"] + S3),
+               ("ALL + Stage 3", ALL + S3),
+               ("ALL + Stage 3 minus semantic_entropy", [f for f in ALL if f != "semantic_entropy"] + S3)]
 MODELS = {"LR": lambda: make_pipeline(StandardScaler(), LogisticRegression(C=1.0, max_iter=5000)),
           "RF": lambda: RandomForestClassifier(n_estimators=200, max_depth=4, random_state=0, n_jobs=-1)}
 N_SPLITS, N_REPEATS, SEED, N_BOOT = 5, 10, 0, 2000
@@ -98,6 +106,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("s7")
     ap.add_argument("--results-dir", default="results")
+    ap.add_argument("--s3", help="Stage 3 output (s3_<split>.jsonl): add the Stage 3 feature sets")
     a = ap.parse_args()
     warnings.filterwarnings("ignore", category=UserWarning)
     split = re.sub(r"^s7_", "", os.path.splitext(os.path.basename(a.s7))[0])
@@ -170,6 +179,40 @@ if __name__ == "__main__":
               f"   (agreement + SE: {fmt(ase)})")
         d, lo, hi = paired_delta(y_a, res["ALL", m]["p"], res["Stage 2 agreement only", m]["p"], boots_a)
         print(f"{m}: ALL - agreement only                          = {d:+.4f}  [95% CI {lo:+.4f}, {hi:+.4f}]")
+
+    # ------------------------------------------------ optional: Stage 3 feature sets
+    if a.s3:
+        with open(a.s3, encoding="utf-8") as f:
+            s3 = {r["id"]: r for r in (json.loads(l) for l in f if l.strip())}
+        missing = [r["id"] for r in recs if r["id"] not in s3 or s3[r["id"]]["label"] != r["label"]]
+        if missing:
+            raise SystemExit(f"ERROR: {len(missing)} ids missing from {a.s3} or with a different label, e.g. {missing[:5]}")
+        recs = [{**r, **{k: s3[r["id"]][k] for k in S3}} for r in recs]
+        print(f"\n## Ablation with Stage 3 features ({a.s3}), target (a); same CV protocol\n")
+        print("| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |")
+        print("|---|---|---|---|---|---|---|")
+        rows3 = list(rows)
+        for name, feats in ABLATION_S3:
+            X = matrix(recs, feats)
+            for m in MODELS:
+                res[name, m] = r = evaluate_set(X, y_a, m, boots_a)
+                rows3.append({"split": split, "target": "process_error", "feature_set": name, "n_features": len(feats),
+                              "model": m, "auroc_mean": round(r["auroc_mean"], 4), "auroc_sd_over_repeats": round(r["auroc_sd"], 4),
+                              "ci_low": round(r["ci_low"], 4), "ci_high": round(r["ci_high"], 4),
+                              "ap_mean": round(r["ap_mean"], 4), "base_rate": round(base["a"], 4), "n": len(y_a)})
+            print(f"| {name} | {len(feats)} | {fmt(res[name, 'LR'])} | {res[name, 'LR']['ap_mean']:.3f} | "
+                  f"{fmt(res[name, 'RF'])} | {res[name, 'RF']['ap_mean']:.3f} | {base['a']:.3f} |")
+        out_csv3 = os.path.join(a.results_dir, f"stage7_ablation_{split}_with_s3.csv")
+        with open(out_csv3, "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=list(rows3[0]))
+            w.writeheader()
+            w.writerows(rows3)
+        print(f"-> {out_csv3}")
+        print()
+        for m in MODELS:
+            d, lo, hi = paired_delta(y_a, res["ALL + Stage 3", m]["p"], res["ALL", m]["p"], boots_a)
+            print(f"{m}: (ALL + Stage 3) - ALL                         = {d:+.4f}  [95% CI {lo:+.4f}, {hi:+.4f}]"
+                  f"  -> {'Stage 3 adds something' if lo > 0 else 'no evidence that Stage 3 adds anything'}")
 
     # ------------------------------------------------ target (b) and the HARD subset
     print(f"\n## Target (b) wrong_answer, base rate {base['b']:.3f} (chance AUROC 0.5)")

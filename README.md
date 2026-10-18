@@ -31,7 +31,7 @@ pip install -q transformers==4.57.6 tqdm
 | 0 Load data | `src/stage0_load_data.py` | `data/raw/*.jsonl` | done |
 | 1 Preprocess (steps, equations, step types) | `src/stage1_preprocess.py` | `data/processed/pb_*.jsonl` | done |
 | 2 Sample N solutions + check | `src/stage2_generate.py`, `src/stage2_check.py`, `colab/run_stage2.ipynb` | `data/processed/samples_*.jsonl` | GSM8K done; MATH, OlympiadBench, Omni-MATH ready to run on Colab |
-| 3 Align | — | — | **not built yet** |
+| 3 Number-based step alignment + step-level evaluation | `src/stage3_align.py`, `src/stage3_evaluate.py`, `tests/test_stage3.py` | `data/processed/s3_*.jsonl`, `results/stage3_summary_*.csv` | GSM8K done; other splits run unchanged once their Stage 2 samples exist |
 | 4 SymPy verification + audit | `src/stage4_sympy_verify.py`, `src/stage4_audit.py`, `src/stage4_precision.py` | `data/processed/s4_*.jsonl`, `results/stage4_*.csv` | done |
 | 7 Answer consistency, semantic entropy, first combined classifier | `src/stage7_consistency.py`, `src/stage7_evaluate.py`, `tests/test_stage7.py` | `data/processed/s7_*.jsonl`, `results/stage7_ablation_*.csv` | GSM8K done; other splits run unchanged once their Stage 2 samples exist |
 
@@ -61,7 +61,13 @@ python src/stage2_generate.py --input data/raw/processbench_<split>.jsonl \
 # Stage 2b: check the samples and the agreement signal
 python src/stage2_check.py data/processed/samples_<split>.jsonl data/raw/processbench_<split>.jsonl
 
-# Stage 3: not built yet
+# Stage 3a: support of each original step = share of samples containing its key numbers
+python src/stage3_align.py data/processed/pb_<split>.jsonl data/processed/samples_<split>.jsonl \
+    data/processed/s3_<split>.jsonl
+# Stage 3b: first unsupported step vs the human first wrong step; Stage 4 and the union for comparison
+python src/stage3_evaluate.py data/processed/s3_<split>.jsonl data/processed/s4_<split>.jsonl \
+    data/processed/pb_<split>.jsonl data/raw/processbench_<split>.jsonl   # -> results/stage3_summary_<split>.csv
+python tests/test_stage3.py
 
 # Stage 4a: verify every extracted equation with SymPy, print the evaluation, save the summary row
 python src/stage4_sympy_verify.py data/processed/pb_<split>.jsonl data/processed/s4_<split>.jsonl \
@@ -79,10 +85,33 @@ python src/stage4_precision.py results/stage4_fresh_audit.csv
 python src/stage7_consistency.py data/processed/samples_<split>.jsonl data/processed/s4_<split>.jsonl     data/raw/processbench_<split>.jsonl data/processed/s7_<split>.jsonl --max-new-tokens 768
 # Stage 7b: single-feature AUROCs, logistic regression + random forest (5-fold x 10 repeats), ablation
 python src/stage7_evaluate.py data/processed/s7_<split>.jsonl      # -> results/stage7_ablation_<split>.csv
+#   with the Stage 3 features added (the file above is unchanged)  -> results/stage7_ablation_<split>_with_s3.csv
+python src/stage7_evaluate.py data/processed/s7_<split>.jsonl --s3 data/processed/s3_<split>.jsonl
 # tests for the answer clustering and normalization
 python tests/test_stage7.py
 python tests/test_normalize.py
 ```
+
+## Stage 3 in short
+
+Stage 7 says *whether* a solution disagrees with the samples; Stage 3 tries to say *at which step*.
+A step of the original solution is **supported** if the new quantities it computes also appear in the
+5 independently sampled solutions. The alignment is by numbers, not by text: every number is read as
+an exact fraction (thousands commas, `$` and `\$`, decimals, `3/4`, `\frac{3}{4}`, mixed numbers like
+`1 1/3`; `25%` matches 25 or 1/4; list numbering and "Step 3" labels are ignored).
+
+- **key numbers** of a step: the result of each of its equations (Stage 1), or, if it has none, the
+  numbers in its text that are not in the problem and not trivial constants (0, 1, 2, 10, 100).
+  A number from the problem statement is never a key number.
+- **support** of a key number: share of samples containing it; per step the mean and the minimum.
+  A step without key numbers has no signal (`None`), not support 0.
+- solution features: `s3_first_low_step` (first step with support_min ≤ 0.2, else −1), `s3_min_support`,
+  `s3_n_low_steps`, `s3_mean_support`, and how many steps have a signal.
+
+`stage3_evaluate.py` compares the first low-support step with the human first wrong step (as Stage 4's
+evaluation does), at thresholds 0.0, 0.2 and 0.4, against Stage 4 and the union of both. A correct step
+can still get low support when the samples reach the answer by another route (for example one
+combined sum instead of two partial ones), so a flag is a hint to look, not proof of an error.
 
 ## Stage 4 in short
 
@@ -137,11 +166,11 @@ signal to combine with the others, not a detector on its own.
 
 ```
 data/raw/          downloaded datasets (Stage 0; do not edit)
-data/processed/    pb_* (Stage 1), samples_* (Stage 2), s4_* (Stage 4), s7_* (Stage 7)
+data/processed/    pb_* (Stage 1), samples_* (Stage 2), s3_* (Stage 3), s4_* (Stage 4), s7_* (Stage 7)
 data/external/     cloned reference repos (git-ignored)
 src/               pipeline scripts
 tests/             unit tests (python tests/test_<name>.py)
-results/           exploration outputs (explore_data.py), Stage 4 summary/audit CSVs, Stage 7 ablation CSVs
+results/           exploration outputs (explore_data.py), Stage 3 summary, Stage 4 summary/audit CSVs, Stage 7 ablation CSVs
 ```
 
 ## Next
@@ -149,5 +178,4 @@ results/           exploration outputs (explore_data.py), Stage 4 summary/audit 
 - Stage 2 sampling on MATH, OlympiadBench, Omni-MATH (`colab/run_stage2.ipynb`, about 3 h on a T4)
 - Answer normalization for competition answers: 37% of original ProcessBench final answers
   (fractions, radicals, tuples, intervals, text) do not reduce to a plain number with `normalize_answer`
-- Stage 3 alignment
-- Stage 7 on MATH, OlympiadBench, Omni-MATH once their samples arrive; then add retrieval (A2)
+- Stage 3 and Stage 7 on MATH, OlympiadBench, Omni-MATH once their samples arrive; then add retrieval (A2)
