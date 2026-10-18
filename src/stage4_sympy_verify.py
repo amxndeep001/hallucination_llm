@@ -57,7 +57,7 @@ def latex_to_py(expr: str):
     s = expr.replace("$", "").replace("\\!", "").replace("\\,", "").replace("\\;", "").replace("\\ ", " ")
     s = s.replace("\\times", "*").replace("\\cdot", "*").replace("\\div", "/").replace("\\pi", "pi")
     s = re.sub(r"\^\s*\{?\s*\\circ\s*\}?", "", s)                         # degrees: 45^\circ -> 45
-    if re.search(r"\d_\{?\d", s):                                         # base notation 1111_2: not a decimal number
+    if re.search(r"\d_\{?[\dA-Za-z]", s):                                 # base notation 1111_2, 44_n: not decimal
         return None
     s = re.sub(r"(\d+(?:\.\d+)?)\s*\\?%", r"(\1/100)", s)                 # 20% -> (20/100)
     s = re.sub(r"(?<![\d.*/^])(\d+)\s*\\frac\{(\d+)\}\{(\d+)\}",           # mixed number 3\frac{4}{5} -> (3+4/5)
@@ -73,7 +73,10 @@ def latex_to_py(expr: str):
         return None
     # f(0), F(1), C(9, 7): a function value, not f*0 -> one opaque symbol per call ('_' stops symbol splitting)
     s = re.sub(r"(?<![A-Za-z_])([A-Za-z])\(\s*(-?\d+(?:\.\d+)?(?:\s*,\s*-?\d+(?:\.\d+)?)*)\s*\)",
-               lambda m: f"{m[1]}_at_" + re.sub(r"\s*,\s*", "_", m[2]).replace("-", "m").replace(".", "p"), s)
+               lambda m: f"{m[1]}_at_" + re.sub(r"\s*,\s*", "_", m[2]).replace("-", "m").replace(".", "_p_"), s)
+    # Python's tokenizer reads malformed literals differently by version (3.12+ rejects them):
+    s = re.sub(r"(?<![\d.])0+(?=\d)", "", s)                               # leading zeros: 011 -> 11
+    s = re.sub(r"(?<=\d)(?=[A-Za-z])", "*", s)                             # 0x -> 0*x, 2n -> 2*n (not a hex literal)
     return s.strip()
 
 

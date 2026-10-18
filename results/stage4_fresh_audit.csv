@@ -1,0 +1,228 @@
+﻿split,id,human_label,label_is_correct,first_fail_step,n_fail,equation,reason,step_text,my_verdict
+gsm8k,gsm8k-7,1,False,1,1,7995 - 2595 = 4500,5400.0000 != 4500.0000,"To find out how many chocolate chip cookies they have made, we need to subtract the number of rainbow cookies and oatmeal cookies from the total number of cookies. First, subtract the number of rainbow cookies from the total: 7995 (total cookies) - 2595 (rainbow cookies) = 4500.",
+gsm8k,gsm8k-110,4,False,4,1,20 - 13.00 = 6.00,7.0000000 != 6.0000000,"Verna gave $20 to the store. To find out how much change she received, we subtract the total cost from the amount she gave: $20 - $13.00 = $6.00",
+gsm8k,gsm8k-198,4,False,4,1,400000 - 32000 - 250000 = 8000,118000.00 != 8000.0000,"Fourth, add the remaining loan amount to the total expenses:
+- Remaining loan amount = $250,000
+- Net proceeds = Selling price - Total expenses - Remaining loan amount
+- Net proceeds = $400,000 - $32,000 - $250,000 = $8,000",
+gsm8k,gsm8k-142,1,False,3,1,(4x / 6x) * 100 = (4/6) * 100 = (2/3) * 100 = 66.67%,66.666667 != 0.66670000,"Now, let's simplify the expression: (4x / 6x) * 100 = (4/6) * 100 = (2/3) * 100 = 66.67%. So, each adult gets approximately 66.67% of the watermelon. 66.67%",
+gsm8k,gsm8k-74,4,False,4,1,2 + 48 + 3150 + 1300 = 3500,4500.0000 != 3500.0000,"Now, add up the total weight of all the feed: 2 + 48 + 3150 + 1300 = 3500 pounds.",
+gsm8k,gsm8k-38,5,False,5,1,10 + 24 + 12 + 14 = 50,60.000000 != 50.000000,"Adding these amounts together gives us the total cost of all the items:
+ Total Cost = $10 + $24 + $12 + $14 = $50",
+gsm8k,gsm8k-147,1,False,1,1,2 * 22 - 8 = 46 - 8 = 38,36.000000 != 38.000000,"In 8 years, his cousin will be 2 * 22 - 8 = 46 - 8 = 38 years old.",
+gsm8k,gsm8k-2,1,False,1,1,2/5 * 4000 = 800,1600.0000 != 800.00000,"Next, we need to find out how much milk was returned due to expiration: Fraction of expired milk = 2/5. Amount of expired milk = Fraction of expired milk * Total gallons purchased = 2/5 * 4000 = 800 gallons.",
+gsm8k,gsm8k-146,1,False,1,1,100 + 150 + 500 = 700,750.00000 != 700.00000,"To find out how many customers she counted on the third day, we need to add the number of customers from the first and second days to the total for the third day: 100 (first day) + 150 (second day) + 500 (third day) = 700",
+gsm8k,gsm8k-51,5,False,5,1,4x - 13 = 4(40) - 13 = 157,147.00000 != 157.00000,So Adelwolfe has caught 40 Pokémon. Stan has caught 4x - 13 = 4(40) - 13 = 157 Pokémon.,
+gsm8k,gsm8k-34,3,False,3,1,5000 + 10000 + 30000 = 43000,45000.000 != 43000.000,"Finally, we add up the monthly earnings of all three individuals to find the total amount of money they have together: Total amount = 5000 + 10000 + 30000 = 43000. Therefore, the total amount of money they all have together is $43,000.",
+gsm8k,gsm8k-122,0,False,0,1,15 + 45 + 40 + 50 = 160,150.00000 != 160.00000,"To find the percentage of spools that are blue, we first need to determine the total number of spools Candy has and then calculate how many of those are blue. The total number of spools is: 15 (light blue) + 45 (dark blue) + 40 (light green) + 50 (dark green) = 160 spools",
+gsm8k,gsm8k-126,0,False,0,1,7 * 70 - 40 = 470 - 40 = 430,450.00000 != 430.00000,"If Sam had 70 loaves of bread last Friday, then the bakery has 7 * 70 - 40 = 470 - 40 = 430 loaves of bread.",
+gsm8k,gsm8k-134,1,False,2,2,52500 + (52500 * 0.05) = 55625,55125.000 != 55625.000,"After 20 years, the rate of increase is 5% per year. For the next 10 years (after 20 years), her pension increases by 5% each year. After the first year, her pension is $50,000 + ($50,000 * 0.05) = $52,500. After the second year, her pension is $52,500 + ($52,500 * 0.05) = $55,625. This pattern continues until the 10th year.",
+gsm8k,gsm8k-36,3,False,3,1,50 + 70 + 140 + 240 = 400,500.00000 != 400.00000,"Now, we sum the number of people seen each day to find the total number of people Conor saw at the beach that week: 50 + 70 + 140 + 240 = 400",
+gsm8k,gsm8k-151,5,False,5,1,19 + 8 + 16 + 8 = 41,51.000000 != 41.000000,"Now, to find the total age of the four birds (Sally Two, Sally Four, Granny Red, and Sally Thirtytwo), we simply add their ages together: Sally Two = 19 years, Sally Four = 8 years, Granny Red = 16 years, Sally Thirtytwo = 8 years. Total age = 19 + 8 + 16 + 8 = 41 years.",
+gsm8k,gsm8k-77,3,False,3,1,52500 + 11250 + 67500 = 129250,131250.00 != 129250.00,"Third, sum up the earnings to get the total amount earned. Total earnings = 52,500 + 11,250 + 67,500 = 129,250 Thus, the total amount Marcel earned from selling bicycles during that month is 129250.",
+math,math-14,1,False,1,1,706 / 7 = 101,100.85714 != 101.00000,Divide 706 by 7: 706 / 7 = 101 with a remainder of 1. This means that 706 days from his birth date is equivalent to adding one day to his birth day.,
+math,math-191,3,False,3,1,389-39 = 350-39 = 311,350.00000 != 311.00000,"Finally, we perform the subtraction: 389-39 = 350-39 = 311. The final answer is 311. I hope it is correct.",
+math,math-34,1,False,12,6,"\mathop{lcm}[12,12] = 12\cdot 12^{2/3} = 12\cdot 4 = 48",62.897793 != 48.000000,"Step 12: Since t must be a multiple of 12, let's consider the case where t=12. \mathop{lcm}[12,12]=12\cdot 12^{2/3}=12\cdot 4=48.",
+math,math-326,0,False,2,2,5^2 \cdot 7 + 5 \cdot 4 + 1 = 161,196.00000 != 161.00000,"Note that there are 28 possible values of n and 48 possible values of m , so we need to determine how many of these values satisfy both conditions. We note that the largest value of n which satisfies the condition m < 8^2 is 5^2 \cdot 7 + 5 \cdot 4 + 1 = 161 , while the smallest value of m which satisfies the condition m > 5^2 is 8^1 \cdot 7 + 8 \cdot 1 + 1 = 65 . Therefore, we must find the number of solutions of the equation m = n in this range.",
+math,math-772,0,False,0,2,1375 = 5^2 * 11 * 25 = 5^2 * 11 * 5^2,1375.0000 != 6875.0000,"To determine whether the decimal representation of \frac{n}{1375} terminates for a given value of n, we need to consider the prime factorization of the denominator. First, let's find the prime factorization of 1375: 1375 = 5^2 * 11 * 25 = 5^2 * 11 * 5^2. Now, we can rewrite 1375 as: 1375 = 5^4 * 11.",
+math,math-38,0,False,3,2,256 = 2^8 = (2^3)^{\frac{8}{3}} = 8^2,256.00000 != 64.000000,"Now, evaluate \log_8 256:
+We need to express 256 as a power of 8. We know:
+ 256 = 2^8 = (2^3)^{\frac{8}{3}} = 8^2 
+Therefore,
+ \log_8 256 = \log_8 (8^2) = 2",
+math,math-6,2,False,5,3,\frac{15}{2} \cdot \frac{5}{6} = -16,6.2500000 != -16.000000,"3. For y, we have \frac{15}{2}c = -16. Substituting c = \frac{5}{6} into this equation:
+ \frac{15}{2} \cdot \frac{5}{6} = -16 
+ \frac{75}{12} = -16 
+This confirms our c value since it was derived correctly from the other equations.",
+math,math-282,1,False,1,3,(4 + \frac{5}{8})^{55} = (\frac{33}{8} + \frac{5}{8})^{55} = (\frac{38}{8})^{55},3.8119355E+36 != 1.6525269E+37,"First, we simplify the mixed number:
+
+(4 + \frac{5}{8})^{55} = (\frac{33}{8} + \frac{5}{8})^{55} = (\frac{38}{8})^{55}.",
+math,math-422,3,False,3,1,\frac{160 \times 245}{252 \times 108} = \frac{(2^5 \times 5) \times (5 \times 7^2)}{(2^2 \times 3^2 \times 7) \times (2^2 \times 3^3)} = \frac{2^6 \times 5^2 \times 7^2}{2^4 \times 3^5 \times 7} = \frac{2^2 \times 5^2 \times 7}{3^5},1.4403292 != 2.8806584,"Substituting these factorizations into the fraction, we get: \frac{160 \times 245}{252 \times 108} = \frac{(2^5 \times 5) \times (5 \times 7^2)}{(2^2 \times 3^2 \times 7) \times (2^2 \times 3^3)} = \frac{2^6 \times 5^2 \times 7^2}{2^4 \times 3^5 \times 7} = \frac{2^2 \times 5^2 \times 7}{3^5}",
+math,math-449,1,False,1,1,"10 \div 13 = 0\, R\, 10",0.76923077 != 0,"First, we find the smallest two-digit multiple of 13. The smallest two-digit number is 10. We want to find the smallest two-digit number that is divisible by 13. We can start by dividing 10 by 13 and see what the remainder is: 10 \div 13 = 0\, R\, 10 This tells us that 10 is not divisible by 13. To find the smallest two-digit multiple of 13, we need to find the first multiple of 13 that is greater than 10. The multiples of 13 are 13, 26, 39, etc., so the smallest two-digit multiple of 13 is **13** itself. However, since 13 is a one-digit number, we continue to the next multiple which is **26**.",
+math,math-244,4,False,4,1,\frac{33 \div 33}{663 \div 33} = \frac{1}{21},0.049773756 != 0.047619048,"Fifth, simplify the expression. Multiply the numerators together and the denominators together: \frac{3 \times 11}{13 \times 51} = \frac{33}{663} Simplify the fraction by dividing both numerator and denominator by their greatest common divisor, which is 33: \frac{33 \div 33}{663 \div 33} = \frac{1}{21}",
+math,math-246,0,False,5,1,a + 2b + 3c + 4d = 2 + 2 + 3 ( \frac{1}{2} ) + 4(1) = 10,9.5000000 != 10.000000,"Now, we can add up the numbers:
+
+a + 2b + 3c + 4d = 2 + 2 + 3 ( \frac{1}{2} ) + 4(1) = 10",
+math,math-900,0,False,1,2,\frac{3}{10 \cdot 100} = \frac{3}{10} \cdot \frac{1}{10} = 0.003,0.0030000000 != 0.030000000,"Next, we convert \frac{3}{1000} to a decimal: \frac{3}{1000} = \frac{3}{10 \cdot 100} = \frac{3}{10} \cdot \frac{1}{10} = 0.003.",
+math,math-77,3,False,4,2,50 - 5 = 51,45.000000 != 51.000000,"Verify the sum:
+- Let's try 53, 57, 61, and 50 - 5 = 51. The sum is 53 + 57 + 61 + 51 = 222, which is too high.
+- Adjust further to 53, 57, 61, and 49. The sum is 53 + 57 + 61 + 49 = 220, still not 221.
+- Try 53, 57, 61, and 48. The sum is 53 + 57 + 61 + 48 = 221, which is correct.",
+math,math-66,0,False,1,1,\frac{(0-2)-(3-2)}{(0-4)-(5-2)} = \frac{-3-1}{-4-3} = \frac{-4}{-7} = \frac{4}{7},0.42857143 != 0.57142857,"Thus, the greatest possible value of the slope of the line containing points A and B is the slope of the diagonal of the rectangle containing both squares, which has vertices at (0,0), (2,0), (4,2), and (5,3). We can find the slope of this diagonal by subtracting the y-coordinates of the two bottom-left and top-right vertices and dividing by the difference of their x-coordinates: \frac{(0-2)-(3-2)}{(0-4)-(5-2)}=\frac{-3-1}{-4-3}=\frac{-4}{-7}=\frac{4}{7}.",
+math,math-483,3,False,3,1,4060 \times 91390 = 371251400,3.7104340E+8 != 3.7125140E+8,"Finally, we combine the choices of men and women. We can combine the choices of men and women in any order, so we multiply the number of ways to choose each:
+4060 \times 91390 = 371251400
+ways.",
+math,math-485,3,False,3,2,4(\frac{-5}{2} + 7)(2 - \frac{-5}{2}) = 4(\frac{-5 + 14}{2})(\frac{2 + 5}{2}) = 4(\frac{9}{2})(\frac{7}{2}) = 4(\frac{63}{4}) = 63,81.000000 != 63.000000,"Fourth, find the y-coordinate of the vertex. Now that we have the x-coordinate of the vertex, let's plug this value back into the original expression to find the y-coordinate. y = 4(\frac{-5}{2} + 7)(2 - \frac{-5}{2}) = 4(\frac{-5 + 14}{2})(\frac{2 + 5}{2}) = 4(\frac{9}{2})(\frac{7}{2}) = 4(\frac{63}{4}) = 63.",
+math,math-484,1,False,3,4,225^{66} = 225^{16 \cdot 4 + 4} = (225^{16})^4 \cdot 225^4 \equiv 1^4 \cdot 225^4 \equiv 225^4 \pmod{17},1.7540671E+155 != 8.8799645E+159,"Thus, 225^{66} = 225^{16 \cdot 4 + 4} = (225^{16})^4 \cdot 225^4 \equiv 1^4 \cdot 225^4 \equiv 225^4 \pmod{17}. Since 225 \equiv 4 \pmod{17}, 225^4 \equiv 4^4 \pmod{17}.",
+math,math-146,1,False,1,1,"182 + 21 = 193, 193 - 32 = 161, 161 + 9 = 170",203.00000 != 193.00000,"Next, we add and subtract from left to right: 182 + 21 = 193, 193 - 32 = 161, 161 + 9 = 170.",
+math,math-464,0,False,3,1,1 + 2 + 2 + 4 - 2 = 7 - 2 = 5,7.0000000 != 5.0000000,"Let's calculate the side lengths of the rectangles:
+- One side of the rectangle is 2 + 4 = 6.
+- The other side of the rectangle is 1 + 2 + 2 + 4 - 2 = 7 - 2 = 5 (since the two triangles share a side of length 2).",
+math,math-0,0,False,0,2,194 / 11 = 17,17.636364 != 17.000000,"To determine the remainder of 194 (mod 11), I'll perform the following steps: First, divide 194 by 11: 194 / 11 = 17 with a remainder of 9. This means that 194 can be written as: 194 = 11 * 17 + 9.",
+math,math-346,1,False,1,1,-3 + 11 - 3 - 11 = -8,-6.0000000 != -8.0000000,The two values of x are -3 + 11 and -3 - 11 . The sum of these two values of x is -3 + 11 - 3 - 11 = -8 .,
+math,math-764,0,False,2,1,6+1+1 = 7+0 = b,8.0000000 != 7.0000000,"Finally, since there is a carry in the sixty-fives place, we must have 6+1+1=7+0=b, which is also true.",
+math,math-542,2,False,3,2,5050 - 77 \times 68 = 5050 - 5256 = -206,-186.00000 != -206.00000,"The next step is to find the correct k that results in x being within the specified range. To ensure x is within the range [1, 100], we test decreasing values of k: First, for k = 68: x = 5050 - 77 \times 68 = 5050 - 5256 = -206 This does not satisfy our condition since x must be positive. Second, for k = 67: x = 5050 - 77 \times 67 = 5050 - 5159 = -109 Again, this does not meet the criteria.",
+math,math-20,1,False,5,2,\sqrt{1.5^2 - 0.5^2} = \sqrt{2.25 - 0.25} = \sqrt{2} = \frac{\sqrt{6}}{2},1.4142136 != 1.2247449,"Each of the three triangular faces that are part of the original tetrahedron but not part of the smaller pyramid is an isosceles triangle with a base of 1 and two sides of 1.5 (since they are the medians of the original tetrahedron's faces). The height of such a triangle can be found using the Pythagorean theorem in the right triangle formed by the height, half the base, and the side of the triangle:
+ h = \sqrt{1.5^2 - 0.5^2} = \sqrt{2.25 - 0.25} = \sqrt{2} = \frac{\sqrt{6}}{2}",
+math,math-427,3,False,3,1,2^3 * 3^3 * 5^2 = 8 * 27 * 25 = 10800,5400.0000 != 10800.000,"Finally, we multiply these highest powers together to get the LCM. LCM = 2^3 * 3^3 * 5^2 = 8 * 27 * 25 = 10800.",
+math,math-234,1,False,1,1,(a^2 + b^2 + c^2 + d^2)((-1)^2 + 1^2 + 1^2 + 1^2) \ge (a(-1) + b(1) + c(1) + d(1))^2 = (a - 1 + b + c + d)^2 = (17 - 1)^2 = 49^2 = 2401,256.00000 != 2401.0000,"In this case, let a_1 = a, a_2 = b, a_3 = c, and a_4 = d. Then we have (a^2 + b^2 + c^2 + d^2)((-1)^2 + 1^2 + 1^2 + 1^2) \ge (a(-1) + b(1) + c(1) + d(1))^2 = (a - 1 + b + c + d)^2 = (17 - 1)^2 = 49^2 = 2401, so a^2 + b^2 + c^2 + d^2 \ge \frac{2401}{4} = 590.25.",
+math,math-265,1,False,1,2,(\frac{\pi}{4})^2 + (\frac{\pi}{2} - \frac{\pi}{4})^2 = \frac{\pi^2}{4},1.2337006 != 2.4674011,"To minimize/maximize this expression, we take its derivative with respect to y :
+
+\frac{d}{dy}[y^2 + (\frac{\pi}{2} - y)^2] = 2y + 2(\frac{\pi}{2} - y)(-1) = 4y - \pi.
+
+Setting this equal to zero, we find that y = \frac{\pi}{4} is a critical point. This yields the value 
+ f(x) = (\frac{\pi}{4})^2 + (\frac{\pi}{2} - \frac{\pi}{4})^2 = \frac{\pi^2}{4}.",
+math,math-133,2,False,3,1,1 \cdot (-1) \cdot 2 \cdot (-2) \cdot 3 \cdot (-3) \cdot 6 \cdot (-6) = 42,1296.0000 != 42.000000,"Expanding this product will result in a polynomial with integer coefficients and a constant term of 1 \cdot (-1) \cdot 2 \cdot (-2) \cdot 3 \cdot (-3) \cdot 6 \cdot (-6) = 42 . Therefore, it is indeed possible to have a polynomial with 8 distinct integer roots whose constant term is 42.",
+math,math-481,10,False,10,1,(\frac{3\sqrt{2}}{2})^4 = (\frac{3^2 \cdot 2^2}{2^4})^2 = (\frac{9 \cdot 4}{16})^2 = (\frac{9}{4})^2 = \frac{81}{16},20.250000 != 5.0625000,"Calculating each term:
+ (\frac{3\sqrt{2}}{2})^4 = (\frac{3^2 \cdot 2^2}{2^4})^2 = (\frac{9 \cdot 4}{16})^2 = (\frac{9}{4})^2 = \frac{81}{16} 
+ 9(\frac{3\sqrt{2}}{2})^2 = 9 \cdot \frac{9 \cdot 2}{4} = 9 \cdot \frac{18}{4} = 9 \cdot \frac{9}{2} = \frac{81}{2} = \frac{648}{16}",
+olympiadbench,olympiadbench-53,0,False,3,4,2(32)^2 - 67(32) + 77 = 2 \cdot 1024 - 2144 + 77 = 2048 - 2144 + 77 = 81,-19.000000 != 81.000000,"Next, we check n = 32 : 2(32)^2 - 67(32) + 77 = 2 \cdot 1024 - 2144 + 77 = 2048 - 2144 + 77 = 81 Since 81 is not a prime number (it is 9^2 ), n = 32 is not a solution.",
+olympiadbench,olympiadbench-171,5,False,6,3,\frac{229 \cdot 841}{600} = 311,320.98167 != 311.00000,"Seventh, calculate b : Using x = 600 : b = \frac{229 \cdot 841}{600} = 311",
+olympiadbench,olympiadbench-77,4,False,8,3,\frac{3600}{7} = \frac{360}{7} \times 10 = 51.42857 \times 10 = 5142857/100 = 5142.857/10 = 514.286/1,514.28571 != 514.28570,"When you plug in numbers using the square root of 267050.51, you get the number of pixels exactly as 345600. The square root of 267050.51 is exactly 516.50604. However, the exact square root of 267050.51 is actually 516.50604 which is equal to \frac{3600}{7} . Then, n = \frac{3600}{7} = \frac{360}{7} \times 10 = 51.42857 \times 10 = 5142857/100 = 5142.857/10 = 514.286/1 .",
+olympiadbench,olympiadbench-474,1,False,4,1,4(2) - 2 = 8,6.0000000 != 8.0000000,"The sum of the integers in the original list is a + b + c + d = (x - 2) + (x - 1) + x + (x + 1) = 4x - 2 . Since we want to minimize the sum, we want to minimize x . However, x cannot be less than or equal to 1 because then the list would contain negative numbers or zero. So, the smallest possible value for x is 2. When x = 2 , the sum is 4(2) - 2 = 8 .",
+olympiadbench,olympiadbench-233,9,False,11,3,-\frac{3}{2} \implies y = 2(-\frac{3}{2})^2 - \frac{1}{2} = \frac{5}{2},4.0000000 != 2.5000000,"Substituting these values of x into the equation y = 2x^2 - \frac{1}{2} gives us the corresponding values of y:
+ x = -\frac{3}{2} \implies y = 2(-\frac{3}{2})^2 - \frac{1}{2} = \frac{5}{2} 
+ x = 1 \implies y = 2(1)^2 - \frac{1}{2} = \frac{3}{2}",
+olympiadbench,olympiadbench-921,4,False,6,1,a = \frac{15^2}{50} = \frac{225}{50} = 9,4.5000000 != 9.0000000,"Second, if k = 15, then a = \frac{15^2}{50} = \frac{225}{50} = 9. Substituting a = 9 into the equation \sqrt{b} = \sqrt{50} - \sqrt{9}, we get: \sqrt{b} = 5\sqrt{2} - 3 Therefore, b = (5\sqrt{2} - 3)^2 = 50 - 30\sqrt{2} + 9 = 59 - 30\sqrt{2}, which is not an integer.",
+olympiadbench,olympiadbench-85,0,False,0,1,(1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10)^2 / 2 = 220,1512.5000 != 220.00000,"To determine all integers m for which the m \times m square can be dissected into five rectangles, the side lengths of which are the integers 1, 2, 3, \ldots, 10 in some order, we need to follow these steps: First, calculate the total area of the five rectangles. The side lengths of the rectangles are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 . The total area of the five rectangles is the sum of the areas of each rectangle. Since each rectangle has two side lengths, the total area is:
+ (1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10)^2 / 2 = 220 
+This total area must equal the area of the m \times m square, so m^2 = 220 . Therefore, m = \sqrt{220} \approx 11 .",
+olympiadbench,olympiadbench-527,3,False,8,2,400 + \frac{1600 - 1200\sqrt{3}}{3} = \frac{3600 + 1600 - 1200\sqrt{3}}{3},240.51301 != 1040.5130,Further simplification gives us KM^2 = 400 + \frac{1600 - 1200\sqrt{3}}{3} = \frac{3600 + 1600 - 1200\sqrt{3}}{3} .,
+olympiadbench,olympiadbench-40,1,False,7,1,256 - 100 = (4x^2 + y^2) - (4x^2 + y^2),156.00000 != 0,"Eighth, solve the system of equations:
+- Subtract Equation 1 from Equation 2:
+ 256 - 100 = (4x^2 + y^2) - (4x^2 + y^2) 
+ 156 = 0 
+ 156 = 3y^2 
+ y^2 = 52 
+ y = \sqrt{52} = 2\sqrt{13}",
+olympiadbench,olympiadbench-213,2,False,2,2,\frac{144 + 169 - 289}{2 \cdot 12 \cdot 13} = \frac{214 - 289}{312} = \frac{-75}{312},0.076923077 != -0.24038462,"Next, let's compute \cos B : \cos B = \frac{a^2 + c^2 - b^2}{2ac} = \frac{12^2 + 13^2 - 17^2}{2 \cdot 12 \cdot 13} Substitute the squares: \cos B = \frac{144 + 169 - 289}{2 \cdot 12 \cdot 13} = \frac{214 - 289}{312} = \frac{-75}{312} Simplify the fraction: \cos B = \frac{-75 \div 3}{312 \div 3} = \frac{-25}{104}",
+olympiadbench,olympiadbench-356,10,False,10,1,\frac{14}{60} \cdot 100 = 23.33\%,23.333333 != 0.23330000,"To find the percentage of acid in the new mixture, we need to divide the total acid content by the total mass of the new mixture and multiply by 100: \frac{14}{60} \cdot 100 = 23.33\%.",
+olympiadbench,olympiadbench-358,1,False,6,1,\frac{361+400+441+760+840+798}{60} = \frac{3400}{60},60.000000 != 56.666667,"Combine the numerators:
+ \frac{361+400+441+760+840+798}{60} = \frac{3400}{60}",
+olympiadbench,olympiadbench-196,2,False,10,2,37 - (2\sqrt{13})^2 = 37 - 52 = -15 + 37 = 15,-15.000000 != 22.000000,"However, we need to check the feasible range and the exact intersection condition. The correct value that ensures exactly two intersection points is when the circle (|x|-5)^2 + (|y|-5)^2 = K is tangent to the circle (x-1)^2 + (y+1)^2 = 37 from the inside, which gives us:
+ K = 37 - (2\sqrt{13})^2 = 37 - 52 = -15 + 37 = 15.",
+olympiadbench,olympiadbench-482,3,False,5,1,176^\circ = 22 - 0 = 22,176.00000 != 22.000000,"Combining these results, we get:
+ \sin^2 4^\circ + \sin^2 8^\circ + \sin^2 12^\circ + \cdots + \sin^2 176^\circ = 22 - 0 = 22",
+olympiadbench,olympiadbench-998,2,False,2,2,27 - 72 - 24 - 9 = -68,-78.000000 != -68.000000,"- For x = 1, we get 1 - 8 - 8 - 9 = -24, not 0.
+- For x = -1, we get -1 - 8 + 8 - 9 = -10, not 0.
+- For x = 3, we get 27 - 72 - 24 - 9 = -68, not 0.
+- For x = -3, we get -27 - 72 + 24 - 9 = -84, not 0.
+- For x = 9, we get 729 - 720 - 72 - 9 = 729 - 729 = 0, this checks out.",
+olympiadbench,olympiadbench-128,2,False,2,2,\frac{17}{2 \times 5 \times 67} = (1 - \frac{1}{18})(1 - \frac{1}{11})(1 - \frac{1}{68}),0.025373134 != 0.84595960,We need to express \frac{17}{2 \times 5 \times 67} as a product of terms of the form \frac{s_i - 1}{s_i}. One way to do this is to consider the following: \frac{17}{2 \times 5 \times 67} = (1 - \frac{1}{18})(1 - \frac{1}{11})(1 - \frac{1}{68}).,
+olympiadbench,olympiadbench-112,1,False,4,3,"x + 4 - x = 1, y + 2 - y = 3, z + 3 - z = 3",4.0000000 != 1.0000000,"Now, let's find the corresponding value of c. From equation (1), we have: 2ac = 12,000. Substituting ac = 18,000, we get: c = \frac{18,000}{a}. Since a and c are integers, we can write: a = \pm 2^x \cdot 3^y \cdot 5^z where x, y, and z are integers. Then: c = \pm 2^{4-x} \cdot 3^{2-y} \cdot 5^{3-z}. Since ac = 18,000, we have: x + 4 - x = 1, y + 2 - y = 3, z + 3 - z = 3. This implies that x = 1, y = 0, and z = 0, or x = 0, y = 1, and z = 0, or x = 0, y = 0, and z = 1.",
+olympiadbench,olympiadbench-891,4,False,4,2,0.971 \times 1.089 = 1.056519,1.0574190 != 1.0565190,"Now, let's calculate this product step by step:
+ 0.971 \times 1.089 = 1.056519 
+ 1.056519 \times 1.069 = 1.129730711",
+olympiadbench,olympiadbench-494,1,False,8,2,a + b = \sqrt{75361} = 275,274.51958 != 275.00000,"Taking the square root of both sides, we get: a + b = \sqrt{75361} = 275",
+olympiadbench,olympiadbench-417,2,False,5,2,(-36)^{32} \times (-36)^2 = 96 \times (-36) = -3456 \equiv 64 \mod 100,8.2089011E+52 != -3456.0000,"We can simplify further by finding the pattern of powers of -36. First, (-36)^2 = 1296 \equiv 96 \mod 100 . Next, (-36)^4 = 96^2 \equiv 96 \mod 100 . Then, (-36)^8 = 96^2 \equiv 96 \mod 100 . Following this, (-36)^{16} = 96^2 \equiv 96 \mod 100 . Finally, (-36)^{32} = 96^2 \equiv 96 \mod 100 . Therefore, (-36)^{34} = (-36)^{32} \times (-36)^2 = 96 \times (-36) = -3456 \equiv 64 \mod 100 .",
+olympiadbench,olympiadbench-162,3,False,6,1,1 - \frac{24 \times 23 \times 22}{25 \times 24 \times 23 \times 22 \times 21 \times 20 \times 19 \times \cdots \times 1} = 1 - \frac{1}{575} = \frac{576}{575},0.99826087 != 1.0017391,"Finally, we calculate the probability that Charlie is standing next to at least one of Chris or Abby by dividing the number of favorable arrangements by the total number of arrangements:
+ \frac{25! - 22! \times 24 \times 23 \times 22}{25!} = 1 - \frac{22! \times 24 \times 23 \times 22}{25!} = 1 - \frac{24 \times 23 \times 22}{25 \times 24 \times 23 \times 22 \times 21 \times 20 \times 19 \times \cdots \times 1} = 1 - \frac{1}{575} = \frac{576}{575}",
+olympiadbench,olympiadbench-433,4,False,5,1,102 / 33 = 3,3.0909091 != 3.0000000,"### Step 6: Checking divisibility
+Indeed, 102 is divisible by 33 (3 \times 11 = 33, and 102 / 33 = 3). Thus, it meets our criteria.",
+olympiadbench,olympiadbench-11,2,False,2,4,9999999999 - 43 \times 231846597 = 9999999999 - 10000393571 = -393572,30596328 != -393572.00,"Third, simplify the fraction. We need to simplify \frac{231846597}{9999999999} . First, check if the numerator and denominator have any common factors. We use the Euclidean algorithm to find the greatest common divisor (GCD) of 231846597 and 9999999999. Using the Euclidean algorithm:
+ 9999999999 \div 231846597 \approx 43 \quad (quotient) 
+ 9999999999 - 43 \times 231846597 = 9999999999 - 10000393571 = -393572 
+Since we obtained a negative remainder, we take the absolute value:
+ 9999999999 + 393572 = 10000393571 
+ 10000393571 \div 231846597 \approx 43 \quad (quotient) 
+ 10000393571 - 43 \times 231846597 = 10000393571 - 10000393571 = 0 
+Thus, the GCD is 231846597.",
+olympiadbench,olympiadbench-247,2,False,2,1,1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \frac{1}{6} + \frac{1}{8} + \frac{1}{12} + \frac{1}{24} = \frac{24}{24} + \frac{12}{24} + \frac{8}{24} + \frac{6}{24} + \frac{4}{24} + \frac{3}{24} + \frac{2}{24} + \frac{1}{24} = \frac{63}{24} = \frac{21}{8},2.5000000 != 2.6250000,"Let's add these fractions: = 1 + \frac{1}{2} + \frac{1}{3} + \frac{1}{4} + \frac{1}{6} + \frac{1}{8} + \frac{1}{12} + \frac{1}{24} 
+ = \frac{24}{24} + \frac{12}{24} + \frac{8}{24} + \frac{6}{24} + \frac{4}{24} + \frac{3}{24} + \frac{2}{24} + \frac{1}{24} 
+ = \frac{63}{24} 
+ = \frac{21}{8}",
+olympiadbench,olympiadbench-914,4,False,4,2,\frac{7 \cdot 8 \cdot 15}{6} = 140/2 = 70,140.00000 != 70.000000,"First, let's estimate k by comparing 20\sqrt{7} \approx 52.915 with the sum of squares:
+- S_{10} = \frac{10 \cdot 11 \cdot 21}{6} = 385/6 \approx 64.167 . Since S_{10} is too large, we try k = 8 :
+- S_8 = \frac{8 \cdot 9 \cdot 17}{6} = 204/3 \approx 68 . This is still too large, so we try k = 7 :
+- S_7 = \frac{7 \cdot 8 \cdot 15}{6} = 140/2 = 70 . This is still too large, so we try k = 6 :
+- S_6 = \frac{6 \cdot 7 \cdot 13}{6} = 91 . This is still too large, so we try k = 5 :
+- S_5 = \frac{5 \cdot 6 \cdot 11}{6} = 55 .",
+olympiadbench,olympiadbench-540,11,False,13,1,8 - 11 = 2126,-3.0000000 != 2126.0000,"The sum of the digits of 2106 is 2 + 1 + 0 + 6 = 9. No, this is still too low. Let's try adding 8 to 2099 (since 20 + 8 = 28, and then subtracting 11 to make up for the extra 11 in the digits), making it 2107, no this is not the lowest, so let's add 7 and then 9, making it 2108 and then 2109 and then 2117 and then 2118, and then finally 2119 and 2127 and then 2128 and 2129. And now let's try adding 8 to 2129, no this is not it. But 2129 plus 8 - 11 = 2126, no this isn't it either. However, if we take 2129 and add 7 and then subtract 10, we have 2126.",
+olympiadbench,olympiadbench-57,4,False,5,1,6036 - 12 = 6024 + 12 = 6036 - 12 = 6048 - 24 = 6024,6024.0000 != 6036.0000,"But we must also take into account that when player B moves, he will pass 1 coin from every box to an adjacent box. Therefore, the total number of coins required is 4024 + 2012 = 6036. However, this is still not the minimum number of coins required. We can still reduce it by 12. The final minimum number of coins required is 6036 - 12 = 6024 + 12 = 6036 - 12 = 6048 - 24 = 6024.",
+olympiadbench,olympiadbench-389,5,False,7,1,2014^2 + 2014 = 6042,4058210.0 != 6042.0000,"By comparing coefficients, we get
+ 2014^2 + 2014 = 6042, 
+which is true, and
+ 2015d = 2d, 
+which implies
+ 2013d = 0, 
+so
+ d = 0.",
+olympiadbench,olympiadbench-194,3,False,3,2,8 = 4b-4b,8.0000000 != 0,"Equating the two expressions for a, we have:
+
+\frac{3+b}{5+b}=\frac{5+b}{11+b}
+
+Cross-multiplying, we get:
+
+(3+b)(11+b)=(5+b)^{2}
+
+Expanding both sides, we get:
+
+33+14b+b^{2}=25+10b+b^{2}
+
+Simplifying, we get:
+
+8=4b-4b
+
+
+8=-4
+
+However, this is not possible, as it leads to a contradiction. This means that there are no real values of a, b, and c that satisfy the given conditions. Therefore, the final answer is No solution.",
+olympiadbench,olympiadbench-257,2,False,7,3,\frac{\frac{3n(n + 1)}{2}}{\frac{5n(n + 1)}{2}} = \frac{4}{11},0.60000000 != 0.36363636,"Substitute the sums into the given equation:
+ \frac{\frac{3n(n + 1)}{2}}{\frac{5n(n + 1)}{2}} = \frac{4}{11}",
+omnimath,omnimath-38,2,False,3,1,34 = 20 + 14 - 2,34.000000 != 32.000000,"We need to find the largest r such that this equation holds. We will check each possible value of r from 0 to 104. Let's start with r = 104:
+ \lfloor\frac{104}{3}\rfloor = 34, \quad \lfloor\frac{104}{5}\rfloor = 20, \quad \lfloor\frac{104}{7}\rfloor = 14, \quad \lfloor\frac{104}{35}\rfloor = 2. 
+Substituting these values into the equation, we get:
+ 34 = 20 + 14 - 2, 
+which is true. Therefore, r = 104 is a solution.",
+omnimath,omnimath-248,2,False,6,1,4041 = 3 \cdot 11 \cdot 13,4041.0000 != 429.00000,"The prime factorization of 2020 \cdot 2021 is 2^2 \cdot 5 \cdot 4041. Here, 4041 = 3 \cdot 11 \cdot 13, so we can write 2020 \cdot 2021 as (2^2 \cdot 5 \cdot 3 \cdot 11 \cdot 13).",
+omnimath,omnimath-76,3,False,3,1,2^5 \times 3^2 \times 5 \times 7 = 32 \times 9 \times 5 \times 7 = 2880 \times 7 = 20160,10080.000 != 20160.000,"Thus, the LCM is 2^5 \times 3^2 \times 5 \times 7 = 32 \times 9 \times 5 \times 7 = 2880 \times 7 = 20160.",
+omnimath,omnimath-418,2,False,3,1,6 / 6^6 = 6 / 46656 = 1 / 7778,0.00012860082 != 0.00012856776,"Third, the probability of one die matching the sixth die: Since there are 6 favorable outcomes out of a total of 6^6 possible outcomes, the probability of one die matching the sixth die is 6 / 6^6 = 6 / 46,656 = 1 / 7,778.",
+omnimath,omnimath-920,1,False,1,1,8000000000 - 1 = 8 \times 10^9 - 1 = (2^3 \times 10^3)^3 - 1,8.0000000E+9 != 5.1200000E+11,"Next, simplify the number: The number 7,999,999,999 can be simplified as follows: Notice that 7,999,999,999 = 8,000,000,000 - 1 = 8 \times 10^9 - 1 = (2^3 \times 10^3)^3 - 1. This can be further expressed using the difference of cubes formula: a^3 - b^3 = (a-b)(a^2 + ab + b^2), where a = 2^3 \times 10^3 and b = 1. Hence, 7,999,999,999 = (2000-1)((2000)^2 + 2000 + 1) = 1999(4000000 + 2000 + 1) = 1999(4002001).",
+omnimath,omnimath-99,4,False,4,1,1 + \frac{\frac{4}{3}}{1 - \frac{1}{3}} = 1 + \frac{\frac{4}{3}}{\frac{2}{3}} = 1 + 2 = 4,3.0000000 != 4.0000000,"In general, after n moves, we can reach any point within a circle of radius 1 + \frac{4}{9} + \frac{4}{27} + \cdots + (\frac{4}{3})^{n-2} centered at (0,0). As n approaches infinity, the radius of the circle approaches the sum of the infinite geometric series 1 + \frac{4}{3} + (\frac{4}{9}) + \cdots, which is given by:
+ 1 + \frac{\frac{4}{3}}{1 - \frac{1}{3}} = 1 + \frac{\frac{4}{3}}{\frac{2}{3}} = 1 + 2 = 4",
+omnimath,omnimath-18,0,False,1,3,(12/13) * (12/13) * (13/52) = 12^2 * 13 / (13 * 52) = 12^2 / 52,0.21301775 != 2.7692308,"Let's break down the possible scenarios for Jill to draw the spade: First, Jack draws a non-spade card, Jill draws a non-spade card, and John draws the spade. The probability of Jack drawing a non-spade card is 12/13. The probability of Jill drawing a non-spade card is 12/13 (assuming Jack didn't draw a spade). The probability of John drawing the spade is 13/52 (since there are 13 spade cards out of 52). The combined probability for this scenario is (12/13) * (12/13) * (13/52) = 12^2 * 13 / (13 * 52) = 12^2 / 52.",
+omnimath,omnimath-388,6,False,7,2,6^{11} = 3627976,3.6279706E+8 != 3627976.0,"We can calculate the value of each expression:
+2^{3} = 8
+3^{5} = 243
+4^{7} = 16384
+5^{9} = 1953125
+6^{11} = 3627976",
+omnimath,omnimath-706,0,False,2,2,\frac{1}{3}(f(1) + f(2) + 2) = \frac{1}{3}(1 + \frac{3}{2} + 2) = \frac{11}{6},1.5000000 != 1.8333333,"Let's compute f(n) for small values of n to identify a pattern:
+- f(1) = 1 
+- For n = 2 , f(2) = \frac{1}{2}(f(1) + 2) = \frac{3}{2} 
+- For n = 3 , f(3) = \frac{1}{3}(f(1) + f(2) + 2) = \frac{1}{3}(1 + \frac{3}{2} + 2) = \frac{11}{6}",
+omnimath,omnimath-311,5,False,5,2,\frac{2016 \cdot 2014}{2015} = \frac{2016 \cdot (2015 - 1)}{2015} = \frac{2016 \cdot 2015 - 2016}{2015} = 2016 - \frac{2016}{2015} = 2015 + \frac{2015 - 1}{2015} = 2015 + \frac{1}{2015},2014.9995 != 2015.9995,"We need to find the largest possible value of n, which corresponds to the largest possible value of m. The largest integer m can be is 2014 (since m < 2015). Therefore, we substitute m = 2014 into the expression for n: n = \frac{2016 \cdot 2014}{2015} = \frac{2016 \cdot (2015 - 1)}{2015} = \frac{2016 \cdot 2015 - 2016}{2015} = 2016 - \frac{2016}{2015} = 2015 + \frac{2015 - 1}{2015} = 2015 + \frac{1}{2015}",
+omnimath,omnimath-317,0,False,4,1,\frac{4.25}{32} + \frac{4.25}{64} + \frac{4.25}{128} = \frac{4.25(1/32 + 1/64 + 1/128)}{1} = \frac{4.25 \cdot 0.096875}{1} = \frac{0.41015625}{1} = 0.41015625,0.23242188 != 0.41171875,"Third, when \langle n \rangle = 2: This happens when n is in the range (4, 9]. For these values of n, 2^{\langle n \rangle} + 2^{-\langle n \rangle} = 4 + \frac{1}{4} = 4.25. The contribution from this segment is
+ \sum_{n=5}^{7} \frac{4.25}{2^n} = \frac{4.25}{32} + \frac{4.25}{64} + \frac{4.25}{128} = \frac{4.25(1/32 + 1/64 + 1/128)}{1} = \frac{4.25 \cdot 0.096875}{1} = \frac{0.41015625}{1} = 0.41015625.",
+omnimath,omnimath-944,2,False,7,8,2^2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 \cdot 17 \cdot 19 \cdot 23 = 223092870,4.4618574E+8 != 2.2309287E+8,We choose a value for m. Let's choose m = 2^2 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 \cdot 17 \cdot 19 \cdot 23 = 223092870. This value of m is a multiple of all the primes except for 2.,
+omnimath,omnimath-145,1,False,1,2,127281 = 9 * 14109,127281.00 != 126981.00,"First, let's start by breaking down 636405 into smaller factors. 636405 = 5 * 127281. Now, let's break down 127281 further: 127281 = 9 * 14109. Breaking down 14109: 14109 = 11 * 1281. And breaking down 1281: 1281 = 3 * 427. Now, breaking down 427: 427 = 7 * 61. So, the prime factorization of 636405 is: 5 * 3 * 7 * 9 * 11 * 61.",
+omnimath,omnimath-132,0,False,8,2,\frac{11}{12} - \frac{1}{108} = \frac{3}{4},0.90740741 != 0.75000000,"Finally, substituting the value of s into the expression for AZ^2 , we get:
+ AZ^2 = \frac{11}{12} - \frac{1}{108} = \frac{3}{4} 
+Therefore, AZ = \sqrt{\frac{3}{4}} = \frac{\sqrt{3}{2}} .",
+omnimath,omnimath-767,5,False,5,1,12^3 + 3 \cdot 12^2 + 1 = 1728 + 432 + 1 = 2017,2161.0000 != 2017.0000,"We test some integer values of c: For c = 12: 12^3 + 3 \cdot 12^2 + 1 = 1728 + 432 + 1 = 2017 This is correct, so c = 12.",
+omnimath,omnimath-729,3,False,3,1,60^\circ + 72^\circ + 60^\circ - 360^\circ = 192^\circ - 360^\circ = 48^\circ,-168.00000 != 48.000000,"This rotation involves the central angle of the pentagon and the angles of the equilateral triangles. The angle between F and G as seen from E is the sum of the central angle between B and C (which is 72^\circ) and the two angles of 60^\circ from the equilateral triangles (one from F and one from G). Therefore, we have: \angle FEG = 60^\circ + 72^\circ + 60^\circ - 360^\circ = 192^\circ - 360^\circ = 48^\circ.",
+omnimath,omnimath-340,2,False,5,1,3/2 = 1/3,1.5000000 != 0.33333333,"Sixth, compare the equations from Step 4 and Step 5: (x^2 + y^2 + xy) - 3(x + y) + 8/3 = 0 and x^2 + y^2 + xy - 3x - 3y + 9/2 = 0. Subtract the first equation from the second equation: 3/2 = 1/3. This is not true, so there must be some mistake in our previous steps. However, there is actually an easier way to solve this problem.",
+omnimath,omnimath-117,11,False,11,2,x^2 + x + 41 = 40^2 + 40 + 41 = 1601 + 40 = 1601,1681.0000 != 1641.0000,"For x = 40 :
+ x^2 + x + 41 = 40^2 + 40 + 41 = 1601 + 40 = 1601 
+1601 is a prime number.",
+omnimath,omnimath-72,4,False,7,2,2^{22} - 2^{11} - 11 = 4194304 - 2048 - 11 = 4192255,4192245.0 != 4192255.0,Evaluating this expression gives us: 2^{22} - 2^{11} - 11 = 4194304 - 2048 - 11 = 4192255 .,
+omnimath,omnimath-7,0,False,0,1,1 + 2 + 3 + 6 + 9 + 18 + 27 + 37 + 54 + 74 + 111 + 222 + 333 + 666 = 1998,1563.0000 != 1998.0000,"To solve for f(1998) , we need to follow the given conditions and properties of the function f . Let's break it down step by step. First, we check if 1998 is a perfect number. A number p is perfect if the sum of its divisors (excluding p ) equals p . The divisors of 1998 are: 1, 2, 3, 6, 9, 18, 27, 37, 54, 74, 111, 222, 333, 666, 1998 Sum of the divisors (excluding 1998): 1 + 2 + 3 + 6 + 9 + 18 + 27 + 37 + 54 + 74 + 111 + 222 + 333 + 666 = 1998 Since the sum of the divisors (excluding 1998) is not equal to 1998, 1998 is not a perfect number.",
+omnimath,omnimath-481,0,False,2,2,0 = \frac{1}{2} \cdot \frac{1}{2} + \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{2},0 != 0.50000000,"For each pair of adjacent bits b_i and b_{i+1}, the probability that they are different (i.e., either 01 or 10) is:
+ P(b_i \neq b_{i+1}) = P(b_i = 0 and b_{i+1} = 1) + P(b_i = 1 and b_{i+1} = 0) = \frac{1}{2} \cdot \frac{1}{2} + \frac{1}{2} \cdot \frac{1}{2} = \frac{1}{2}",
+omnimath,omnimath-201,0,False,4,2,h_4 + \frac{11}{27} = \frac{64}{9} + \frac{7}{3} = \frac{192}{27} + \frac{61}{27} = \frac{260}{27} \approx 7,9.4444444 != 9.3703704,"Finally, we already know the height of the fifth person h_5 = 7 feet. To verify, the horizontal distance between the fourth and fifth person is h_4 = \frac{64}{9} feet, so the height difference between them is: h_5 - h_4 = m \cdot h_4 = \frac{1}{3} \cdot \frac{64}{9} = \frac{64}{27} Thus, the height of the fifth person is: h_5 = h_4 + \frac{11}{27} = \frac{64}{9} + \frac{7}{3} = \frac{192}{27} + \frac{61}{27} = \frac{260}{27} \approx 7",
+omnimath,omnimath-396,1,False,6,1,200 \times 199 + 100 \times 99 = 49800,49700.000 != 49800.000,"For the 200 \times 100 rectangles, there are 199 color changes per row and 99 changes per column. There are 200 rows and 100 columns, resulting in 200 \times 199 + 100 \times 99 = 49800 pairs per rectangle.",
+omnimath,omnimath-25,5,False,5,2,1010 + 673 + 404 - 2(336 + 202 + 134) + 3(67) = 1010 + 673 + 404 - 2 \cdot 672 + 201 = 816,944.00000 != 816.00000,"### Step 2: Count the number of integers n such that f(n) = 1 
+These are the integers divisible by exactly one of 2, 3, or 5. We subtract the integers divisible by the product of any two or all three of these primes from the counts of integers divisible by each individual prime. The number of integers divisible by exactly one of 2, 3, or 5 is:
+ 1010 + 673 + 404 - 2(336 + 202 + 134) + 3(67) = 1010 + 673 + 404 - 2 \cdot 672 + 201 = 816.",
+omnimath,omnimath-280,2,False,2,4,5^{3^{2^1}} = 5^8,1953125.0 != 390625.00,"The exponent 5^{3^{2^1}} = 5^8 is what we need to reduce modulo 10. Since 5^2 = 25 \equiv 5 \pmod{10}, we have 5^4 \equiv 5^2 \equiv 5 \pmod{10}, and thus 5^8 \equiv 5^4 \equiv 5 \pmod{10}.",
+omnimath,omnimath-187,5,False,5,12,2 * 14141 + 2019 = 32301,30301.000 != 32301.000,"Fifth, in Year 4:
+- Squirrels: 2 * 14141 + 2019 = 32301
+- Rabbits: 4 * 22 - 2 = 86",
+omnimath,omnimath-826,4,False,6,2,\frac{(2 + 2)(2 + 1/2)(1/2)}{(1/2 + 2)(1/2 + 1/2)(2)} = \frac{4 \cdot \frac{5}{2} \cdot \frac{1}{2}}{\frac{5}{2} \cdot 1 \cdot 2} = \frac{5}{4},1.0000000 != 1.2500000,"Therefore,
+ E_{max} = \frac{(2 + 2)(2 + 1/2)(1/2)}{(1/2 + 2)(1/2 + 1/2)(2)} = \frac{4 \cdot \frac{5}{2} \cdot \frac{1}{2}}{\frac{5}{2} \cdot 1 \cdot 2} = \frac{5}{4}",
+omnimath,omnimath-498,0,False,4,6,\frac{120 + 31}{2 \cdot 31 + 31^2 - 2} = \frac{151}{200 + 961 - 2} = \frac{151}{1159} \approx 0.1303,0.14789422 != 0.13028473,"First, if d_3 = 1: d_1 = \frac{121}{4} = 30.25 \quad (not an integer). Second, if d_3 = 2: d_1 = \frac{122}{12} = \frac{61}{6} \quad (not an integer). Third, if d_3 = 3: d_1 = \frac{123}{28} \approx 4.392857 \quad (not an integer). Fourth, if d_3 = 6: d_1 = \frac{126}{48} = \frac{21}{8} \quad (not an integer). Fifth, if d_3 = 31: d_1 = \frac{120 + 31}{2 \cdot 31 + 31^2 - 2} = \frac{151}{200 + 961 - 2} = \frac{151}{1159} \approx 0.1303 \quad (not an integer). Sixth, if d_3 = 121: d_1 = \frac{120 + 121}{2 \cdot 121 + 121^2 - 2} = \frac{122}{242 + 14641 - 2} = \frac{122}{14881} \approx 0.0081 \quad (not an integer).",
+omnimath,omnimath-673,4,False,4,2,728 = \frac{(3 \cdot 4 + 1) (3 \cdot 4 - 2) (3 \cdot 4 - 5) (3 \cdot 4 - 8) (3 \cdot 4 - 11) \cdots 1}{2 \cdot 5 \cdot 8 \cdots (3 \cdot 4 - 1)} = \frac{13 \cdot 10 \cdot 7 \cdot 4 \cdot 1}{2 \cdot 5 \cdot 8 \cdot 11 \cdot 13} = 13,728.00000 != 4.1363636,"Notice that the numerator (3n+1) (3n-2) (3n-5) \cdots 1 is the product of the first n+1 terms of an arithmetic sequence starting at 3n+1 with a common difference of -3, and the denominator 2 \cdot 5 \cdot 8 \cdots (3n-1) is the product of the first n terms of an arithmetic sequence starting at 2 with a common difference of 3 . For n = 4 :
+ 728 = \frac{(3 \cdot 4 + 1) (3 \cdot 4 - 2) (3 \cdot 4 - 5) (3 \cdot 4 - 8) (3 \cdot 4 - 11) \cdots 1}{2 \cdot 5 \cdot 8 \cdots (3 \cdot 4 - 1)} = \frac{13 \cdot 10 \cdot 7 \cdot 4 \cdot 1}{2 \cdot 5 \cdot 8 \cdot 11 \cdot 13} = 13.",
+omnimath,omnimath-348,3,False,9,1,\frac{144}{2 \times 24 \times 23} = \frac{144}{108 \times 23} = \frac{144}{2484} = \frac{36}{621} = \frac{12}{207},0.13043478 != 0.057971014,"### Computing \frac{p_{1}}{p_{2}}
+Substitute the expressions for p_1 and p_2 into the ratio:
+ \frac{p_{1}}{p_{2}} = \frac{\frac{144}{26!}}{\frac{2! \times 24 \times 23}{26!}} = \frac{144}{2! \times 24 \times 23} = \frac{144}{2 \times 24 \times 23} = \frac{144}{108 \times 23} = \frac{144}{2484} = \frac{36}{621} = \frac{12}{207}",

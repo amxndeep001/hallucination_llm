@@ -23,9 +23,10 @@ git clone https://github.com/openai/prm800k data/external/prm800k
 |---|---|---|---|
 | 0 Load data | `src/stage0_load_data.py` | `data/raw/*.jsonl` | done |
 | 1 Preprocess (steps, equations, step types) | `src/stage1_preprocess.py` | `data/processed/pb_*.jsonl` | done |
-| 2 Sample N solutions + check | `src/stage2_generate.py`, `src/stage2_check.py` | `data/processed/samples_*.jsonl` | GSM8K only |
+| 2 Sample N solutions + check | `src/stage2_generate.py`, `src/stage2_check.py`, `colab/run_stage2.ipynb` | `data/processed/samples_*.jsonl` | GSM8K done; MATH, OlympiadBench, Omni-MATH ready to run on Colab |
 | 3 Align | — | — | **not built yet** |
-| 4 SymPy verification + audit | `src/stage4_sympy_verify.py`, `src/stage4_audit.py` | `data/processed/s4_*.jsonl`, `results/stage4_*.csv` | done |
+| 4 SymPy verification + audit | `src/stage4_sympy_verify.py`, `src/stage4_audit.py`, `src/stage4_precision.py` | `data/processed/s4_*.jsonl`, `results/stage4_*.csv` | done |
+| 7 Self-consistency + semantic entropy | — | — | **not built yet** |
 
 ## Run order
 
@@ -38,13 +39,19 @@ python src/stage0_load_data.py
 # Stage 1: split solutions into steps and extract equations
 python src/stage1_preprocess.py data/raw/processbench_<split>.jsonl data/processed/pb_<split>.jsonl
 
-# Stage 2a: sample 5 solutions per problem (GPU, e.g. Colab; resumable)
+# Stage 2a: sample 5 solutions per problem (GPU; resumable: finished ids are skipped)
+#   GSM8K (done):
 python src/stage2_generate.py --input data/processed/pb_gsm8k.jsonl \
     --output data/processed/samples_gsm8k.jsonl \
     --model Qwen/Qwen2.5-Math-1.5B-Instruct --n 5 --batch-size 2
+#   MATH / OlympiadBench / Omni-MATH: run colab/run_stage2.ipynb, which does for each split
+#   (raw input = the original problem text with its $...$; pb_* strips it. Same ids and order.)
+python src/stage2_generate.py --input data/raw/processbench_<split>.jsonl \
+    --output data/processed/samples_<split>.jsonl --model Qwen/Qwen2.5-Math-1.5B-Instruct \
+    --sample 300 --seed 0 --max-new-tokens 1024 --n 5 --temperature 0.7 --top-p 0.95 --batch-size 2
 #   smoke test without a model: add --backend mock --limit 5
 # Stage 2b: check the samples and the agreement signal
-python src/stage2_check.py data/processed/samples_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl
+python src/stage2_check.py data/processed/samples_<split>.jsonl data/raw/processbench_<split>.jsonl
 
 # Stage 3: not built yet
 
@@ -53,6 +60,12 @@ python src/stage4_sympy_verify.py data/processed/pb_<split>.jsonl data/processed
     --summary results/stage4_summary.csv
 # Stage 4b: CSV of cases to review by hand (early failures, sampled false alarms, sampled skips)
 python src/stage4_audit.py data/processed/s4_<split>.jsonl results/stage4_audit_<split>.csv
+# Stage 4c: fresh sample of 30 flagged solutions per split (seed 123, not yet audited), all splits in one CSV;
+#           fill in my_verdict (real_error / false_alarm / extraction_bug), then compute precision
+python src/stage4_audit.py --fresh-sample results/stage4_fresh_audit.csv
+python src/stage4_precision.py results/stage4_fresh_audit.csv
+
+# Stage 7 (self-consistency + semantic entropy): not built yet
 ```
 
 ## Stage 4 in short
@@ -70,12 +83,12 @@ A step fails if any of its equations fails. The first failing step is the predic
 Stage 2 (GSM8K, 400 problems × 5 samples): low agreement between the samples and the original
 answer detects a process error with **AUROC 0.916**.
 
-Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`, stable across runs):
+Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`; byte-identical across repeated runs and across Python 3.9 and 3.13 with the pinned SymPy 1.14.0):
 
 | Split | Erroneous flagged | Exact first-step match | Ceiling | False alarms on correct | Precision |
 |---|---|---|---|---|---|
 | GSM8K (400) | 8.2% | 7.2% | 61.8% | 0.0% | 100.0% |
-| MATH (1,000) | 16.5% | 7.9% | 56.6% | 0.5% | 98.0% |
+| MATH (1,000) | 16.3% | 7.9% | 56.6% | 0.5% | 98.0% |
 | OlympiadBench (1,000) | 10.6% | 2.9% | 52.0% | 1.8% | 92.1% |
 | Omni-MATH (1,000) | 11.1% | 4.9% | 44.4% | 2.1% | 94.4% |
 
@@ -95,6 +108,8 @@ results/           exploration outputs (explore_data.py) and Stage 4 summary/aud
 
 ## Next
 
+- Stage 2 sampling on MATH, OlympiadBench, Omni-MATH (`colab/run_stage2.ipynb`, about 3 h on a T4)
+- Answer normalization for competition answers: 37% of original ProcessBench final answers
+  (fractions, radicals, tuples, intervals, text) do not reduce to a plain number with `normalize_answer`
 - Stage 3 alignment
-- Stage 2 sampling on MATH, OlympiadBench, Omni-MATH
-- Combine Stage 4 flags with the Stage 2 agreement signal and retrieval
+- Stage 7 self-consistency + semantic entropy, combined with the Stage 4 flags and retrieval
