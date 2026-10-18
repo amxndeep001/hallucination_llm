@@ -4,7 +4,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."
 from stage2_check import sample_answer
 from stage3_align import align, solution_features
 from stage7_consistency import features
-from evaluate_all import FEATURE_SETS, TRANSFER_SETS, check_no_leakage
+from evaluate_all import FEATURE_SETS, HARD_SETS, TRANSFER_SETS, check_no_leakage
 
 SAMPLES = {"id": "t-0", "samples": [
     {"text": "3 \\times 4 = 12, so \\boxed{12}", "final_answer": "12", "mean_logprob": -0.1, "mean_entropy": 0.2, "n_tokens": 50},
@@ -16,7 +16,7 @@ STEPS = [{"idx": 0, "text": "He has 3 \\times 4 = 12 apples.", "equations": ["3 
 
 
 def test_feature_sets_have_no_target_fields():
-    check_no_leakage(FEATURE_SETS + TRANSFER_SETS)
+    check_no_leakage(FEATURE_SETS + TRANSFER_SETS + HARD_SETS)
     for bad in ("label", "final_answer_correct", "original_answer"):
         try:
             check_no_leakage([("bad", ["agree_with_original", bad])])

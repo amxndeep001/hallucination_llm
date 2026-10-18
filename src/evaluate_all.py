@@ -8,8 +8,12 @@ Only the sampled problems are evaluated (the ids in s7/s3; s4/pb/raw records are
    answer but a wrong step), and diagnostics for weak splits (truncation, no answer, self-agreement,
    original answers SymPy cannot parse).
 2. AUROC [bootstrap 95% CI] for Stage 4 only / agreement only / Stage 3 only / Stage 4 + agreement /
-   ALL (Stage 4 + 7) / ALL + Stage 3, LR and RF, 5-fold CV x 10 repeats (same protocol and code as
-   stage7_evaluate.py), targets (a) process_error = label != -1 and (b) wrong_answer.
+   ALL (Stage 4 + 7) / ALL + Stage 3, LR and RF, 5-fold CV x 10 repeats (same models, folds and bootstrap
+   as stage7_evaluate.py), targets (a) process_error = label != -1 and (b) wrong_answer.
+   The AUROC is that of the out-of-fold predictions averaged over the 10 repeats, and the CI bootstraps the
+   problems of those same predictions, so both describe one statistic. (stage7_evaluate.py reports the mean
+   of the 10 per-repeat AUROCs, kept here as auroc_mean_over_repeats.) HARD subset: the same for Stage 4 /
+   Stage 3 / agreement / Stage 7 (agreement + entropy) / ALL / ALL + Stage 3, where both classes have >= 30.
 3. Step level: Stage 3 (s3_first_low_step, support_min <= 0.2) and Stage 4 (SymPy first fail) vs the human
    first wrong step, with the chance exact-match level, and the share of steps with no key number.
 4. Generalisation: train on GSM8K, test on each other split; leave one dataset out (train on the others).
@@ -18,7 +22,8 @@ Labels and final_answer_correct are targets only: check_no_leakage() asserts no 
 
 Usage:
   python src/evaluate_all.py [--splits gsm8k math olympiadbench omnimath] [--suffix _truncnone]
-Writes results/all_splits_{overview,auroc,steps,transfer}<suffix>.csv
+  python src/evaluate_all.py --suffix _truncnone --compare     # both runs side by side
+Writes results/all_splits_{overview,auroc,hard,steps,transfer}<suffix>.csv, all_splits_compare<suffix>.csv
 """
 import argparse, csv, os, warnings
 import numpy as np
@@ -32,6 +37,9 @@ SPLITS = ["gsm8k", "math", "olympiadbench", "omnimath"]
 AGREE = ["agree_with_original"]
 FEATURE_SETS = [("Stage 4 only", S4), ("agreement only", AGREE), ("Stage 3 only", S3),
                 ("Stage 4 + agreement", S4 + AGREE), ("ALL (Stage 4 + 7)", ALL), ("ALL + Stage 3", ALL + S3)]
+S7_ONLY = [f for f in ALL if f not in S4]                   # agreement, clusters, semantic entropy, logprob, length
+HARD_SETS = [("Stage 4 only", S4), ("Stage 3 only", S3), ("agreement only", AGREE),
+             ("Stage 7 only (agreement + entropy)", S7_ONLY), ("ALL (Stage 4 + 7)", ALL), ("ALL + Stage 3", ALL + S3)]
 TRANSFER_SETS = [("agreement only", AGREE), ("Stage 4 + agreement", S4 + AGREE),
                  ("ALL (Stage 4 + 7)", ALL), ("ALL + Stage 3", ALL + S3)]
 TARGETS = {"process_error": lambda r: r["label"] != -1, "wrong_answer": lambda r: r["final_answer_correct"] is False}
@@ -89,6 +97,9 @@ def overview(name, recs):
 
 
 def cv_rows(name, recs, target, sets):
+    """auroc = AUROC of the out-of-fold predictions averaged over the 10 repeats, the same statistic the
+    bootstrap CI is computed on (stage7_evaluate.py reports the mean of the 10 per-repeat AUROCs instead,
+    which for near-chance sets can fall outside that CI; it is kept here as auroc_mean_over_repeats)."""
     y = y_of(recs, target)
     boots = boot_idx(y)
     rows = []
@@ -96,9 +107,14 @@ def cv_rows(name, recs, target, sets):
         X = matrix(recs, feats)
         for m in MODELS:
             r = evaluate_set(X, y, m, boots)
+            auc = roc_auc_score(y, r["p"])
+            if not r["ci_low"] <= auc <= r["ci_high"]:
+                print(f"  NOTE {name} / {target} / {fs} / {m}: AUROC {auc:.3f} outside its percentile CI "
+                      f"[{r['ci_low']:.3f}, {r['ci_high']:.3f}]")
             rows.append({"group": name, "target": target, "feature_set": fs, "model": m,
-                         "auroc": round(r["auroc_mean"], 3), "ci_low": round(r["ci_low"], 3),
-                         "ci_high": round(r["ci_high"], 3), "ap": round(r["ap_mean"], 3),
+                         "auroc": round(auc, 3), "ci_low": round(r["ci_low"], 3), "ci_high": round(r["ci_high"], 3),
+                         "auroc_mean_over_repeats": round(r["auroc_mean"], 3), "sd_over_repeats": round(r["auroc_sd"], 3),
+                         "ap_mean_over_repeats": round(r["ap_mean"], 3),
                          "base_rate": round(y.mean(), 3), "n": len(y), "n_pos": int(y.sum())})
     return rows
 
@@ -158,14 +174,44 @@ def table(rows, cols):
         print("| " + " | ".join(str(r[c]) for c in cols) + " |")
 
 
+def compare(results_dir, suffix):
+    """Side by side: default answers vs the variant (e.g. _truncnone), every AUROC row of both runs."""
+    rows = []
+    for kind, keys in [("auroc", ["group", "target", "feature_set", "model"]),
+                       ("hard", ["group", "target", "feature_set", "model"]),
+                       ("transfer", ["train", "test", "target", "feature_set", "model"])]:
+        paths = [os.path.join(results_dir, f"all_splits_{kind}{s}.csv") for s in ("", suffix)]
+        if not all(os.path.exists(p) for p in paths):
+            continue
+        base, var = [{tuple(r[k] for k in keys): r for r in csv.DictReader(open(p, encoding="utf-8"))} for p in paths]
+        for k, r in base.items():
+            v = var.get(k)
+            if v is None:
+                continue
+            rows.append({"table": kind, "key": " / ".join(k),
+                         "auroc_default": r["auroc"], "ci_default": f"[{r['ci_low']}, {r['ci_high']}]",
+                         f"auroc{suffix}": v["auroc"], f"ci{suffix}": f"[{v['ci_low']}, {v['ci_high']}]",
+                         "delta": round(float(v["auroc"]) - float(r["auroc"]), 3)})
+    print(f"\n## Default answers vs {suffix.strip('_')}: every AUROC row (delta = {suffix.strip('_')} - default)\n")
+    table(rows, list(rows[0]))
+    write(rows, os.path.join(results_dir, f"all_splits_compare{suffix}.csv"))
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--splits", nargs="+", default=SPLITS)
     ap.add_argument("--suffix", default="", help="s7 variant, e.g. _truncnone (from --truncated-no-answer)")
     ap.add_argument("--results-dir", default="results")
+    ap.add_argument("--compare", action="store_true",
+                    help="only compare the CSVs of the default run and the --suffix run (both must exist)")
     a = ap.parse_args()
+    if a.compare:
+        if not a.suffix:
+            ap.error("--compare needs --suffix")
+        compare(a.results_dir, a.suffix)
+        raise SystemExit
     warnings.filterwarnings("ignore", category=UserWarning)
-    check_no_leakage(FEATURE_SETS + TRANSFER_SETS)
+    check_no_leakage(FEATURE_SETS + TRANSFER_SETS + HARD_SETS)
 
     data = {}
     for sp in a.splits:
@@ -200,23 +246,27 @@ if __name__ == "__main__":
         auc += rows
         for r in rows:
             r["auroc [95% CI]"] = f"{r['auroc']:.3f} [{r['ci_low']:.3f}, {r['ci_high']:.3f}]"
-        table(rows, ["group", "feature_set", "model", "auroc [95% CI]", "ap", "base_rate", "n"])
+        table(rows, ["group", "feature_set", "model", "auroc [95% CI]", "ap_mean_over_repeats", "base_rate", "n"])
         for r in rows:
             del r["auroc [95% CI]"]
     write(auc, out("auroc"))
 
-    print(f"\n## HARD subset (correct final answer): target process_error, LR, where both classes have >= {MIN_HARD}\n")
+    print(f"\n## HARD subset (correct final answer): target process_error = a wrong step despite the right answer;"
+          f" which feature groups carry the signal (only where both classes have >= {MIN_HARD})\n")
     hard_rows = []
     for (name, recs), o in zip(groups, ov):
         if o["hard_reliable"]:
             hard = [r for r in recs if r["final_answer_correct"] is True]
-            hard_rows += [r for r in cv_rows(name, hard, "process_error",
-                                             [("agreement only", AGREE), ("Stage 3 only", S3), ("ALL + Stage 3", ALL + S3)])
-                          if r["model"] == "LR"]
+            hard_rows += cv_rows(name, hard, "process_error", HARD_SETS)
         else:
-            print(f"  {name}: skipped, {o['n_hard']} vs {o['n_hard_correct_steps']}: too small to trust")
+            print(f"  {name}: NOT EVALUATED: only {o['n_hard']} correct-answer-wrong-step cases "
+                  f"(vs {o['n_hard_correct_steps']} fully correct), too few to train or score a classifier")
     if hard_rows:
-        table(hard_rows, ["group", "feature_set", "auroc", "ci_low", "ci_high", "base_rate", "n", "n_pos"])
+        for r in hard_rows:
+            r["auroc [95% CI]"] = f"{r['auroc']:.3f} [{r['ci_low']:.3f}, {r['ci_high']:.3f}]"
+        table(hard_rows, ["group", "feature_set", "model", "auroc [95% CI]", "base_rate", "n", "n_pos"])
+        for r in hard_rows:
+            del r["auroc [95% CI]"]
         write(hard_rows, out("hard"))
 
     if not a.suffix:                                         # step level does not depend on the answer variant
