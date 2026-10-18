@@ -7,10 +7,12 @@ For every equation (e.g. '1/3 \\times 18 = 6') we answer one of three things:
           may be a condition to solve, such as 2x = 4). 'skip' is NOT 'pass'.
 
 Usage:
-  python src/stage4_sympy_verify.py data/processed/pb_gsm8k.jsonl data/processed/s4_gsm8k.jsonl
-If the input has ProcessBench labels, a small evaluation against the human-marked first wrong step is printed.
+  python src/stage4_sympy_verify.py data/processed/pb_gsm8k.jsonl data/processed/s4_gsm8k.jsonl \
+         [--summary results/stage4_summary.csv]
+If the input has ProcessBench labels, a small evaluation against the human-marked first wrong step is printed
+(and, with --summary, saved as this split's row of the CSV).
 """
-import json, re, sys
+import argparse, csv, json, os, re
 import sympy as sp
 from sympy.parsing.sympy_parser import (parse_expr, standard_transformations,
                                          implicit_multiplication_application, rationalize)
@@ -260,16 +262,43 @@ def evaluate(records):
     print(f"all equations: {dict(c)}")
     skip = Counter(e["reason"] for e in allsteps if e["status"] == "skip")
     print("most common skip reasons:", skip.most_common(4))
+    pct = lambda n, d: round(100 * n / d, 1)
+    return {"n_erroneous": len(err), "n_correct": len(ok),
+            "flagged_pct": pct(tp, len(err)), "exact_first_step_pct": pct(len(exact), len(err)),
+            "earlier": len(early), "later": len(late), "ceiling_pct": pct(len(ceiling), len(err)),
+            "false_alarm_pct": pct(fp, len(ok)), "precision_pct": pct(tp, max(tp + fp, 1)),
+            "eq_pass": c["pass"], "eq_fail": c["fail"], "eq_skip": c["skip"]}
+
+
+def write_summary(path, split, metrics):
+    """Insert or replace this split's row in a per-split summary CSV."""
+    rows = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8", newline="") as f:
+            rows = {r["split"]: r for r in csv.DictReader(f)}
+    rows[split] = {"split": split, **metrics}
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=["split", *metrics])
+        w.writeheader()
+        w.writerows(rows[k] for k in sorted(rows))
 
 
 if __name__ == "__main__":
-    src, dst = sys.argv[1], sys.argv[2]
+    ap = argparse.ArgumentParser()
+    ap.add_argument("input")
+    ap.add_argument("output")
+    ap.add_argument("--summary", help="CSV to update with this split's metrics, e.g. results/stage4_summary.csv")
+    a = ap.parse_args()
     recs = []
-    with open(src, encoding="utf-8") as f:
+    with open(a.input, encoding="utf-8") as f:
         for line in f:
             recs.append(verify_record(json.loads(line)))
-    with open(dst, "w", encoding="utf-8") as out:
+    with open(a.output, "w", encoding="utf-8") as out:
         for r in recs:
             out.write(json.dumps(r) + "\n")
-    print(f"verified {len(recs)} solutions -> {dst}")
-    evaluate(recs)
+    print(f"verified {len(recs)} solutions -> {a.output}")
+    metrics = evaluate(recs)
+    if a.summary and metrics:
+        split = re.sub(r"^(s4_|pb_)", "", os.path.splitext(os.path.basename(a.input))[0])
+        write_summary(a.summary, split, metrics)
+        print(f"summary row '{split}' -> {a.summary}")

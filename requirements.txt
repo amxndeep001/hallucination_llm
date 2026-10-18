@@ -1,12 +1,13 @@
-datasets
-pandas
-sympy
-latex2sympy2
-regex
-tqdm
-transformers
-torch
-sentence-transformers
-faiss-cpu
-scikit-learn
-xgboost
+# Pinned to the versions used for the committed results (Python 3.9.1)
+datasets==4.5.0
+pandas==2.3.3
+sympy==1.14.0
+latex2sympy2==1.9.1
+regex==2026.1.15
+tqdm==4.70.1
+transformers==4.57.6
+torch==2.8.0
+sentence-transformers==5.1.2
+faiss-cpu==1.13.0
+scikit-learn==1.6.1
+xgboost==2.1.4
