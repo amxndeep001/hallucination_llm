@@ -76,9 +76,15 @@ def _balance_parens(s: str) -> str:
     return "".join(ch for i, ch in enumerate(s) if i not in drop)
 
 
+def _is_text_note(inner: str) -> bool:
+    """'(women)', '(Die 1)', '(units digit: 7)' are notes; '(a + b)', '(4 / 20)', '(\\mathbf{a} \\cdot b)' are math."""
+    has_word = re.search(r"(?<!\\)\b[A-Za-z]{3,}\b", inner)
+    return bool(has_word) and (not re.search(r"\d", inner) or not re.search(r"[+\-*/^=]", inner))
+
+
 def _clean_equation(eq: str) -> str:
     """Strip units and non-math words from an equation for SymPy."""
-    eq = re.sub(r"\([^()\d]*\)", "", eq)                      # drop text-only notes like '(women)', keep '4(3)'
+    eq = re.sub(r"\(([^()]*)\)", lambda m: "" if _is_text_note(m[1]) else m[0], eq)
     eq = eq.replace("$", "")                                   # currency sign is not part of the math
     eq = re.sub(r"(?<=\d),(?=\d{3}\b)", "", eq)              # 14,000 -> 14000
     words = eq.split()
@@ -86,7 +92,8 @@ def _clean_equation(eq: str) -> str:
     for w in words:
         w_clean = w.strip(",;:.)(")
         low = w_clean.lower()
-        if (low in UNIT_WORDS or re.match(r"^[a-z]+/[a-z]+$", low)
+        if ((low in UNIT_WORDS and len(low) > 1)                   # 'g', 'l', 'm' stay: they are variables
+                or re.match(r"^[a-z]+/[a-z]+$", low)
                 or re.fullmatch(r"[A-Za-z]{2,}", w_clean)):   # drop words, KEEP variables like x, y
             parens = "".join(ch for ch in w if ch in "()")    # but keep their brackets
             if parens:
@@ -131,11 +138,29 @@ def _split_juxtaposed(eq: str):
 
 def extract_equations(step: str):
     OPERATORS = {"+", "-", "*", "/", "^", "\\times", "\\div", "\\cdot"}
+    step = re.sub(r"\s-\s+(?=[A-Z][a-z])", "\n", step)          # inline bullets: '... 240 minutes - Time spent ...'
+    step = re.sub(r"\n\s*(?==)", " ", step)                      # a line starting with '=' continues the chain
+    lines = step.split("\n")
+    if len(lines) > 1:                      # an equation never spans lines: '- 3^1 = 3\n- 3^2 = 9' is two
+        return list(dict.fromkeys(e for line in lines for e in extract_equations(line)))
+    step = re.sub(r"^\s*[-*•]\s+", "", step)                     # list bullet, not a minus sign
     step = re.sub(r"(\d(?:\.\d+)?\s*\\?%)\s+of\s+", r"\1 * ", step)   # '25% of 1.60' -> '25% * 1.60'
     toks = step.replace("=", " = ").split()
     eqs = []
     eq_positions = [i for i, t in enumerate(toks) if t == "="]
-    
+
+    def with_lhs(l, r, eq_idx):
+        """Span from l; a left side that is only a quantity's count ('One-third of 27 =',
+        '4 hours =', 'Multiples of 3 or 5 =') is a description, not math: drop it."""
+        eq = _clean_equation(" ".join(toks[l:r + 1]).strip(" ,;:."))
+        first, _, rest = eq.partition("=")
+        prev = toks[l - 1] if l > 0 else ""                       # 'of 27 =' yes; 'Notice that: 27 =' no
+        described = (re.search(r"[A-Za-z]{2,}", " ".join(toks[l:eq_idx]))
+                     or re.fullmatch(r"\(?[A-Za-z]{2,}", prev))
+        if re.fullmatch(r"\s*-?\d+(?:\.\d+)?\s*", first) and described and rest.strip():
+            return rest.strip()
+        return eq
+
     for eq_idx in eq_positions:
         # RIGHT: a unit is accepted only directly after a number (e.g. "= 6 pounds")
         r = eq_idx
@@ -166,14 +191,15 @@ def extract_equations(step: str):
                 left_has_operator = True
         
         if left_has_operator and l < eq_idx and r > eq_idx:
-            span = " ".join(toks[l:r + 1]).strip(" ,;:.")
-            eqs.append(_clean_equation(span))
+            eqs.append(with_lhs(l, r, eq_idx))
+        elif (has_operator and r > eq_idx and l < eq_idx              # '12 = 2^2 \cdot 3': keep a numeric left side
+              and re.fullmatch(r"[\d\s.,\-]+", with_lhs(l, r, eq_idx).split("=")[0])):
+            eqs.append(with_lhs(l, r, eq_idx))
         elif has_operator and r > eq_idx:
             span = " ".join(toks[eq_idx + 1:r + 1]).strip(" ,;:.")
             eqs.append(_clean_equation(span))
         elif l < eq_idx and r > eq_idx:
-            span = " ".join(toks[l:r + 1]).strip(" ,;:.")
-            eqs.append(_clean_equation(span))
+            eqs.append(with_lhs(l, r, eq_idx))
     
     seen = set()
     unique_eqs = []

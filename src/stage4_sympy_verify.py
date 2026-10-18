@@ -54,10 +54,14 @@ def _replace_cmd(s, cmd, nargs, fmt):
 def latex_to_py(expr: str):
     s = expr.replace("$", "").replace("\\!", "").replace("\\,", "").replace("\\;", "").replace("\\ ", " ")
     s = s.replace("\\times", "*").replace("\\cdot", "*").replace("\\div", "/").replace("\\pi", "pi")
+    s = re.sub(r"\^\s*\{?\s*\\circ\s*\}?", "", s)                         # degrees: 45^\circ -> 45
+    if re.search(r"\d_\{?\d", s):                                         # base notation 1111_2: not a decimal number
+        return None
     s = re.sub(r"(\d+(?:\.\d+)?)\s*\\?%", r"(\1/100)", s)                 # 20% -> (20/100)
     s = re.sub(r"(?<![\d.*/^])(\d+)\s*\\frac\{(\d+)\}\{(\d+)\}",           # mixed number 3\frac{4}{5} -> (3+4/5)
                lambda m: f"({m[1]}+{m[2]}/{m[3]})" if int(m[2]) < int(m[3]) else m[0], s)
-    for cmd, n, fmt in (("frac", 2, "(({0})/({1}))"), ("sqrt", 1, "sqrt({0})")):
+    for cmd, n, fmt in (("frac", 2, "(({0})/({1}))"), ("sqrt", 1, "sqrt({0})"),
+                        ("binom", 2, "binomial({0},{1})")):
         s = _replace_cmd(s, cmd, n, fmt)
         if s is None:
             return None
@@ -65,6 +69,9 @@ def latex_to_py(expr: str):
     s = s.replace("^", "**").replace("{", "(").replace("}", ")")
     if "\\" in s:                                                          # unsupported LaTeX command
         return None
+    # f(0), F(1), C(9, 7): a function value, not f*0 -> one opaque symbol per call ('_' stops symbol splitting)
+    s = re.sub(r"(?<![A-Za-z_])([A-Za-z])\(\s*(-?\d+(?:\.\d+)?(?:\s*,\s*-?\d+(?:\.\d+)?)*)\s*\)",
+               lambda m: f"{m[1]}_at_" + re.sub(r"\s*,\s*", "_", m[2]).replace("-", "m").replace(".", "p"), s)
     return s.strip()
 
 
@@ -122,6 +129,11 @@ def _compare(a, b, left, right):
             if (a2 is not None and b2 is not None and not _kind(a2) and not _kind(b2)
                     and not (a2 - b2).free_symbols and sp.simplify(a2 - b2) == 0):
                 return "pass", "equal in percent notation"
+        m = re.fullmatch(r"\s*(-?\d+)\s*\\div\s*(\d+)\s*", left)              # '410 \div 333 = 1' (remainder 77)
+        if m and re.fullmatch(r"\s*-?\d+\s*", right) and int(m[2]):
+            n, dv = int(m[1]), int(m[2])
+            if int(right) in (n // dv, int(n / dv)):
+                return "pass", "integer quotient (remainder dropped)"
         return "fail", f"{sp.N(a, 8)} != {sp.N(b, 8)}"
     if sp.expand(diff) == 0:
         return "pass", "identity"
