@@ -26,7 +26,7 @@ git clone https://github.com/openai/prm800k data/external/prm800k
 | 2 Sample N solutions + check | `src/stage2_generate.py`, `src/stage2_check.py`, `colab/run_stage2.ipynb` | `data/processed/samples_*.jsonl` | GSM8K done; MATH, OlympiadBench, Omni-MATH ready to run on Colab |
 | 3 Align | — | — | **not built yet** |
 | 4 SymPy verification + audit | `src/stage4_sympy_verify.py`, `src/stage4_audit.py`, `src/stage4_precision.py` | `data/processed/s4_*.jsonl`, `results/stage4_*.csv` | done |
-| 7 Self-consistency + semantic entropy | — | — | **not built yet** |
+| 7 Answer consistency, semantic entropy, first combined classifier | `src/stage7_consistency.py`, `src/stage7_evaluate.py`, `tests/test_stage7.py` | `data/processed/s7_*.jsonl`, `results/stage7_ablation_*.csv` | GSM8K done; other splits run unchanged once their Stage 2 samples exist |
 
 ## Run order
 
@@ -65,7 +65,14 @@ python src/stage4_audit.py data/processed/s4_<split>.jsonl results/stage4_audit_
 python src/stage4_audit.py --fresh-sample results/stage4_fresh_audit.csv
 python src/stage4_precision.py results/stage4_fresh_audit.csv
 
-# Stage 7 (self-consistency + semantic entropy): not built yet
+# Stage 7a: consistency features per problem (needs samples_<split>, s4_<split>, the raw file)
+#   --max-new-tokens = the Stage 2 cap (768 for GSM8K, 1024 for the Colab splits); without it the
+#   largest n_tokens in the samples file is used
+python src/stage7_consistency.py data/processed/samples_<split>.jsonl data/processed/s4_<split>.jsonl     data/raw/processbench_<split>.jsonl data/processed/s7_<split>.jsonl --max-new-tokens 768
+# Stage 7b: single-feature AUROCs, logistic regression + random forest (5-fold x 10 repeats), ablation
+python src/stage7_evaluate.py data/processed/s7_<split>.jsonl      # -> results/stage7_ablation_<split>.csv
+# tests for the answer clustering
+python tests/test_stage7.py
 ```
 
 ## Stage 4 in short
@@ -77,6 +84,23 @@ Each equation from Stage 1 is converted from LaTeX, parsed by SymPy and marked:
 - **skip**: cannot be judged; the reason says why (variables, inequality, unsupported LaTeX, unbalanced brackets …). Skip is not pass.
 
 A step fails if any of its equations fails. The first failing step is the predicted first error.
+
+## Stage 7 in short
+
+For each problem, the 5 sampled final answers are clustered by mathematical equivalence: the same
+`normalize_answer` string, or SymPy (via the Stage 4 parser) finds the difference exactly 0, so
+`0.5`, `1/2`, `rac{1}{2}` and `0.50` are one cluster. Answers SymPy cannot parse, or that contain
+words, match by string only. From the clusters and the samples:
+
+- **majority_share**, **n_clusters**, **semantic_entropy** (−Σ p ln p over cluster shares): do the samples agree with each other?
+- **agree_with_original**: share of samples equivalent to the original ProcessBench solution's answer
+- **no_answer_rate**, **truncated_rate**, token log-probability and entropy summaries, mean length
+- the Stage 4 SymPy counts (n_fail, n_checked, first_fail_step, sympy_flag, n_equations)
+
+`stage7_evaluate.py` scores each feature alone (AUROC), then trains logistic regression and a small
+random forest with cross-validation, for two targets: *process error* (`label != -1`) and *wrong
+final answer*. It also scores the hard subset: a correct final answer but a wrong step. The ablation
+shows what each group of features adds. Human labels are used only as targets, never as features.
 
 ## Results so far
 
@@ -100,10 +124,11 @@ signal to combine with the others, not a detector on its own.
 
 ```
 data/raw/          downloaded datasets (Stage 0; do not edit)
-data/processed/    pb_* (Stage 1), samples_* (Stage 2), s4_* (Stage 4)
+data/processed/    pb_* (Stage 1), samples_* (Stage 2), s4_* (Stage 4), s7_* (Stage 7)
 data/external/     cloned reference repos (git-ignored)
 src/               pipeline scripts
-results/           exploration outputs (explore_data.py) and Stage 4 summary/audit CSVs
+tests/             unit tests (python tests/test_<name>.py)
+results/           exploration outputs (explore_data.py), Stage 4 summary/audit CSVs, Stage 7 ablation CSVs
 ```
 
 ## Next
@@ -112,4 +137,4 @@ results/           exploration outputs (explore_data.py) and Stage 4 summary/aud
 - Answer normalization for competition answers: 37% of original ProcessBench final answers
   (fractions, radicals, tuples, intervals, text) do not reduce to a plain number with `normalize_answer`
 - Stage 3 alignment
-- Stage 7 self-consistency + semantic entropy, combined with the Stage 4 flags and retrieval
+- Stage 7 on MATH, OlympiadBench, Omni-MATH once their samples arrive; then add retrieval (A2)
