@@ -1,9 +1,10 @@
 """Stage 2 sanity check: did sampling work, and is the agreement signal useful?
 Usage:  python src/stage2_check.py data/processed/samples_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl
+        [--truncated-no-answer --max-new-tokens 1024]
 Prints: formatting/length stats, how often the samples agree with each other, how often they agree
 with the ORIGINAL ProcessBench solution, and a first AUROC for 'low agreement => solution is wrong'.
 """
-import json, re, sys
+import argparse, json, re
 from collections import Counter
 from stage2_generate import extract_answer, normalize_answer
 
@@ -57,18 +58,27 @@ def agreement(answers, orig):
     return sum(a == orig for a in answers) / len(answers)
 
 
-def main(samples_path, raw_path):
+def sample_answer(s, cap=None):
+    """Normalized final answer of one sample. With cap (the Stage 2 max_new_tokens): a sample that reached
+    the cap without a \\boxed{} answer has NO answer ('') instead of the last number of its cut-off text."""
+    if cap is not None and s["n_tokens"] >= cap and "\\boxed{" not in s["text"]:
+        return ""
+    return normalize_answer(s["final_answer"])
+
+
+def main(samples_path, raw_path, cap=None):
     raw = {}
     with open(raw_path, encoding="utf-8") as f:
         for l in f:
             r = json.loads(l); raw[r["id"]] = r
     recs = [json.loads(l) for l in open(samples_path, encoding="utf-8") if l.strip()]
-    print(f"{len(recs)} problems, {sum(len(r['samples']) for r in recs)} samples")
+    print(f"{len(recs)} problems, {sum(len(r['samples']) for r in recs)} samples"
+          + (f"; truncated at {cap} tokens without \\boxed = no answer" if cap else ""))
 
     empty = toks = total = 0
     self_agree, orig_agree, has_err, ans_wrong = [], [], [], []
     for r in recs:
-        answers = [normalize_answer(s["final_answer"]) for s in r["samples"]]
+        answers = [sample_answer(s, cap) for s in r["samples"]]
         total += len(answers)
         empty += sum(a == "" for a in answers)
         toks += sum(s["n_tokens"] for s in r["samples"])
@@ -91,4 +101,13 @@ def main(samples_path, raw_path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    ap = argparse.ArgumentParser()
+    ap.add_argument("samples")
+    ap.add_argument("raw")
+    ap.add_argument("--truncated-no-answer", action="store_true",
+                    help="a sample that hit the token cap without \\boxed{} has no answer (needs --max-new-tokens)")
+    ap.add_argument("--max-new-tokens", type=int, help="Stage 2 cap: 768 for GSM8K, 1024 for the Colab splits")
+    a = ap.parse_args()
+    if a.truncated_no_answer and not a.max_new_tokens:
+        ap.error("--truncated-no-answer needs --max-new-tokens")
+    main(a.samples, a.raw, a.max_new_tokens if a.truncated_no_answer else None)
