@@ -71,8 +71,9 @@ python src/stage4_precision.py results/stage4_fresh_audit.csv
 python src/stage7_consistency.py data/processed/samples_<split>.jsonl data/processed/s4_<split>.jsonl     data/raw/processbench_<split>.jsonl data/processed/s7_<split>.jsonl --max-new-tokens 768
 # Stage 7b: single-feature AUROCs, logistic regression + random forest (5-fold x 10 repeats), ablation
 python src/stage7_evaluate.py data/processed/s7_<split>.jsonl      # -> results/stage7_ablation_<split>.csv
-# tests for the answer clustering
+# tests for the answer clustering and normalization
 python tests/test_stage7.py
+python tests/test_normalize.py
 ```
 
 ## Stage 4 in short
@@ -89,8 +90,12 @@ A step fails if any of its equations fails. The first failing step is the predic
 
 For each problem, the 5 sampled final answers are clustered by mathematical equivalence: the same
 `normalize_answer` string, or SymPy (via the Stage 4 parser) finds the difference exactly 0, so
-`0.5`, `1/2`, `rac{1}{2}` and `0.50` are one cluster. Answers SymPy cannot parse, or that contain
-words, match by string only. From the clusters and the samples:
+`0.5`, `1/2`, `\frac{1}{2}` and `0.50` are one cluster. Answers SymPy cannot parse, or that contain
+words, match by string only. Answers are first normalized by `normalize_answer`, which also strips
+currency (`\$288.00` -> 288), a stray leading backslash, thousands commas, unit words separated
+from the number (`53 minutes` -> 53) and proper mixed numbers (`1 and 1/3` -> 4/3); an original answer
+`expression = number` becomes the number. For **agree_with_original** only, `X%` also matches `X`
+and `X/100` (the clustering keeps `10% != 10`). From the clusters and the samples:
 
 - **majority_share**, **n_clusters**, **semantic_entropy** (−Σ p ln p over cluster shares): do the samples agree with each other?
 - **agree_with_original**: share of samples equivalent to the original ProcessBench solution's answer
@@ -105,7 +110,7 @@ shows what each group of features adds. Human labels are used only as targets, n
 ## Results so far
 
 Stage 2 (GSM8K, 400 problems × 5 samples): low agreement between the samples and the original
-answer detects a process error with **AUROC 0.916**.
+answer detects a process error with **AUROC 0.946** (0.916 before the answer normalization fix).
 
 Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`; byte-identical across repeated runs and across Python 3.9 and 3.13 with the pinned SymPy 1.14.0):
 
