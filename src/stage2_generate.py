@@ -53,12 +53,13 @@ def normalize_answer(a: str) -> str:
     if m and 0 < int(m[2]) < int(m[3]):
         return str(int(m[1]) + Fraction(int(m[2]), int(m[3])))
     a = re.sub(r"\\text\{([^}]*)\}", r"\1", a)
-    a = a.replace("\\$", "").replace("$", "").replace("\\!", "").replace(",", "").replace(" ", "").strip()
+    a = a.replace("\\$", "").replace("$", "").replace("\\!", "").replace(",", "")
+    a = re.sub(r"\s+", "", a)                             # spaces and newlines ('\begin{pmatrix}\n...')
     a = re.sub(r"^(-?)\\(?=\d)", r"\1", a)               # stray leading backslash: '\15' (not '\\' or '\ ' inside)
     try:
         f = float(a)
         return str(int(f)) if f == int(f) else str(f)
-    except ValueError:
+    except (ValueError, OverflowError):                   # '777...7' (80 digits) overflows to inf
         return a
 
 

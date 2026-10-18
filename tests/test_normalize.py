@@ -62,6 +62,28 @@ def test_original_answer_takes_value_after_last_equals():
     assert orig("a = 2.08, b = 0.28") == "a=2.08b=0.28"              # a list of values: unchanged
 
 
+def test_whitespace_and_newlines():
+    assert norm("\\begin{pmatrix}\n1 & 2\\\\\n3 & 4\n\\end{pmatrix}") == norm("\\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix}")
+
+
+def test_huge_integer_does_not_crash():
+    assert norm("7" * 400) == "7" * 400                         # float() gives inf: left as a string
+
+
+def test_original_answer_unboxed_latex():
+    orig = lambda last: original_answer({"steps": [last]})
+    assert orig("Final Answer: The final answer is $16\\pi$. I hope it is correct.") == "16\\pi"
+    assert orig("Final Answer: The final answer is \\(\\frac{4}{35}\\). I hope it is correct.") == "\\frac{4}{35}"
+    assert orig("so the value is \\(-\\frac{2\\sqrt{3}}{3}\\).") == "-\\frac{2\\sqrt{3}}{3}"
+    assert orig("The probability is \\(\\frac{11}{36}\\).") == "\\frac{11}{36}"
+    # a closing span that is not a pure number expression keeps the old last-number fallback
+    assert orig("so the answer is \\( x = 9 \\).") == "9"
+    assert orig("Then \\(f(50) = 6\\)") == "6"
+    assert orig("The answer is 7, as \\(n\\) is odd.") == "7"
+    # boxed answers are untouched
+    assert orig("\\(\\frac{1}{2}\\) so \\boxed{3}") == "3"
+
+
 def test_plain_numbers():
     assert norm("18") == norm("18.0") == norm("\\text{18}") == "18"
     assert norm("0.50") == "0.5"

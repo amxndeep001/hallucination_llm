@@ -18,11 +18,33 @@ def auroc(scores, labels):
     return wins / (len(pos) * len(neg))
 
 
+_SPAN = r"\$\$(.+?)\$\$|\$(.+?)\$|\\\((.+?)\\\)|\\\[(.+?)\\\]"
+
+
+def unboxed_answer(step):
+    """Answer of a last step without \\boxed{}, where the last-number fallback would cut a LaTeX answer
+    ('$16\\pi$' -> '16', '\\(\\frac{4}{35}\\)' -> '35'). Returns '' when neither rule applies:
+      - 'The final answer is $X$' -> X
+      - the step ends with a math span holding a pure number expression (no '=', no letters outside
+        LaTeX commands) -> that span: 'is \\(-\\frac{2\\sqrt{3}}{3}\\).'"""
+    if "\\boxed{" in step:
+        return ""
+    m = re.search(rf"final answer is:?\s*(?:{_SPAN})", step, re.S | re.I)
+    if m:
+        return next(g for g in m.groups() if g is not None).strip()
+    spans = list(re.finditer(_SPAN, step, re.S))
+    if spans and re.fullmatch(r"\s*[.!]?\s*", step[spans[-1].end():]):
+        s = next(g for g in spans[-1].groups() if g is not None).strip()
+        if "=" not in s and re.search(r"\d", s) and not re.search(r"[A-Za-z]", re.sub(r"\\[A-Za-z]+", "", s)):
+            return s
+    return ""
+
+
 def original_answer(raw_rec):
     """Normalized final answer of the original ProcessBench solution (from its last step).
     'expression = number' (e.g. '150 \\div 3 = 50') -> the number after the last '=', unless the answer is
     a list or text ('a = 2.08, b = 0.28'), where the last value is not the whole answer."""
-    raw = extract_answer(raw_rec["steps"][-1])
+    raw = unboxed_answer(raw_rec["steps"][-1]) or extract_answer(raw_rec["steps"][-1])
     a = normalize_answer(raw)
     tail = a.rsplit("=", 1)[-1]
     if "=" in a and "," not in raw and "\\text" not in raw and re.fullmatch(r"-?\d+(?:\.\d+)?(?:/\d+)?", tail):
