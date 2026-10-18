@@ -16,6 +16,7 @@ Smoke test without any model:
 The script is resumable: problems already present in --output are skipped.
 """
 import argparse, json, os, random, re, time
+from fractions import Fraction
 
 SYSTEM_PROMPT = "Please reason step by step, and put your final answer within \\boxed{}."
 
@@ -36,10 +37,24 @@ def extract_answer(text: str) -> str:
     return nums[-1] if nums else ""
 
 
+_NUM = r"-?\\?\$?\s*\d[\d,]*(?:\.\d+)?"
+_UNIT = r"[A-Za-z]{2,}[A-Za-z./ ]*"
+
+
 def normalize_answer(a: str) -> str:
-    """Light normalisation so '18', '18.0', '$18$' and '\\text{18}' compare equal."""
-    a = re.sub(r"\\text\{([^}]*)\}", r"\1", str(a))
-    a = a.replace("$", "").replace("\\!", "").replace(",", "").replace(" ", "").strip()
+    """Light normalisation so '18', '18.0', '$18$', '\\$18.00', '18 hours' and '\\text{18}' compare equal."""
+    a = str(a).strip()
+    # trailing unit word, only when separated by a space or \text{}: '53 minutes', '5 \text{hours}' (not '2x')
+    m = re.fullmatch(rf"({_NUM})\s*\\(?:text|mbox|mathrm)\{{\s*{_UNIT}\}}|({_NUM})\s+{_UNIT}", a)
+    if m:
+        a = m[1] or m[2]
+    # mixed number '1 and 1/3', '1 \text{ and } 1/3' -> 4/3 (only if the fraction is proper)
+    m = re.fullmatch(r"(\d+)\s*(?:\\text\{\s*and\s*\}|and)\s*(\d+)\s*/\s*(\d+)", a)
+    if m and 0 < int(m[2]) < int(m[3]):
+        return str(int(m[1]) + Fraction(int(m[2]), int(m[3])))
+    a = re.sub(r"\\text\{([^}]*)\}", r"\1", a)
+    a = a.replace("\\$", "").replace("$", "").replace("\\!", "").replace(",", "").replace(" ", "").strip()
+    a = re.sub(r"^(-?)\\(?=\d)", r"\1", a)               # stray leading backslash: '\15' (not '\\' or '\ ' inside)
     try:
         f = float(a)
         return str(int(f)) if f == int(f) else str(f)

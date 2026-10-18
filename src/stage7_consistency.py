@@ -3,6 +3,7 @@
 For every problem, from its N sampled solutions (Stage 2) and the original ProcessBench solution:
   majority_share       size of the largest answer cluster / samples with an answer
   agree_with_original  share of samples whose answer is equivalent to the original solution's answer
+                       (here only, X% also matches X and X/100)
   n_clusters, cluster_sizes, semantic_entropy
                        answers clustered by MATHEMATICAL equivalence: the same normalize_answer string,
                        or SymPy finds the difference exactly 0 (0.5 = 1/2 = \\frac{1}{2} = 0.50; 10\\% = 1/10,
@@ -57,6 +58,18 @@ def equivalent(a, b):
         return False
 
 
+def agrees(a, orig):
+    """agree_with_original only: equivalent, or one side is 'X%' and the other is X or X/100.
+    (The clustering keeps 10% != 10, so competition answers are unaffected.)"""
+    if equivalent(a, orig):
+        return True
+    for x, y in ((a, orig), (orig, a)):
+        m = re.fullmatch(r"(.+?)\\?%", x)
+        if m and y and (equivalent(normalize_answer(m[1]), y) or equivalent(f"({m[1]})/100", y)):
+            return True
+    return False
+
+
 def cluster(answers):
     """Cluster non-empty normalized answers by equivalence (transitive closure). Sizes, largest first."""
     answers = [a for a in answers if a != ""]
@@ -92,7 +105,7 @@ def features(sample_rec, s4_rec, raw_rec, cap):
     return {
         "id": sample_rec["id"], "label": raw_rec["label"], "final_answer_correct": raw_rec["final_answer_correct"],
         "majority_share": sizes[0] / n_answered if n_answered else 0.0,
-        "agree_with_original": sum(equivalent(a, orig) for a in answers) / len(answers),
+        "agree_with_original": sum(agrees(a, orig) for a in answers) / len(answers),
         "n_clusters": len(sizes), "cluster_sizes": sizes, "semantic_entropy": semantic_entropy(sizes),
         "no_answer_rate": sum(a == "" for a in answers) / len(answers),
         "mean_logprob_mean": sum(lp) / len(lp), "mean_logprob_min": min(lp),

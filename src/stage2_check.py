@@ -3,7 +3,7 @@ Usage:  python src/stage2_check.py data/processed/samples_gsm8k.jsonl data/raw/p
 Prints: formatting/length stats, how often the samples agree with each other, how often they agree
 with the ORIGINAL ProcessBench solution, and a first AUROC for 'low agreement => solution is wrong'.
 """
-import json, sys
+import json, re, sys
 from collections import Counter
 from stage2_generate import extract_answer, normalize_answer
 
@@ -19,8 +19,15 @@ def auroc(scores, labels):
 
 
 def original_answer(raw_rec):
-    """Normalized final answer of the original ProcessBench solution (from its last step)."""
-    return normalize_answer(extract_answer(raw_rec["steps"][-1]))
+    """Normalized final answer of the original ProcessBench solution (from its last step).
+    'expression = number' (e.g. '150 \\div 3 = 50') -> the number after the last '=', unless the answer is
+    a list or text ('a = 2.08, b = 0.28'), where the last value is not the whole answer."""
+    raw = extract_answer(raw_rec["steps"][-1])
+    a = normalize_answer(raw)
+    tail = a.rsplit("=", 1)[-1]
+    if "=" in a and "," not in raw and "\\text" not in raw and re.fullmatch(r"-?\d+(?:\.\d+)?(?:/\d+)?", tail):
+        a = normalize_answer(tail)
+    return a
 
 
 def agreement(answers, orig):
