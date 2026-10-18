@@ -1,0 +1,100 @@
+﻿category,id,human_label,first_fail_step,step_idx,equation,status,reason,step_text,my_verdict
+early,omnimath-305,15,12,12,60 = 5^2 + 6^2 = 25 + 36 = 61,fail,60.000000 != 61.000000,"Seventh, consider n = 60 :
+- Divisors: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60 
+- Here, d_5 = 5 and d_6 = 6 
+- Check: 60 = 5^2 + 6^2 = 25 + 36 = 61 
+- This does not work.",
+early,omnimath-719,4,2,2,1 * \frac{1}{100} = \frac{101}{100} \times \frac{1}{100} = \frac{101}{10000},fail,0.010000000 != 0.010100000,"Now, let's consider the expected number of coins after the second round. The probability of gaining a coin is now \frac{\frac{101}{100}}{100} , since we're using the expected number of coins from the previous round. However, to simplify the calculation, we'll use the linearity of expectation. The expected gain in coins during the second round is: Expected gain = (Expected number of coins after Round 1) * \frac{1}{100} = \frac{101}{100} \times \frac{1}{100} = \frac{101}{10000} .",
+early,omnimath-998,6,3,3,47.25 \cdot 8.75 = 414.375,fail,413.43750 != 414.37500,"Calculating inside the square root:
+ 10.5 \cdot 4.5 = 47.25, \quad 2.5 \cdot 3.5 = 8.75, \quad 47.25 \cdot 8.75 = 414.375, 
+so
+ K = \sqrt{414.375} = \frac{21\sqrt{15}}{4}.",
+false_alarm,omnimath-787,-1,1,4,1 = \frac{1}{3} + \frac{1}{5} + \frac{1}{7},fail,1.0000000 != 0.67619048,"Fourth, considering the complexity, let's select a = 3, b = 5, and c = 7 for our denominators: 1 = \frac{1}{3} + \frac{1}{5} + \frac{1}{7} This sum is: = \frac{35}{105} + \frac{21}{105} + \frac{15}{105} = \frac{71}{105} This still does not equate to 1 directly. Let's think more carefully about how to reach exactly 1 using four distinct unit fractions.",
+false_alarm,omnimath-897,-1,5,5,-5 - 3 - 7 - 9 = -24 -24,fail,-24.000000 != -48.000000,"Thus, the possible values of b are -5, -3, -7, and -9 . The sum of all possible values of b is: -5 - 3 - 7 - 9 = -24 -24",
+false_alarm,omnimath-612,-1,5,5,\frac{1}{2} \cdot 15 + \frac{1}{6} \cdot 20 + \frac{1}{24} \cdot 15 + \frac{1}{120} \cdot 6 + \frac{1}{720} \cdot 1 = 7.5 + 3.333,fail,11.509722 != 10.833000,"Calculating these terms gives:
+ = \frac{1}{2} \cdot 15 + \frac{1}{6} \cdot 20 + \frac{1}{24} \cdot 15 + \frac{1}{120} \cdot 6 + \frac{1}{720} \cdot 1 
+ = 7.5 + 3.333... + 0.625 + 0.05 + 0.001388... 
+ \approx 11.5098",
+false_alarm,omnimath-717,-1,7,7,0 \cdot b = 2014,fail,0 != 2014.0000,"If a = 0 :
+ 0 \cdot b = 2014 
+This is a contradiction, so a \neq 0 .",
+false_alarm,omnimath-787,-1,1,2,1 = \frac{1}{2} + \frac{1}{3} + \frac{1}{8},fail,1.0000000 != 0.95833333,"Second, if we try a = 2, b = 3, and c = 8 (to ensure d will be distinct and still allow for a whole number solution), we get: 1 = \frac{1}{2} + \frac{1}{3} + \frac{1}{8} The sum of these fractions is: = \frac{12}{24} + \frac{8}{24} + \frac{3}{24} = \frac{23}{24} This also doesn't equal 1. Let's try another combination.",
+false_alarm,omnimath-787,-1,1,1,1 = \frac{1}{2} + \frac{1}{3} + \frac{1}{7},fail,1.0000000 != 0.97619048,"Let's pick some values for a, b, and c and then solve for d. To simplify the process, we'll start with smaller numbers. First, let's try a = 2, b = 3, and c = 7. This gives us: 1 = \frac{1}{2} + \frac{1}{3} + \frac{1}{7} The sum of these fractions is: = \frac{21}{42} + \frac{14}{42} + \frac{6}{42} = \frac{41}{42} Since this does not equal 1, let's adjust our selection.",
+false_alarm,omnimath-787,-1,1,3,1 = \frac{1}{2} + \frac{1}{5} + \frac{1}{7},fail,1.0000000 != 0.84285714,"Third, let's try a = 2, b = 5, and c = 7 for our initial values: 1 = \frac{1}{2} + \frac{1}{5} + \frac{1}{7} This sum is: = \frac{35}{70} + \frac{14}{70} + \frac{10}{70} = \frac{59}{70} Again, it doesn't equal 1. Let's try something different.",
+false_alarm,omnimath-612,-1,5,6,11.5098 \times 720 = 8286.656,fail,8287.0560 != 8286.6560,"However, this calculation represents the **average** number of increasing subsequences per permutation. Since there are 6! possible permutations, the total number of increasing subsequences across all permutations is approximately:
+ 11.5098 \times 720 = 8286.656",
+false_alarm,omnimath-805,-1,5,5,1404 = 2^2 \times 3^2 \times 13,fail,1404.0000 != 468.00000,"For y to be a positive integer, \frac{1404}{d} must be an integer less than 150. Therefore, d must be a divisor of 1404. First, we find the divisors of 1404:
+ 1404 = 2^2 \times 3^2 \times 13 
+The divisors of 1404 are: 1, 2, 3, 4, 6, 9, 12, 13, 18, 26, 36, 39, 52, 78, 117, 156, 234, 468, 702, 1404",
+false_alarm,omnimath-787,-1,1,5,1 = \frac{1}{3} + \frac{1}{4} + \frac{1}{5},fail,1.0000000 != 0.78333333,"Upon reconsideration, a key insight is realizing that if one of the denominators is a product of two or more primes, the sum of the fractions might be closer to 1. Let's try a = 3, b = 4, and c = 5 for our denominators: 1 = \frac{1}{3} + \frac{1}{4} + \frac{1}{5} This sum is: = \frac{20}{60} + \frac{15}{60} + \frac{12}{60} = \frac{47}{60} This does not equal 1. Let's try a different combination.",
+skip,omnimath-994,1,,0,n-1 \implies n = 2013k + 1,skip,could not parse,"To find all positive integers a, b, n and prime numbers p that satisfy the equation a^{2013} + b^{2013} = p^n, we will analyze the equation step by step. First, consider the case when a = b. Then the equation becomes:
+2a^{2013} = p^n.
+This implies that p^n must be even, so p = 2 (since 2 is the only even prime number). Thus, we have:
+2a^{2013} = 2^n \implies a^{2013} = 2^{n-1}.
+Since a^{2013} is a power of 2, a must also be a power of 2. Let a = 2^k. Then:
+(2^k)^{2013} = 2^{2013k} = 2^{n-1} \implies 2013k = n-1 \implies n = 2013k + 1.
+So, one solution is a = 2^k, b = 2^k, p = 2, and n = 2013k + 1 for any positive integer k.",
+skip,omnimath-373,0,,3,2(1003 + y) + z < = 2003,skip,could not parse,"We can use the fact that the total number of good sides must be even to derive a relationship between x and the number of diagonals. Let's assume that there are y diagonals that form isosceles triangles with two good sides, and z diagonals that don't. We know that there are at least x isosceles triangles with two good sides, so there are at least x good diagonals. Therefore, we can write: 2x + z <= 2003. We also know that the total number of good sides must be even, so we can write: 2(1003 + y) + z <= 2003. Simplifying the equation, we get: 2006 + 2y + z <= 2003. Subtracting 2003 from both sides, we get: 3 + 2y + z <= 0. Rearranging the terms, we get: 2y + z <= -3.",
+skip,omnimath-882,1,,3,\binom{2^{2009}}{2^{2009} - 1} = \binom{2^{2009}}{1} = 2^{2009},skip,could not parse,"Thus, the coefficient a_{2^{2009}-1} is given by: a_{2^{2009}-1} = \binom{2^{2009}}{2^{2009} - 1} By Pascal's Rule, which states \binom{n}{k} = \frac{n}{k} \binom{n-1}{k-1}, and knowing that \binom{n}{k} = \binom{n}{n-k}, we can see that: \binom{2^{2009}}{2^{2009} - 1} = \binom{2^{2009}}{1} = 2^{2009}",
+skip,omnimath-253,6,,0,2w + 4x + 8y + 16z = 7,skip,has variables (may be a condition to solve),"To solve for the values of w, x, y, z given the system of equations: First, we have the equations:
+ w + x + y + z = 5 
+ 2w + 4x + 8y + 16z = 7 
+ 3w + 9x + 27y + 81z = 11 
+ 4w + 16x + 64y + 256z = 1",
+skip,omnimath-467,5,,5,\frac{1}{2} ( x - 1 ) = y,skip,has variables (may be a condition to solve),"After all four individuals have taken their shares, the remaining soup should be zero because they get the same amount of soup each. Therefore, we set the remaining soup equal to y : \frac{1}{2} ( x - 1 ) = y Since x = 4y , we substitute y in the equation: \frac{1}{2} ( 4y - 1 ) = y Solving for y : 2y - \frac{1}{2} = y 2y - y = \frac{1}{2} y = \frac{1}{2} Now, substituting y = \frac{1}{2} back into x = 4y : x = 4 \cdot \frac{1}{2} = 2 Thus, the value of x for which everyone gets the same amount of soup is: 2",
+skip,omnimath-254,6,,0,f(x^3) + f(y)^3 + f(z)^3 = 3xyz,skip,has variables (may be a condition to solve),"To determine all functions f: \mathbb{R} \to \mathbb{R} such that
+ f(x^3) + f(y)^3 + f(z)^3 = 3xyz 
+for all real numbers x , y , and z with x + y + z = 0 , we will proceed as follows:",
+skip,omnimath-163,4,,3,1 + \sum_{k = 1}^{2024} ( \prod_{i = 1}^{k-1} \frac{4048-2i}{4049-i} ) \cdot \frac{2i}{4049-k},skip,unbalanced brackets,"Fourth, we use the concept of the expected value for a geometric distribution with a slight modification. The expected number of draws E(X) can be calculated using the following approach:
+ E(X) = 1 + \sum_{k=1}^{2024} ( \prod_{i=1}^{k-1} \frac{4048-2i}{4049-i} ) \cdot \frac{2i}{4049-k}",
+skip,omnimath-423,1,,3,m + n + p + q = 6 + 4 + 9 + 1 = 20,skip,has variables (may be a condition to solve),"Now that we have the values of m , n , p , and q , we can find their sum: m + n + p + q = 6 + 4 + 9 + 1 = 20 .",
+skip,omnimath-922,14,14,0,"( \frac{x_1 + x_2 + x_3}{3}, \frac{y_1 + y_2 + y_3}{3} ) = (0,0)",skip,has variables (may be a condition to solve),"To find the length of the longest side of the triangle whose medians are given by the lines y = x, y = 2x, and y = 3x and whose perimeter is 1, we start by determining the coordinates of the vertices of the triangle. The medians of a triangle intersect at the centroid, which divides each median into a ratio of 2:1. The centroid of the triangle is the origin (0,0) because all the medians pass through the origin. Let the vertices of the triangle be A = (x_1, y_1), B = (x_2, y_2), and C = (x_3, y_3). Since the centroid is the origin, we have:
+ ( \frac{x_1 + x_2 + x_3}{3}, \frac{y_1 + y_2 + y_3}{3} ) = (0,0)",
+skip,omnimath-260,4,,10,48a - 100 - 70a/3 = -240,skip,has variables (may be a condition to solve),"Now, substitute this expression for b into the other new equation:
+Substituting into 48a + 10b = -240 :
+ 48a + 10(-112 - 14a)/12 = -240 
+ 48a - 100 - 70a/3 = -240 
+ 144a - 300 - 140a = -720 
+ 4a = -420 
+ a = -105",
+skip,omnimath-528,-1,,9,12 - 49 \implies 74y = -37 \implies y = -\frac{37}{74} \implies y = -\frac{1}{2},skip,could not parse,"Subtracting 49 from both sides, we get:
+ 74y = 12 - 49 \implies 74y = -37 \implies y = -\frac{37}{74} \implies y = -\frac{1}{2}",
+skip,omnimath-169,0,,8,(x_1 + x_3 + \cdots + x_{n-1} + x_n)^2 = (2^{n/2+1/2} - 1)^2,skip,could not parse,"Using the formula for geometric series, we have:
+ (x_1 + x_3 + \cdots + x_{n-1} + x_n)^2 = (2^{n/2+1/2} - 1)^2 
+and
+ (y_2 + y_4 + \cdots + y_{n-1})^2 = (2^{n/2} - 2^{1/2})^2",
+skip,omnimath-135,2,,18,\frac{BL}{LV} = \frac{\pi + 2}{\pi - 2} \times \frac{\pi + 2}{\pi + 2} = \frac{\pi^2 + 4\pi + 4}{\pi^2 - 4} = \frac{(\pi + 2)^2}{(\pi - 2)(\pi + 2)} = \frac{\pi + 2}{\pi - 2},skip,has variables (may be a condition to solve),"Simplifying this expression, we get:
+ \frac{BL}{LV} = \frac{\pi + 2}{\pi - 2} \times \frac{\pi + 2}{\pi + 2} = \frac{\pi^2 + 4\pi + 4}{\pi^2 - 4} = \frac{(\pi + 2)^2}{(\pi - 2)(\pi + 2)} = \frac{\pi + 2}{\pi - 2}",
+skip,omnimath-563,-1,,7,25.97 - 3.71y + 3.72y = 26.00,skip,has variables (may be a condition to solve),"Distribute 3.71:
+ 3.71 \cdot 7 - 3.71y + 3.72y = 26.00 
+ 25.97 - 3.71y + 3.72y = 26.00",
+skip,omnimath-812,5,,5,BD_1 = s - b = 12 - 11 = 1,skip,has variables (may be a condition to solve),"The points D_1 and D_2 are the points where the incircle and the A -excircle touch BC , respectively. The distances from B to D_1 and D_2 are:
+ BD_1 = s - b = 12 - 11 = 1, 
+ BD_2 = s - c = 12 - 5 = 7.",
+skip,omnimath-957,-1,,2,1}^{2001} (-1)^{n+1} n^2 + \sum_{n = 1}^{2001} (-1)^{n+1} n,skip,unbalanced brackets,"We can split this into two separate sums: a_n = (-1)^{n+1} n^2 + (-1)^{n+1} n So, the original sum can be written as: \sum_{n=1}^{2001} a_n = \sum_{n=1}^{2001} (-1)^{n+1} n^2 + \sum_{n=1}^{2001} (-1)^{n+1} n",
+skip,omnimath-170,1,,5,f(2007) - (-\log 2006 - f(2005)) = \log \frac{2007^2}{2006},skip,could not parse,"From equation (3), we can express f(\frac{1}{2006}) as: f(\frac{1}{2006}) = -\log 2006 - f(2005). Substituting this into equation (4), we get: f(2007) - (-\log 2006 - f(2005)) = \log \frac{2007^2}{2006}. Simplifying, we have: f(2007) + \log 2006 + f(2005) = \log \frac{2007^2}{2006}.",
+skip,omnimath-600,4,,5,X ( k = \frac{n-m}{2}),skip,unbalanced brackets,"Thus, by defining X as a set containing one odd and one even integer, we have shown that such a subset X does indeed exist, satisfying the given condition. Specifically, choosing X = \{m, n\} where m is an odd integer and n is an even integer, ensures that for any integer n, there is exactly one solution (a, b) = (m, k) in X (where k = \frac{n-m}{2}), if n-m is even. If n-m is odd, then no solution exists, which aligns with the requirement that exactly one solution is sought for each n.",
+skip,omnimath-747,-1,,0,\frac{3}{4}C - \frac{1}{8}C = 30,skip,has variables (may be a condition to solve),"To solve this problem, let's break it down step by step. First, we need to determine the total capacity of the tank. We know that adding 30 liters of gas increases the fuel level from \frac{1}{8} full to \frac{3}{4} full. This means that the 30 liters represent the difference between these two fractions of the tank's capacity. Let C be the total capacity of the tank in liters. The difference between \frac{3}{4} of the tank and \frac{1}{8} of the tank is equal to the 30 liters added:
+ \frac{3}{4}C - \frac{1}{8}C = 30 liters",
+skip,omnimath-545,-1,,7,2}^{\infty} n \cdot \frac{\frac{1}{n} \cdot 2^{-n}}{\ln 2 - \frac{1}{2}} = \frac{1}{\ln 2 - \frac{1}{2}} \sum_{n = 2}^{\infty} 2^{-n},skip,unbalanced brackets,"The expected value of N given that Annie draws the number 2 is:
+ E(N \mid Annie draws 2) = \sum_{n=2}^{\infty} n \cdot P(N = n \mid Annie draws 2) = \sum_{n=2}^{\infty} n \cdot \frac{\frac{1}{n} \cdot 2^{-n}}{\ln 2 - \frac{1}{2}} = \frac{1}{\ln 2 - \frac{1}{2}} \sum_{n=2}^{\infty} 2^{-n}.",
+skip,omnimath-361,2,,5,\sum_{k = 0}^{2018} \frac{\binom{2018}{k}}{\binom{2018}{k}} = \sum_{k = 0}^{2018} 1 = 2019,skip,unbalanced brackets,"Given this understanding, the sum simplifies to:
+ \sum_{k=0}^{2018} \frac{\binom{2018}{k}}{\binom{2018}{k}} = \sum_{k=0}^{2018} 1 = 2019",
+skip,omnimath-948,-1,,0,P(k) = \frac{k}{k+1},skip,not an equation,"To solve for P(n+1) where P(x) is a polynomial of degree n such that P(k) = \frac{k}{k+1} for k = 0, 1, 2, \ldots, n , we can proceed as follows: First, define a new polynomial: Let Q(x) = (x+1)P(x) - x . Notice that Q(x) is a polynomial of degree n+1 because (x+1)P(x) is a polynomial of degree n+1 and subtracting x does not change the degree.",
+skip,omnimath-831,-1,,4,z = x - 2 = \frac{11 + \sqrt{73}}{4} - 2 = \frac{11 + \sqrt{73} - 8}{4} = \frac{3 + \sqrt{73}}{4},skip,has variables (may be a condition to solve),"We need to find the corresponding values of y and z for each x. Let's consider x = \frac{11 + \sqrt{73}}{4}:
+y = 11 - 2(\frac{11 + \sqrt{73}}{4}) = 11 - \frac{22 + 2\sqrt{73}}{4} = \frac{44 - 22 - 2\sqrt{73}}{4} = \frac{22 - 2\sqrt{73}}{4} = \frac{11 - \sqrt{73}}{2},
+z = x - 2 = \frac{11 + \sqrt{73}}{4} - 2 = \frac{11 + \sqrt{73} - 8}{4} = \frac{3 + \sqrt{73}}{4}.",
+skip,omnimath-763,2,,7,i = n-1,skip,has variables (may be a condition to solve),"Substituting i = n-1 into the original equation, we get: a_{n+1} - a_{n-1}a_n = 1. But we know that a_{n+1} = a_1, so we have: a_1 - a_{n-1}a_n = 1. Rearranging terms, we get: a_{n-1}a_n = a_1 - 1. Since a_1 = 1, we have: a_{n-1}a_n = 0. This implies that either a_{n-1} = 0 or a_n = 0.",
+skip,omnimath-901,-1,,3,f(p-1) + 1 = p,skip,has variables (may be a condition to solve),"Then, for all prime p , we have f(p-1) + 1 = p , that is f(p-1) = p - 1 .",
+skip,omnimath-432,2,,7,0 = 2k - 1 + s,skip,has variables (may be a condition to solve),"If r is odd, say r = 2m + 1, then 2k + 1 + r = 2k + 1 + 2m + 1 = 2(k + m + 1) is even, and:
+ a_{2(k + m + 1)} = 0 
+ 0 = 2k - 1 + s 
+ s = 1 - 2k",
+skip,omnimath-114,8,,4,m + 2p = \frac{n}{2},skip,has variables (may be a condition to solve),"Verifying the Candidate Set: Let's check if this set X works:
+- For any integer n , we need to find a, b \in X such that a + 2b = n .
+- Since a and b are both even, let a = 2m and b = 2p for some integers m and p .
+- The equation becomes 2m + 2(2p) = n , which simplifies to 2(m + 2p) = n .
+- This implies m + 2p = \frac{n}{2} . For m + 2p = \frac{n}{2} to have a unique solution, \frac{n}{2} must be an integer. However, n can be any integer, and not all integers are even. Therefore, X = \{2k \mid k \in \mathbb{Z}\} does not work because it does not cover all integers n .",
+skip,omnimath-939,4,,4,x_1 = x_2 = \cdots = x_n = \frac{1}{n+1},skip,has variables (may be a condition to solve),"Since \frac{n}{n+1} is very close to 1 (but not exactly 1), the value \frac{1}{n+1} is a good candidate. We can verify that for x_1 = x_2 = \cdots = x_n = \frac{1}{n+1} , the expression k_1 x_1 + k_2 x_2 + \cdots + k_n x_n will be very close to 1 for most combinations, thus minimizing the sum of the absolute values.",
+skip,omnimath-29,2,,2,"a = (x+y)^2 = (2y+y)^2 = 9y^2, b = (x-y)^2 = (2y-y)^2 = y^2",skip,has variables (may be a condition to solve),"First, let's consider the case where d = \frac{x}{y} = 2. If d = 2, then x = 2y. Substituting x = 2y into the expressions for a and b: a = (x+y)^2 = (2y+y)^2 = 9y^2, b = (x-y)^2 = (2y-y)^2 = y^2. So, the set becomes \{9y^2, y^2, 2y^2, 2\}. This set must match \{4, 12.8, 28.8, N\}. By comparing, we see that y^2 = 4 or 9y^2 = 4, but 9y^2 = 4 does not work because it would make y^2 = \frac{4}{9}, which does not fit the other elements. So, y^2 = 4, giving y = 2 or y = -2.",
+skip,omnimath-161,2,5,3,1}^{n} \binom{n}{k} \cdot \log_2(k) \leq \sum_{k = 1}^{n} n \cdot \log_2(n),skip,unbalanced brackets,"Next, let's find the upper bound U for M . We can use the following inequality: \sum_{k=1}^{n} \binom{n}{k} \cdot \log_2(k) \leq \sum_{k=1}^{n} n \cdot \log_2(n) . This is because \binom{n}{k} \leq n for all k . Now, we can rewrite the right-hand side of the inequality as: \sum_{k=1}^{n} n \cdot \log_2(n) = n \cdot \sum_{k=1}^{n} \log_2(n) . Since the sum is a geometric series, we can evaluate it directly: \sum_{k=1}^{n} \log_2(n) = n \cdot \log_2(n) . So, the inequality becomes: \sum_{k=1}^{n} \binom{n}{k} \cdot \log_2(k) \leq n \cdot n \cdot \log_2(n) . Now, we can substitute this upper bound into the expression for M : M \leq \log_2(n \cdot n \cdot \log_2(n)) . Simplifying this expression gives us: U = \log_2(2012^2 \cdot \log_2(2012)) \approx 24.53 .",

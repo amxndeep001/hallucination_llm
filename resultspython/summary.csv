@@ -1,5 +1,0 @@
-split,problems,with_process_error_%,avg_steps,equations_per_step,first_wrong_step_has_equation_%
-gsm8k,400,51.8,5.21,0.68,76.8
-math,1000,59.4,6.5,1.01,61.3
-olympiadbench,1000,66.1,8.82,1.12,57.2
-omnimath,1000,75.9,8.29,0.94,51.5

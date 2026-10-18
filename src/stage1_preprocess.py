@@ -61,9 +61,30 @@ def _is_math_token(tok: str) -> bool:
     return bool(MATH_TOKEN.match(tok))
 
 
+def _balance_parens(s: str) -> str:
+    """Remove '(' / ')' characters that have no partner."""
+    stack, drop = [], set()
+    for i, ch in enumerate(s):
+        if ch == "(":
+            stack.append(i)
+        elif ch == ")":
+            if stack:
+                stack.pop()
+            else:
+                drop.add(i)
+    drop.update(stack)
+    return "".join(ch for i, ch in enumerate(s) if i not in drop)
+
+
+def _is_text_note(inner: str) -> bool:
+    """'(women)', '(Die 1)', '(units digit: 7)' are notes; '(a + b)', '(4 / 20)', '(\\mathbf{a} \\cdot b)' are math."""
+    has_word = re.search(r"(?<!\\)\b[A-Za-z]{3,}\b", inner)
+    return bool(has_word) and (not re.search(r"\d", inner) or not re.search(r"[+\-*/^=]", inner))
+
+
 def _clean_equation(eq: str) -> str:
     """Strip units and non-math words from an equation for SymPy."""
-    eq = re.sub(r"\([^)]*\)", "", eq)
+    eq = re.sub(r"\(([^()]*)\)", lambda m: "" if _is_text_note(m[1]) else m[0], eq)
     eq = eq.replace("$", "")                                   # currency sign is not part of the math
     eq = re.sub(r"(?<=\d),(?=\d{3}\b)", "", eq)              # 14,000 -> 14000
     words = eq.split()
@@ -71,27 +92,82 @@ def _clean_equation(eq: str) -> str:
     for w in words:
         w_clean = w.strip(",;:.)(")
         low = w_clean.lower()
-        if low in UNIT_WORDS:
-            continue
-        if re.match(r"^[a-z]+/[a-z]+$", low):
-            continue
-        if re.fullmatch(r"[A-Za-z]{2,}", w_clean):      # drop words, KEEP variables like x, y
+        if ((low in UNIT_WORDS and len(low) > 1)                   # 'g', 'l', 'm' stay: they are variables
+                or re.match(r"^[a-z]+/[a-z]+$", low)
+                or re.fullmatch(r"[A-Za-z]{2,}", w_clean)):   # drop words, KEEP variables like x, y
+            parens = "".join(ch for ch in w if ch in "()")    # but keep their brackets
+            if parens:
+                cleaned.append(parens)
             continue
         cleaned.append(w)
-    return " ".join(cleaned).strip(" ,;:.)(")
+    return _balance_parens(" ".join(cleaned).strip(" ,;:.")).strip()
+
+
+BINARY_START = re.compile(r"^\s*(?:[+*/^]|-\s|\\times|\\div|\\cdot)")
+BINARY_END = re.compile(r"(?:[+\-*/^]|\\times|\\div|\\cdot)\s*$")
+
+def _trim_sides(eq: str):
+    """Drop incomplete sides at either end of a chain ('- 4 = 10 - 4 = 6' -> '10 - 4 = 6').
+    Such fragments appear when a word operand was stripped out. Returns None if < 2 sides remain."""
+    sides = eq.split("=")
+    while sides and (not sides[0].strip() or BINARY_START.match(sides[0]) or BINARY_END.search(sides[0])):
+        sides.pop(0)
+    while sides and (not sides[-1].strip() or BINARY_START.match(sides[-1]) or BINARY_END.search(sides[-1])):
+        sides.pop()
+    if len(sides) < 2 or any(not s.strip() for s in sides):
+        return None
+    return " = ".join(s.strip() for s in sides)
+
+
+def _split_juxtaposed(eq: str):
+    """'71 + 72 = 143 143 + 73 = 216' is two equations written back to back:
+    split wherever two numbers stand next to each other with no operator."""
+    toks, pieces, cur = eq.split(), [], []
+    for i, t in enumerate(toks):
+        if t in ("\\quad", "\\qquad"):                       # explicit separator between equations
+            pieces.append(" ".join(cur)); cur = []
+            continue
+        cur.append(t)
+        if i + 1 < len(toks) and re.search(r"\d$", t) and (
+                re.match(r"\d", toks[i + 1])                                        # '143 143'
+                or (re.fullmatch(r"[A-Za-z]", toks[i + 1]) and toks[i + 2:i + 3] == ["="])):  # 'n-1 n = 14'
+            pieces.append(" ".join(cur)); cur = []
+    pieces.append(" ".join(cur))
+    return pieces
 
 
 def extract_equations(step: str):
     OPERATORS = {"+", "-", "*", "/", "^", "\\times", "\\div", "\\cdot"}
+    step = re.sub(r"\s-\s+(?=[A-Z][a-z])", "\n", step)          # inline bullets: '... 240 minutes - Time spent ...'
+    step = re.sub(r"\n\s*(?==)", " ", step)                      # a line starting with '=' continues the chain
+    lines = step.split("\n")
+    if len(lines) > 1:                      # an equation never spans lines: '- 3^1 = 3\n- 3^2 = 9' is two
+        return list(dict.fromkeys(e for line in lines for e in extract_equations(line)))
+    step = re.sub(r"^\s*[-*•]\s+", "", step)                     # list bullet, not a minus sign
+    step = re.sub(r"(\d(?:\.\d+)?\s*\\?%)\s+of\s+", r"\1 * ", step)   # '25% of 1.60' -> '25% * 1.60'
     toks = step.replace("=", " = ").split()
     eqs = []
     eq_positions = [i for i, t in enumerate(toks) if t == "="]
-    
+
+    def with_lhs(l, r, eq_idx):
+        """Span from l; a left side that is only a quantity's count ('One-third of 27 =',
+        '4 hours =', 'Multiples of 3 or 5 =') is a description, not math: drop it."""
+        eq = _clean_equation(" ".join(toks[l:r + 1]).strip(" ,;:."))
+        first, _, rest = eq.partition("=")
+        prev = toks[l - 1] if l > 0 else ""                       # 'of 27 =' yes; 'Notice that: 27 =' no
+        described = (re.search(r"[A-Za-z]{2,}", " ".join(toks[l:eq_idx]))
+                     or re.fullmatch(r"\(?[A-Za-z]{2,}", prev))
+        if re.fullmatch(r"\s*-?\d+(?:\.\d+)?\s*", first) and described and rest.strip():
+            return rest.strip()
+        return eq
+
     for eq_idx in eq_positions:
         # RIGHT: a unit is accepted only directly after a number (e.g. "= 6 pounds")
         r = eq_idx
         has_operator = False
         while r + 1 < len(toks):
+            if r > eq_idx and toks[r].endswith((".", ":", ";")):   # sentence ended
+                break
             nxt = toks[r + 1]
             ok = _is_math_token(nxt) or (_is_unit(nxt) and _is_number(toks[r]))
             if not ok:
@@ -105,7 +181,9 @@ def extract_equations(step: str):
         left_has_operator = False
         while l - 1 >= 0:
             prv = toks[l - 1]
-            ok = _is_math_token(prv) or (_is_unit(prv) and (toks[l] in OPERATORS or toks[l] == "="))
+            if prv.endswith((".", ":", ";")):                      # previous sentence / label 'n:'
+                break
+            ok =_is_math_token(prv) or (_is_unit(prv) and (toks[l] in OPERATORS or toks[l] == "="))
             if not ok:
                 break
             l -= 1
@@ -113,19 +191,21 @@ def extract_equations(step: str):
                 left_has_operator = True
         
         if left_has_operator and l < eq_idx and r > eq_idx:
-            span = " ".join(toks[l:r + 1]).strip(" ,;:.")
-            eqs.append(_clean_equation(span))
+            eqs.append(with_lhs(l, r, eq_idx))
+        elif (has_operator and r > eq_idx and l < eq_idx              # '12 = 2^2 \cdot 3': keep a numeric left side
+              and re.fullmatch(r"[\d\s.,\-]+", with_lhs(l, r, eq_idx).split("=")[0])):
+            eqs.append(with_lhs(l, r, eq_idx))
         elif has_operator and r > eq_idx:
             span = " ".join(toks[eq_idx + 1:r + 1]).strip(" ,;:.")
             eqs.append(_clean_equation(span))
         elif l < eq_idx and r > eq_idx:
-            span = " ".join(toks[l:r + 1]).strip(" ,;:.")
-            eqs.append(_clean_equation(span))
+            eqs.append(with_lhs(l, r, eq_idx))
     
     seen = set()
     unique_eqs = []
-    for eq in eqs:
-        if eq.startswith("=") or eq.startswith("= "):
+    for piece in (p for eq in eqs for p in _split_juxtaposed(eq)):
+        eq = _trim_sides(piece)
+        if eq is None:
             continue
         if re.search(r"[\+\-\*/\^]|\\times|\\div|\\cdot", eq) and eq not in seen:
             seen.add(eq)
@@ -178,7 +258,7 @@ def preprocess_record(rec: dict) -> dict:
 if __name__ == "__main__":
     src, dst = sys.argv[1], sys.argv[2]
     n = 0
-    with open(src) as f, open(dst, "w") as out:
+    with open(src, encoding="utf-8") as f, open(dst, "w", encoding="utf-8") as out:
         for line in f:
             out.write(json.dumps(preprocess_record(json.loads(line))) + "\n"); n += 1
     print(f"processed {n} records -> {dst}")
