@@ -17,6 +17,13 @@ git clone https://github.com/DIYANAPV/SelfCheckAgent data/external/SelfCheckAgen
 git clone https://github.com/openai/prm800k data/external/prm800k
 ```
 
+On Colab (Stage 2), do not install `requirements.txt`: it pins torch 2.8.0, which breaks Colab's
+preinstalled CUDA libraries and torchvision. Stage 2 needs only torch (Colab's own), transformers and tqdm:
+
+```bash
+pip install -q transformers==4.57.6 tqdm
+```
+
 ## Pipeline
 
 | Stage | Script | Output | Status |
@@ -44,7 +51,8 @@ python src/stage1_preprocess.py data/raw/processbench_<split>.jsonl data/process
 python src/stage2_generate.py --input data/processed/pb_gsm8k.jsonl \
     --output data/processed/samples_gsm8k.jsonl \
     --model Qwen/Qwen2.5-Math-1.5B-Instruct --n 5 --batch-size 2
-#   MATH / OlympiadBench / Omni-MATH: run colab/run_stage2.ipynb, which does for each split
+#   MATH / OlympiadBench / Omni-MATH: run colab/run_stage2.ipynb (installs only transformers + tqdm,
+#   keeps Colab's torch; see Setup), which does for each split
 #   (raw input = the original problem text with its $...$; pb_* strips it. Same ids and order.)
 python src/stage2_generate.py --input data/raw/processbench_<split>.jsonl \
     --output data/processed/samples_<split>.jsonl --model Qwen/Qwen2.5-Math-1.5B-Instruct \
