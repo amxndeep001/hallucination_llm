@@ -2,7 +2,7 @@
 import math, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 from stage2_generate import normalize_answer
-from stage7_consistency import cluster, equivalent, semantic_entropy
+from stage7_consistency import agrees, cluster, equivalent, semantic_entropy
 
 
 def sizes(answers):
@@ -44,6 +44,17 @@ def test_text_answers_match_by_string_only():
                           normalize_answer("4 \\text{ blue, } 6 \\text{ red}"))
     assert equivalent(normalize_answer("\\frac{5}{8}A + 45"), normalize_answer("\\frac{5A + 360}{8}"))
     assert equivalent(normalize_answer("2\\sqrt{2}"), normalize_answer("\\sqrt{8}"))
+
+
+def test_percent_matches_in_agreement_only():
+    n = normalize_answer
+    assert agrees(n("20%"), n("20")) and agrees(n("20"), n("20%"))           # X% matches X
+    assert agrees(n("20\\%"), n("0.2")) and agrees(n("0.2"), n("20%"))       # X% matches X/100
+    assert agrees(n("66.67%"), n("66.67"))
+    assert not agrees(n("20%"), n("2")) and not agrees(n("70\\%"), n("10"))
+    assert not agrees(n("20%"), "")
+    assert not equivalent(n("10\\%"), n("10"))                               # clustering unchanged
+    assert sizes(["10\\%", "10", "10"]) == [2, 1]
 
 
 def test_empty_answers_are_not_clustered():
