@@ -88,35 +88,102 @@ def _decimals(side: str) -> int:
     return len(m.group(1)) if m else 0
 
 
+SYMPY_ERRORS = (TypeError, ValueError, AttributeError, NotImplementedError,
+                ZeroDivisionError, OverflowError, RecursionError)
+
+
+def _kind(e):
+    """Why a parsed side cannot be compared as a number, or None if it can."""
+    if not isinstance(e, sp.Expr):                                         # Symbol is also a Boolean, so test Expr first
+        if isinstance(e, (sp.logic.boolalg.Boolean, sp.core.relational.Relational)):
+            return "contains an inequality"
+        return f"unsupported value ({type(e).__name__})"
+    if e.has(sp.zoo, sp.nan, sp.oo, -sp.oo):
+        return "undefined value (division by zero or infinity)"
+    return None
+
+
+def _compare(a, b, left, right):
+    """Compare two scalar SymPy expressions."""
+    for e in (a, b):
+        why = _kind(e)
+        if why:
+            return "skip", why
+    diff = a - b
+    if not a.free_symbols and not b.free_symbols:
+        if sp.simplify(diff) == 0:
+            return "pass", "equal"
+        d = _decimals(right)
+        err = float(abs(sp.N(diff)))                                       # abs() also handles complex values
+        if d > 0 and err <= 10 ** (-d):                                    # rounded / truncated to stated decimals
+            return "pass", f"equal up to {d} decimals"
+        if "%" in left + right:                                            # '0.2 * 100 = 20%' (percent notation)
+            a2, b2 = to_sympy(left.replace("\\%", "").replace("%", "")), to_sympy(right.replace("\\%", "").replace("%", ""))
+            if (a2 is not None and b2 is not None and not _kind(a2) and not _kind(b2)
+                    and not (a2 - b2).free_symbols and sp.simplify(a2 - b2) == 0):
+                return "pass", "equal in percent notation"
+        return "fail", f"{sp.N(a, 8)} != {sp.N(b, 8)}"
+    if sp.expand(diff) == 0:
+        return "pass", "identity"
+    return "skip", "has variables (may be a condition to solve)"
+
+
 def check_pair(left: str, right: str):
     a, b = to_sympy(left), to_sympy(right)
     if a is None or b is None:
         return "skip", "could not parse"
     try:
-        diff = a - b
-        if not a.free_symbols and not b.free_symbols:
-            if sp.simplify(diff) == 0:
-                return "pass", "equal"
-            d = _decimals(right)
-            err = abs(float(diff))
-            if d > 0 and err <= 10 ** (-d):                                # rounded / truncated to stated decimals
-                return "pass", f"equal up to {d} decimals"
-            if "%" in left + right:                                        # '0.2 * 100 = 20%' (percent notation)
-                a2, b2 = to_sympy(left.replace("\\%", "").replace("%", "")), to_sympy(right.replace("\\%", "").replace("%", ""))
-                if a2 is not None and b2 is not None and not (a2 - b2).free_symbols and sp.simplify(a2 - b2) == 0:
-                    return "pass", "equal in percent notation"
-            return "fail", f"{sp.N(a, 8)} != {sp.N(b, 8)}"
-        if sp.expand(diff) == 0:
-            return "pass", "identity"
-        return "skip", "has variables (may be a condition to solve)"
-    except Exception as e:
-        return "skip", f"error: {type(e).__name__}"
+        seq_a, seq_b = isinstance(a, (tuple, list)), isinstance(b, (tuple, list))
+        if seq_a and seq_b:                                                # points / tuples: compare element-wise
+            if len(a) != len(b):
+                return "skip", "tuples of different length"
+            res = [_compare(x, y, "", "") for x, y in zip(a, b)]
+            if any(st == "fail" for st, _ in res):
+                return "fail", f"tuple element {next(why for st, why in res if st == 'fail')}"
+            if all(st == "pass" for st, _ in res):
+                return "pass", "equal tuples"
+            return "skip", next(why for st, why in res if st == "skip")
+        if seq_a or seq_b:
+            return "skip", "tuple compared with a single value"
+        return _compare(a, b, left, right)
+    except SYMPY_ERRORS as e:
+        return "skip", f"error: {type(e).__name__}: {str(e)[:80]}"
+
+
+def _split_top_commas(eq: str):
+    """'a = 1, b = 2' -> ['a = 1', 'b = 2']: split at commas outside any brackets."""
+    parts, depth, cur = [], 0, ""
+    for ch in eq:
+        depth += (ch in "({[") - (ch in ")}]")
+        if ch == "," and depth == 0 and not cur.endswith("\\"):           # '\,' is a LaTeX space, not a comma
+            parts.append(cur); cur = ""
+        else:
+            cur += ch
+    parts.append(cur)
+    return [p for p in (p.strip().rstrip("\\").strip() for p in parts) if p]   # drop trailing '\\' line breaks only
 
 
 def check_equation(eq: str):
+    parts = _split_top_commas(eq)
+    if len(parts) > 1:                                                     # a list of equations
+        res = [check_single(p) for p in parts if "=" in p]
+        if not res:
+            return "skip", "not an equation"
+        for st, why in res:
+            if st == "fail":
+                return "fail", why
+        if all(st == "pass" for st, _ in res):
+            return "pass", res[0][1]
+        return "skip", next(why for st, why in res if st == "skip")
+    return check_single(eq)
+
+
+def check_single(eq: str):
     sides = [s for s in eq.split("=")]
     if len(sides) < 2 or any(not s.strip() for s in sides):
         return "skip", "not an equation"
+    if any(s.count("(") != s.count(")") or s.count("{") != s.count("}") for s in sides):
+        return "skip", "unbalanced brackets"
     if re.fullmatch(r"\s*[A-Za-z]\s*\([^()]*\)\s*", sides[0]):               # 'f(0) = ...' is a function value
         sides.pop(0)
     while len(sides) > 2 and re.fullmatch(r"\s*[A-Za-z]\s*", sides[0]):     # 'S = 4(3) - 5 = 7': S is a name
