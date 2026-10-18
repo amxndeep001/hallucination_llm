@@ -1,0 +1,8 @@
+split,method,threshold,n_erroneous,n_correct,flagged_pct,exact_match_pct,earlier,later,false_alarm_pct,precision_pct,ceiling_pct,exact_step0_pct,n_step0,exact_step1_pct,n_step1,exact_step2_pct,n_step2,exact_step3+_pct,n_step3+,chance_exact_pct
+gsm8k,Stage 3 (support_min <= 0.0),0.0,207,193,77.8,44.0,21,49,10.4,89.0,87.9,40.5,37,44.3,61,52.0,50,39.0,59,20.8
+gsm8k,Stage 3 (support_min <= 0.2),0.2,207,193,84.1,44.4,32,50,18.7,82.9,87.9,43.2,37,49.2,61,46.0,50,39.0,59,20.8
+gsm8k,Stage 3 (support_min <= 0.4),0.4,207,193,89.4,47.3,37,50,23.8,80.1,87.9,43.2,37,52.5,61,48.0,50,44.1,59,20.8
+gsm8k,Stage 4 (SymPy first fail),,207,193,8.2,7.2,0,2,0.0,100.0,61.8,5.4,37,6.6,61,0.0,50,15.3,59,20.8
+gsm8k,union Stage 3 (<= 0.0) + Stage 4,0.0,207,193,78.7,44.9,21,49,10.4,89.1,90.8,40.5,37,44.3,61,52.0,50,42.4,59,20.8
+gsm8k,union Stage 3 (<= 0.2) + Stage 4,0.2,207,193,84.5,44.9,32,50,18.7,82.9,90.8,43.2,37,49.2,61,46.0,50,40.7,59,20.8
+gsm8k,union Stage 3 (<= 0.4) + Stage 4,0.4,207,193,89.9,47.8,37,50,23.8,80.2,90.8,43.2,37,52.5,61,48.0,50,45.8,59,20.8
