@@ -208,19 +208,20 @@ def sample_sentences(split, ids):
 CONDITION = re.compile(r"\b(if|when|whenever|suppose|assume|assuming|such that|where|for (?:all|some|every|any|each)|"
                        r"solve|solving|solution|let|contradiction|impossible|cannot|no solution)\b|[<>≤≥≠]|"
                        r"\\(?:le|ge|leq|geq|neq|ne|lt|gt|approx|equiv|pmod|bmod|mod|in|pm|mp)(?![A-Za-z])", re.I)
-REWRITE = re.compile(r"\b(simplif\w*|expand\w*|factor\w*|rewrit\w*|identity|equivalent\w*|distribut\w*|"
-                     r"combin\w* like terms)\b", re.I)
 INTEGER_NAMES = set("nmkijNMK")
 ALLOWED_FUNCS = (sp.binomial, sp.factorial)
 N_POINTS, MAX_TRIES, MAX_EQ_CHARS = 5, 60, 160
 
 
 def _lone_name(side):
-    return bool(re.fullmatch(r"\s*[A-Za-z](?:_\{?\w+\}?)?\s*(?:\([^()]*\))?\s*", side))
+    """'x', 'f(4)', 'a_{n+1}', 'm_BC', 'OP_1', 'AB': a name, not an expression (v2: up to 3 letters)."""
+    return bool(re.fullmatch(r"\s*[A-Za-z]{1,3}(?:_\{?\w+\}?)?\s*(?:\([^()]*\))?\s*", side))
 
 
 def _juxtaposed(side):
     """'23b^3 b^3': two terms next to each other across a space, usually two expressions run together."""
+    if re.search(r"[\w)}]\s+-\S", side):                             # '0.3n -150.6': two equations glued (v2)
+        return True
     toks = side.split()
     return any(re.search(r"[\w)}]$", a) and re.match(r"[\w(\\]", b) and not re.match(r"\\(?:times|cdot|div)", b)
                and not re.search(r"\\(?:times|cdot|div|frac|sqrt|left|right)$", a) for a, b in zip(toks, toks[1:]))
@@ -273,7 +274,10 @@ def numeric_check_single(eq, context, rng):
     """A chain s0 = s1 = ... is checked link by link. A link that differs at all 5 points by the same constant is
     true for no values: fail. A link that differs by a varying amount may be the condition being solved
     ('5x + 9 = (x+3)^2 = x^2 + 6x + 9'); a chain holds at most one condition, so it fails when two or more links
-    differ, or one differs and the claim says it is a rewrite (simplify / expand / factor ...)."""
+    differ. A differing link with a constant side, a single-name side or glued terms is never a flag.
+    v2 (after inspecting results/rag_numeric_failures_v1.csv, before any TEST metric): constant / name / glued
+    checks now come before the constant-difference rule, names may have up to 3 letters, '0.3n -150.6' counts as
+    glued, and the 'claims to simplify / expand' cue that turned one differing link into a fail was removed."""
     sides = eq.split("=")
     if len(sides) < 2 or any(not s.strip() for s in sides):
         return "skip", "not an equation"
@@ -303,22 +307,21 @@ def numeric_check_single(eq, context, rng):
             links.append((i, r))
     if not links:
         return None
-    for i, r in links:
-        if isinstance(r, tuple) and r[0] == "const":
-            return "fail", f"sides differ by the constant {r[1]:.6g} at every point (true for no values)"
-    differ = [i for i, r in links if r == "differ"]
-    if differ and any(_juxtaposed(sides[k]) for i in differ for k in (i, i + 1)):
-        return "skip", "terms run together across a space (probably two expressions)"
-    if len(differ) >= 2:
-        return "fail", f"{len(differ)} links of the chain differ at all {N_POINTS} points (at most one can be a condition)"
-    if len(differ) == 1:
-        i = differ[0]
+    bad = [i for i, r in links if r == "differ" or (isinstance(r, tuple) and r[0] == "const")]
+    for i in bad:                                                      # v2: these are not identities to check
         if not exprs[i].free_symbols or not exprs[i + 1].free_symbols:
             return "skip", "condition: one side is a constant (an equation to solve)"
         if _lone_name(sides[i]) or _lone_name(sides[i + 1]):
             return "skip", "definition / assignment (one side is a single name)"
-        if REWRITE.search(context):
-            return "fail", f"claimed rewrite differs at all {N_POINTS} points"
+        if _juxtaposed(sides[i]) or _juxtaposed(sides[i + 1]):
+            return "skip", "terms run together across a space (probably two expressions)"
+    for i, r in links:
+        if isinstance(r, tuple) and r[0] == "const":
+            return "fail", f"sides differ by the constant {r[1]:.6g} at every point (true for no values)"
+    differ = [i for i, r in links if r == "differ"]
+    if len(differ) >= 2:
+        return "fail", f"{len(differ)} links of the chain differ at all {N_POINTS} points (at most one can be a condition)"
+    if differ:
         return "skip", "equation in the unknowns (may be a condition to solve)"
     skips = [r for _, r in links if r != "pass"]
     return ("pass", f"equal at {N_POINTS} points") if not skips else skips[0]
@@ -353,9 +356,8 @@ def numeric_check(claim_latex):
     p/q with p in 1..40, q in 1..9, so positive and away from 0; points giving a pole, an undefined or complex
     value are redrawn, at most 60 tries).
       pass  every link of the equation is equal at all 5 points
-      fail  a link differs at all 5 points by the same constant (true for no values of the unknowns), or the chain
-            has 2+ links that differ at all 5 points, or 1 such link in a claim that calls it a rewrite
-            (simplify / expand / factor / rewrite / identity / equivalent / distribute / combine like terms)
+      fail  a link (both sides with variables, neither a single name) differs at all 5 points by the same constant
+            (true for no values of the unknowns), or the chain has 2+ links that differ at all 5 points
       skip  with a reason: condition words or relations in the claim (if, when, suppose, let, solve, where, <, >,
             \\neq, \\equiv, mod, contradiction ...), inequality, parse failure, unsupported function (anything but
             binomial / factorial), domain issue (fewer than 5 valid points, or only some points differ: sporadic,
@@ -379,6 +381,43 @@ def numeric_check(claim_latex):
             if r is not None:
                 out.append((part, *r))
     return out
+
+
+def _check_worker(inq, outq):
+    while True:
+        outq.put(numeric_check(inq.get()))
+
+
+class TimedChecker:
+    """numeric_check in a worker process with a hard time limit per claim (SymPy can stall on rare inputs and a thread
+    cannot be stopped). A claim over the limit is skipped with a guard reason and the worker is restarted."""
+
+    def __init__(self, timeout=10):
+        self.timeout = timeout
+        self._start()
+
+    def _start(self):
+        import multiprocessing as mp
+        ctx = mp.get_context("spawn")
+        self.inq, self.outq = ctx.Queue(), ctx.Queue()
+        self.proc = ctx.Process(target=_check_worker, args=(self.inq, self.outq), daemon=True)
+        self.proc.start()
+        self.inq.put("x = 1")                                          # warm-up: imports are not timed
+        self.outq.get()
+
+    def check(self, latex):
+        import queue
+        self.inq.put(latex)
+        try:
+            return self.outq.get(timeout=self.timeout)
+        except queue.Empty:
+            self.proc.terminate()
+            self.proc.join()
+            self._start()
+            return [("(whole claim)", "skip", f"guard: timed out after {self.timeout} s")]
+
+    def close(self):
+        self.proc.terminate()
 
 
 def claim_status(results):
@@ -546,12 +585,13 @@ def run_nli(a):
 
 def run_numeric(a):
     claims = load_claims(a.claims)
+    checker = TimedChecker(a.claim_timeout)
     t0 = time.time()
     n = 0
     with open(f"{P}/rag_pilot_numeric.jsonl", "w", encoding="utf-8") as f:
         for i, cl in claims.items():
             for c in cl:
-                res = numeric_check(c["latex"])
+                res = checker.check(c["latex"])
                 n += 1
                 f.write(json.dumps({"key": f"{i}|{c['step']}.{c['claim_idx']}", "id": i, "step": c["step"],
                                     "claim_idx": c["claim_idx"], "status": claim_status(res),
@@ -574,7 +614,7 @@ def run_numeric(a):
             for c in extract_claims(r["problem"], r["steps"]):
                 n_cl += 1
                 t = time.time()
-                res = numeric_check(c["latex"])
+                res = checker.check(c["latex"])
                 if time.time() - t > 2:
                     slow.append((round(time.time() - t, 1), r["id"], c["step"], c["latex"][:120]))
                 for reason in {w for _, s, w in res if w.startswith("guard:")}:
@@ -596,6 +636,7 @@ def run_numeric(a):
             log(f"  slow claim ({t_} s): {i_} step {st_}: {lx}")
         rng = random.Random(SEED)
         fails += rng.sample(sf, min(15, len(sf)))
+    checker.close()
     with open("results/rag_numeric_failures.csv", "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["split", "id", "step", "claim", "equation", "reason", "pilot_half", "my_verdict"])
         w.writeheader()
@@ -737,6 +778,7 @@ if __name__ == "__main__":
     ap.add_argument("--threads", type=int, default=None)
     ap.add_argument("--max-passages", type=int, default=5000)
     ap.add_argument("--audit-steps", type=int, default=25)
+    ap.add_argument("--claim-timeout", type=int, default=10, help="numeric: seconds per claim before it is skipped")
     a = ap.parse_args()
     if a.command == "nli":
         if not a.source:

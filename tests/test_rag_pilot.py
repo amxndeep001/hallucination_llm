@@ -79,7 +79,11 @@ def test_false_identity_fails():
 
 def test_conditions_are_skipped_not_flagged():
     for claim in [r"If x + 1 = 3 then x = 2", r"x^2 - 5x + 6 = 0", r"2x + 3 = x + 7", r"y = 3x + 2",
-                  r"5x + 9 = (x+3)^2 = x^2 + 6x + 9", r"Suppose a + b = 2ab"]:
+                  r"5x + 9 = (x+3)^2 = x^2 + 6x + 9", r"Suppose a + b = 2ab",
+                  # false flags in the first version (results/rag_numeric_failures_v1.csv):
+                  r"2^{3+x} = 2^{61}", r"f(f(2)) = f(4) = 2", r"OP_1 = OP_2 = 1",
+                  r"we subtract 156.6 from both sides: 6 - 156.6 = 0.3n -150.6 = 0.3n",
+                  r"Simplifying, we get x_1^2 + x_2^2 + bx_1 + bx_2 = x_3^2 + bx_3."]:
         res = numeric_check(claim)
         assert claim_status(res) == "skip", (claim, res)
 
