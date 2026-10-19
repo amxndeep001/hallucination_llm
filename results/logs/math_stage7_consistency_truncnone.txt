@@ -1,0 +1,5 @@
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens); truncated without a boxed answer = no answer
+-> data/processed/s7_math_truncnone.jsonl
+  mean majority_share 0.840 | mean agree_with_original 0.467 | mean semantic_entropy 0.283
+  n_clusters distribution: {0: 6, 1: 195, 2: 50, 3: 32, 4: 15, 5: 2}
+  samples truncated: 8.067% | no answer: 8.000% | answers matched by string only (unparsable or text): 33 of 323 distinct

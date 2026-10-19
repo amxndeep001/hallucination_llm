@@ -1,0 +1,60 @@
+===== Stage 3 step-level evaluation: math, 300 problems, 167 with a process error, 133 correct
+chance exact match (uniformly random step of each erroneous solution): 18.1%
+chance precision of a flag (= share of erroneous solutions): 55.7%
+
+| method | flagged % | exact match % | earlier | later | false alarm % | precision % | ceiling % |
+|---|---|---|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 62.9 | 21.0 | 22 | 48 | 23.3 | 77.2 | 70.7 |
+| Stage 3 (support_min <= 0.2) | 68.3 | 21.0 | 29 | 50 | 26.3 | 76.5 | 70.7 |
+| Stage 3 (support_min <= 0.4) | 71.9 | 22.2 | 34 | 49 | 30.8 | 74.5 | 70.7 |
+| Stage 4 (SymPy first fail) | 12.6 | 7.2 | 0 | 9 | 0.8 | 95.5 | 48.5 |
+| union Stage 3 (<= 0.0) + Stage 4 | 65.9 | 23.4 | 22 | 49 | 24.1 | 77.5 | 77.8 |
+| union Stage 3 (<= 0.2) + Stage 4 | 71.3 | 23.4 | 29 | 51 | 27.1 | 76.8 | 77.8 |
+| union Stage 3 (<= 0.4) + Stage 4 | 74.9 | 24.6 | 34 | 50 | 31.6 | 74.9 | 77.8 |
+(ceiling: erroneous solutions whose human first wrong step has a key number (Stage 3) / an equation (Stage 4))
+
+## Exact match % by position of the human first wrong step (n per bucket)
+
+| method | step 0 (n=27) | step 1 (n=53) | step 2 (n=31) | step 3+ (n=56) |
+|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 22.2 | 22.6 | 29.0 | 14.3 |
+| Stage 3 (support_min <= 0.2) | 22.2 | 22.6 | 32.3 | 12.5 |
+| Stage 3 (support_min <= 0.4) | 29.6 | 22.6 | 29.0 | 14.3 |
+| Stage 4 (SymPy first fail) | 3.7 | 9.4 | 3.2 | 8.9 |
+| union Stage 3 (<= 0.0) + Stage 4 | 25.9 | 28.3 | 29.0 | 14.3 |
+| union Stage 3 (<= 0.2) + Stage 4 | 25.9 | 28.3 | 32.3 | 12.5 |
+| union Stage 3 (<= 0.4) + Stage 4 | 33.3 | 28.3 | 29.0 | 14.3 |
+| chance (random step) | 23.7 | 19.6 | 19.3 | 13.4 |
+
+## HARD: final answer correct but a wrong step: n = 30
+  Stage 3 (<= 0.0): flagged 18 of 30, exact first wrong step 9
+  Stage 3 (<= 0.2): flagged 20 of 30, exact first wrong step 10
+  Stage 3 (<= 0.4): flagged 22 of 30, exact first wrong step 13
+  Stage 4: flagged 2 of 30, exact 0
+
+-> results\stage3_summary_math.csv
+
+## 10 most confident Stage 3 flags (support_min <= 0.2) that are NOT the human first wrong step
+(confidence: lower support_min, then lower support_mean, then more key numbers)
+
+- math-723 | label -1 | flagged step 1 | key numbers ['11', '20', '991'] | support_min 0.0 mean 0.00
+    First, consider the units place. In every ten consecutive numbers (1-10, 11-20, ..., 991-1000), the digit 8 appears once in the units place. Since there are 100 sets of ten in 1000 numbers, the digit 8 appears in the units place 100 times.
+- math-1 | label 9 | flagged step 2 | key numbers ['15', '24'] | support_min 0.0 mean 0.00
+    Second, the second term is:  \frac{(x+3)(x-5)}{9(x+4)(x-6)} = \frac{x^2 - 2x - 15}{9(x^2 - 2x - 24)}.
+- math-189 | label 8 | flagged step 7 | key numbers ['7', '12'] | support_min 0.0 mean 0.00
+    Example Calculation: Let's assume m = 7 (a common prime number) and try to find suitable k and t. Given m = 7, we have: - k + t = 7 - Let's try k = 4 and t = 3 as a simple case where k and t are positive integers that sum up to 7. Thus, n = k \cdot t = 4 \cdot 3 = 12, which is not prime. So, we must adjust our approach.
+- math-324 | label 2 | flagged step 3 | key numbers ['3', '5'] | support_min 0.0 mean 0.00
+    Now, let's multiply through by (x^2 + y^2) to clear the fraction: 2x^2 - (x^2 + y^2) = 4(x^2 + y^2) \Rightarrow 2x^2 - x^2 - y^2 = 4x^2 + 4y^2 \Rightarrow x^2 - 4x^2 - y^2 = 4y^2 \Rightarrow -3x^2 - y^2 = 4y^2 \Rightarrow -3x^2 = 5y^2.
+- math-46 | label 3 | flagged step 1 | key numbers ['20/7', '6/7'] | support_min 0.0 mean 0.00
+    Now, let's try to find the values of k that satisfy these conditions. Since C is a multiple of 7, we can write C = 7k , where k is an integer. We know that C is greater than 20, so we can write:  7k > 20  Dividing both sides by 7, we get:  k > \frac{20}{7} = 2\frac{6}{7}  Since k is an integer, this means that k must be at least 3.
+- math-488 | label 1 | flagged step 3 | key numbers ['4/3', '0.5'] | support_min 0.0 mean 0.00
+    Equality occurs when a=2b=3c=4d. Solving these equations, we find that a=4, b=2, c=\frac{4}{3}, and d=\frac{1}{2}. Therefore, the maximum value of ab^2c^3d^4 is 1. Final Answer: The final answer is 1. I hope it is correct.
+- math-831 | label -1 | flagged step 0 | key numbers ['4', '9'] | support_min 0.0 mean 0.00
+    To find the simplest radical form of \sqrt{53}, we need to look for perfect square factors of 53. First, we can start by checking if 53 is a perfect square itself. However, it is not because it does not end with a perfect square number like 0, 1, 4, 9, etc.
+- math-971 | label -1 | flagged step 8 | key numbers ['0.25', '3.25'] | support_min 0.0 mean 0.00
+    **Case 2: 4x^2 < 3 **  0 \leq x < \frac{\sqrt{3}}{2}  The expression is:  2x + (3 - 4x^2) = -4x^2 + 2x + 3  This is a quadratic function in x that opens downwards. The maximum value occurs at the vertex x = -\frac{b}{2a} = \frac{2}{8} = \frac{1}{4} :  -4(\frac{1}{4})^2 + 2(\frac{1}{4}) + 3 = -4(\frac{1}{16}) + \frac{2}{4} + 3 = -\frac{1}{4} + \frac{1}{2} + 3 = \frac{1}{4} + 3 = \frac{13}{4}
+- math-980 | label -1 | flagged step 5 | key numbers ['72', '425'] | support_min 0.0 mean 0.00
+    Thus, the probability that 3 cards chosen at random from a standard 52-card deck form a pair is \frac{72{425}}.
+- math-101 | label 3 | flagged step 4 | key numbers ['0.25'] | support_min 0.0 mean 0.00
+    Final Answer: The final answer is \frac{1}{4}. I hope it is correct.
+(114 such flags in total; 85 with support_min 0, tied in support -> ordered by more key numbers, then id)

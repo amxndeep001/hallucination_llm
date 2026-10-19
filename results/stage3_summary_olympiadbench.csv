@@ -1,0 +1,8 @@
+split,method,threshold,n_erroneous,n_correct,flagged_pct,exact_match_pct,earlier,later,false_alarm_pct,precision_pct,ceiling_pct,exact_step0_pct,n_step0,exact_step1_pct,n_step1,exact_step2_pct,n_step2,exact_step3+_pct,n_step3+,chance_exact_pct
+olympiadbench,Stage 3 (support_min <= 0.0),0.0,189,111,54.0,14.8,28,46,34.2,72.9,65.1,7.7,13,8.8,34,23.3,43,14.1,99,13.1
+olympiadbench,Stage 3 (support_min <= 0.2),0.2,189,111,66.1,17.5,42,50,45.0,71.4,65.1,23.1,13,11.8,34,23.3,43,16.2,99,13.1
+olympiadbench,Stage 3 (support_min <= 0.4),0.4,189,111,69.8,16.9,48,52,52.3,69.5,65.1,30.8,13,8.8,34,23.3,43,15.2,99,13.1
+olympiadbench,Stage 4 (SymPy first fail),,189,111,9.0,2.6,2,10,1.8,89.5,54.5,7.7,13,0.0,34,4.7,43,2.0,99,13.1
+olympiadbench,union Stage 3 (<= 0.0) + Stage 4,0.0,189,111,56.1,15.9,28,48,34.2,73.6,78.3,15.4,13,8.8,34,23.3,43,15.2,99,13.1
+olympiadbench,union Stage 3 (<= 0.2) + Stage 4,0.2,189,111,67.7,18.5,42,51,45.0,71.9,78.3,30.8,13,11.8,34,23.3,43,17.2,99,13.1
+olympiadbench,union Stage 3 (<= 0.4) + Stage 4,0.4,189,111,71.4,18.0,48,53,52.3,69.9,78.3,38.5,13,8.8,34,23.3,43,16.2,99,13.1

@@ -1,0 +1,8 @@
+split,method,threshold,n_erroneous,n_correct,flagged_pct,exact_match_pct,earlier,later,false_alarm_pct,precision_pct,ceiling_pct,exact_step0_pct,n_step0,exact_step1_pct,n_step1,exact_step2_pct,n_step2,exact_step3+_pct,n_step3+,chance_exact_pct
+math,Stage 3 (support_min <= 0.0),0.0,167,133,62.9,21.0,22,48,23.3,77.2,70.7,22.2,27,22.6,53,29.0,31,14.3,56,18.1
+math,Stage 3 (support_min <= 0.2),0.2,167,133,68.3,21.0,29,50,26.3,76.5,70.7,22.2,27,22.6,53,32.3,31,12.5,56,18.1
+math,Stage 3 (support_min <= 0.4),0.4,167,133,71.9,22.2,34,49,30.8,74.5,70.7,29.6,27,22.6,53,29.0,31,14.3,56,18.1
+math,Stage 4 (SymPy first fail),,167,133,12.6,7.2,0,9,0.8,95.5,48.5,3.7,27,9.4,53,3.2,31,8.9,56,18.1
+math,union Stage 3 (<= 0.0) + Stage 4,0.0,167,133,65.9,23.4,22,49,24.1,77.5,77.8,25.9,27,28.3,53,29.0,31,14.3,56,18.1
+math,union Stage 3 (<= 0.2) + Stage 4,0.2,167,133,71.3,23.4,29,51,27.1,76.8,77.8,25.9,27,28.3,53,32.3,31,12.5,56,18.1
+math,union Stage 3 (<= 0.4) + Stage 4,0.4,167,133,74.9,24.6,34,50,31.6,74.9,77.8,33.3,27,28.3,53,29.0,31,14.3,56,18.1

@@ -1,0 +1,94 @@
+===== Stage 7 evaluation: gsm8k, 400 problems
+(a) process_error: 207 of 400  base rate 0.517
+(b) wrong_answer : 200 of 400  base rate 0.500
+HARD subset (final answer correct): 200 problems, 7 with a wrong step (base rate 0.035)
+  WARNING: only 7 correct-answer-wrong-step cases (< 30): HARD-subset numbers are NOT reliable.
+Chance level: AUROC 0.500 for every target; average precision (AP) = base rate.
+
+## Single-feature AUROC (sign-corrected: max(auc, 1-auc); chance 0.5)
+
+| feature | (a) process_error, base 0.517 | direction | (b) wrong_answer, base 0.500 | direction | HARD, base 0.035 (n_pos=7) | direction |
+|---|---|---|---|---|---|---|
+| majority_share | 0.636 | lower = error | 0.634 | lower = error | 0.597 | lower = error |
+| agree_with_original | 0.949 | lower = error | 0.957 | lower = error | 0.659 | lower = error |
+| n_clusters | 0.634 | higher = error | 0.633 | higher = error | 0.597 | higher = error |
+| semantic_entropy | 0.636 | higher = error | 0.634 | higher = error | 0.596 | higher = error |
+| no_answer_rate | 0.500 | lower = error | 0.500 | lower = error | 0.503 | lower = error |
+| mean_logprob_mean | 0.603 | lower = error | 0.596 | lower = error | 0.665 | lower = error |
+| mean_logprob_min | 0.605 | lower = error | 0.597 | lower = error | 0.674 | lower = error |
+| mean_entropy_mean | 0.591 | higher = error | 0.587 | higher = error | 0.600 | higher = error |
+| mean_entropy_max | 0.586 | higher = error | 0.579 | higher = error | 0.628 | higher = error |
+| n_tokens_mean | 0.595 | higher = error | 0.598 | higher = error | 0.501 | lower = error |
+| truncated_rate | 0.504 | higher = error | 0.505 | higher = error | 0.513 | lower = error |
+| n_fail | 0.541 | higher = error | 0.542 | higher = error | nan | constant |
+| n_checked | 0.507 | higher = error | 0.509 | higher = error | 0.531 | lower = error |
+| first_fail_step | 0.541 | higher = error | 0.542 | higher = error | nan | constant |
+| sympy_flag | 0.541 | higher = error | 0.542 | higher = error | nan | constant |
+| n_equations | 0.535 | higher = error | 0.539 | higher = error | 0.544 | lower = error |
+(the direction is chosen on the same data, so single-feature AUROCs are slightly optimistic)
+
+## Ablation, target (a) process_error: AUROC mean over 10x5-fold CV [bootstrap 95% CI]; chance 0.5, base rate 0.517
+
+| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 4 only | 5 | 0.552 [0.496, 0.606] | 0.622 | 0.535 [0.459, 0.575] | 0.596 | 0.517 |
+| Stage 2 agreement only | 1 | 0.940 [0.889, 0.955] | 0.921 | 0.938 [0.888, 0.955] | 0.919 | 0.517 |
+| Stage 7 only (all but Stage 4) | 11 | 0.937 [0.907, 0.963] | 0.907 | 0.943 [0.919, 0.970] | 0.919 | 0.517 |
+| Stage 4 + agreement | 6 | 0.947 [0.915, 0.967] | 0.941 | 0.942 [0.911, 0.965] | 0.928 | 0.517 |
+| ALL | 16 | 0.942 [0.912, 0.965] | 0.927 | 0.941 [0.918, 0.967] | 0.921 | 0.517 |
+| ALL minus semantic_entropy | 15 | 0.942 [0.912, 0.965] | 0.927 | 0.937 [0.910, 0.963] | 0.921 | 0.517 |
+| ALL minus Stage 4 | 11 | 0.937 [0.907, 0.963] | 0.907 | 0.943 [0.919, 0.970] | 0.919 | 0.517 |
+-> results\stage7_ablation_gsm8k.csv
+
+## Paired bootstrap: AUROC difference on the repeat-averaged out-of-fold predictions (target a, base rate 0.517)
+
+LR: ALL - (ALL minus semantic_entropy)            = -0.0002  [95% CI -0.0007, +0.0001]
+LR: (agreement + semantic_entropy) - agreement    = +0.0052  [95% CI -0.0003, +0.0125]   (agreement + SE: 0.938 [0.896, 0.958])
+LR: ALL - agreement only                          = +0.0174  [95% CI +0.0056, +0.0305]
+RF: ALL - (ALL minus semantic_entropy)            = +0.0070  [95% CI +0.0008, +0.0138]
+RF: (agreement + semantic_entropy) - agreement    = -0.0007  [95% CI -0.0034, +0.0014]   (agreement + SE: 0.933 [0.887, 0.955])
+RF: ALL - agreement only                          = +0.0220  [95% CI +0.0058, +0.0396]
+
+## Ablation with Stage 3 features (data/processed/s3_gsm8k.jsonl), target (a); same CV protocol
+
+| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 3 only | 6 | 0.894 [0.859, 0.925] | 0.891 | 0.887 [0.852, 0.921] | 0.866 | 0.517 |
+| Stage 4 + agreement + Stage 3 | 12 | 0.952 [0.929, 0.973] | 0.938 | 0.940 [0.913, 0.964] | 0.919 | 0.517 |
+| ALL + Stage 3 | 22 | 0.947 [0.921, 0.970] | 0.930 | 0.943 [0.919, 0.966] | 0.931 | 0.517 |
+| ALL + Stage 3 minus semantic_entropy | 21 | 0.947 [0.922, 0.971] | 0.930 | 0.945 [0.920, 0.967] | 0.935 | 0.517 |
+-> results\stage7_ablation_gsm8k_with_s3.csv
+
+LR: (ALL + Stage 3) - ALL                         = +0.0077  [95% CI -0.0009, +0.0165]  -> no evidence that Stage 3 adds anything
+RF: (ALL + Stage 3) - ALL                         = -0.0002  [95% CI -0.0124, +0.0125]  -> no evidence that Stage 3 adds anything
+
+## Target (b) wrong_answer, base rate 0.500 (chance AUROC 0.5)
+  Stage 2 agreement only   LR 0.949 [0.905, 0.963]  AP 0.924 | RF 0.946 [0.903, 0.962]  AP 0.920 | base 0.500
+  Stage 4 only             LR 0.551 [0.490, 0.601]  AP 0.610 | RF 0.543 [0.447, 0.568]  AP 0.586 | base 0.500
+  ALL                      LR 0.953 [0.929, 0.973]  AP 0.933 | RF 0.954 [0.936, 0.977]  AP 0.927 | base 0.500
+
+## HARD subset: target (a) among 200 correct-answer solutions, 7 with a wrong step, base rate 0.035  -- NOT RELIABLE (< 30 positives)
+  Stage 2 agreement only   LR 0.522 [0.134, 0.846]  AP 0.054 | RF 0.348 [0.033, 0.606]  AP 0.035 | base 0.035
+  Stage 4 only             LR 0.379 [0.213, 0.529]  AP 0.030 | RF 0.646 [0.365, 0.869]  AP 0.088 | base 0.035
+  ALL                      LR 0.281 [0.079, 0.432]  AP 0.026 | RF 0.376 [0.162, 0.549]  AP 0.031 | base 0.035
+
+## Combined model (LR, ALL features), target (a), threshold 0.462 = max F1 on the same out-of-fold predictions (OPTIMISTIC: the threshold was not chosen on held-out data)
+  precision 0.910 (chance = base rate 0.517)   recall 0.928   F1 0.919
+  confusion matrix          predicted ok   predicted error
+    actual ok    (label -1)           174                19
+    actual error                      15               192
+
+## 10 most confidently wrong problems (LR, ALL; repeat-averaged out-of-fold P(process error))
+
+| id | label | final_answer_correct | P(error) | original answer | sample answers |
+|---|---|---|---|---|---|
+| gsm8k-307 | 1 | True | 0.029 | 45 | 45, 45, 45, 45, 45 |
+| gsm8k-243 | -1 | True | 0.967 | 92 | 201.25, 259.49, 2594.93, 2594.92, 259.49 |
+| gsm8k-282 | -1 | True | 0.966 | 56 | 52, 52, 52, 52, 44 |
+| gsm8k-260 | -1 | True | 0.959 | 150 | 50, 50, 50, 50, 50 |
+| gsm8k-238 | -1 | True | 0.956 | 4 | 34, 34, 34, 34, 34 |
+| gsm8k-319 | -1 | True | 0.953 | 4blueshoeboxesand6redshoeboxes | 6red4blue, 10, 4blue6red, 4blue6red, 6red4blue |
+| gsm8k-262 | -1 | True | 0.952 | 18 | 10, 10, 10, 10, 10 |
+| gsm8k-290 | 0 | True | 0.050 | 40 | 40, 40, 40, 40, 40 |
+| gsm8k-230 | -1 | True | 0.948 | 11 | 6, 6, 6, 6, 6 |
+| gsm8k-174 | 2 | False | 0.054 | 96 | 96, 96, 96, 96, 96 |

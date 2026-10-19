@@ -1,0 +1,5 @@
+400 problems; truncation cap = 768 tokens (from --max-new-tokens)
+-> data/processed/s7_gsm8k.jsonl
+  mean majority_share 0.863 | mean agree_with_original 0.472 | mean semantic_entropy 0.292
+  n_clusters distribution: {1: 257, 2: 77, 3: 44, 4: 16, 5: 6}
+  samples truncated: 1.000% | no answer: 0.100% | answers matched by string only (unparsable or text): 3 of 315 distinct
