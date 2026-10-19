@@ -19,13 +19,16 @@ The human label and final_answer_correct are copied as targets only, never used 
 Usage:
   python src/stage7_consistency.py data/processed/samples_gsm8k.jsonl data/processed/s4_gsm8k.jsonl \
          data/raw/processbench_gsm8k.jsonl data/processed/s7_gsm8k.jsonl [--max-new-tokens 768]
+         [--truncated-no-answer]
 Without --max-new-tokens the cap is taken as the largest n_tokens in the samples file.
+--truncated-no-answer: a sample that reached the cap without a boxed answer counts as no answer instead
+of the last number in its cut-off text (see stage2_check.sample_answer).
 """
 import argparse, json, math, re, sys
 from collections import Counter
 import sympy as sp
 from stage2_generate import normalize_answer
-from stage2_check import original_answer
+from stage2_check import original_answer, sample_answer
 from stage4_sympy_verify import to_sympy, _kind, SYMPY_ERRORS
 
 _parsed = {}
@@ -92,9 +95,9 @@ def semantic_entropy(sizes):
     return max(0.0, -sum(k / n * math.log(k / n) for k in sizes)) if n else 0.0     # max: no -0.0
 
 
-def features(sample_rec, s4_rec, raw_rec, cap):
+def features(sample_rec, s4_rec, raw_rec, cap, truncated_no_answer=False):
     samples = sample_rec["samples"]
-    answers = [normalize_answer(s["final_answer"]) for s in samples]
+    answers = [sample_answer(s, cap if truncated_no_answer else None) for s in samples]
     orig = original_answer(raw_rec)
     sizes = cluster(answers)
     n_answered = sum(sizes)
@@ -129,6 +132,8 @@ if __name__ == "__main__":
     ap.add_argument("raw")
     ap.add_argument("output")
     ap.add_argument("--max-new-tokens", type=int, help="generation cap of the Stage 2 run (default: max n_tokens)")
+    ap.add_argument("--truncated-no-answer", action="store_true",
+                    help="a sample that reached the cap without a boxed answer has no answer (not its last number)")
     a = ap.parse_args()
 
     samples, s4, raw = read_jsonl(a.samples), read_jsonl(a.s4), read_jsonl(a.raw)
@@ -140,9 +145,10 @@ if __name__ == "__main__":
         cap, src = a.max_new_tokens, "--max-new-tokens"
     else:
         cap, src = max(s["n_tokens"] for r in samples for s in r["samples"]), "largest n_tokens in the samples file"
-    print(f"{len(samples)} problems; truncation cap = {cap} tokens (from {src})")
+    print(f"{len(samples)} problems; truncation cap = {cap} tokens (from {src})"
+          + ("; truncated without a boxed answer = no answer" if a.truncated_no_answer else ""))
 
-    out = [features(r, s4[r["id"]], raw[r["id"]], cap) for r in samples]
+    out = [features(r, s4[r["id"]], raw[r["id"]], cap, a.truncated_no_answer) for r in samples]
     with open(a.output, "w", encoding="utf-8") as f:
         for r in out:
             f.write(json.dumps(r) + "\n")

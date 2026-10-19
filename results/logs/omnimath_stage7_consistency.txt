@@ -1,0 +1,5 @@
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens)
+-> data/processed/s7_omnimath.jsonl
+  mean majority_share 0.611 | mean agree_with_original 0.312 | mean semantic_entropy 0.833
+  n_clusters distribution: {1: 74, 2: 58, 3: 51, 4: 71, 5: 46}
+  samples truncated: 18.800% | no answer: 0.000% | answers matched by string only (unparsable or text): 108 of 542 distinct

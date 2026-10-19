@@ -1,0 +1,10 @@
+400 problems, 2082 steps -> data/processed/s3_gsm8k.jsonl
+numbers in original steps: 8772; excluded as problem numbers: 4040 (46.1%); trivial constants (0,1,2,10,100) not counted unless an equation result: 676 (7.7%)
+key numbers from: {'rhs': 840, 'derived': 784} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational       48 of   958 (5.0%)
+  knowledge_claim     20 of    41 (48.8%)
+  reasoning          390 of  1083 (36.0%)
+  all                458 of  2082 (22.0%)
+support_min distribution over steps with a signal: {0.0: 491, 0.2: 100, 0.4: 66, 0.6: 74, 0.8: 101, 1.0: 792}
+solutions with a low step (support_min <= 0.2): 210 of 400

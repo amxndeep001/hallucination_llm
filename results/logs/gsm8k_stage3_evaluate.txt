@@ -1,0 +1,60 @@
+===== Stage 3 step-level evaluation: gsm8k, 400 problems, 207 with a process error, 193 correct
+chance exact match (uniformly random step of each erroneous solution): 20.8%
+chance precision of a flag (= share of erroneous solutions): 51.8%
+
+| method | flagged % | exact match % | earlier | later | false alarm % | precision % | ceiling % |
+|---|---|---|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 77.8 | 44.0 | 21 | 49 | 10.4 | 89.0 | 87.9 |
+| Stage 3 (support_min <= 0.2) | 84.1 | 44.4 | 32 | 50 | 18.7 | 82.9 | 87.9 |
+| Stage 3 (support_min <= 0.4) | 89.4 | 47.3 | 37 | 50 | 23.8 | 80.1 | 87.9 |
+| Stage 4 (SymPy first fail) | 8.2 | 7.2 | 0 | 2 | 0.0 | 100.0 | 61.8 |
+| union Stage 3 (<= 0.0) + Stage 4 | 78.7 | 44.9 | 21 | 49 | 10.4 | 89.1 | 90.8 |
+| union Stage 3 (<= 0.2) + Stage 4 | 84.5 | 44.9 | 32 | 50 | 18.7 | 82.9 | 90.8 |
+| union Stage 3 (<= 0.4) + Stage 4 | 89.9 | 47.8 | 37 | 50 | 23.8 | 80.2 | 90.8 |
+(ceiling: erroneous solutions whose human first wrong step has a key number (Stage 3) / an equation (Stage 4))
+
+## Exact match % by position of the human first wrong step (n per bucket)
+
+| method | step 0 (n=37) | step 1 (n=61) | step 2 (n=50) | step 3+ (n=59) |
+|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 40.5 | 44.3 | 52.0 | 39.0 |
+| Stage 3 (support_min <= 0.2) | 43.2 | 49.2 | 46.0 | 39.0 |
+| Stage 3 (support_min <= 0.4) | 43.2 | 52.5 | 48.0 | 44.1 |
+| Stage 4 (SymPy first fail) | 5.4 | 6.6 | 0.0 | 15.3 |
+| union Stage 3 (<= 0.0) + Stage 4 | 40.5 | 44.3 | 52.0 | 42.4 |
+| union Stage 3 (<= 0.2) + Stage 4 | 43.2 | 49.2 | 46.0 | 40.7 |
+| union Stage 3 (<= 0.4) + Stage 4 | 43.2 | 52.5 | 48.0 | 45.8 |
+| chance (random step) | 25.6 | 22.2 | 20.6 | 16.6 |
+
+## HARD: final answer correct but a wrong step: n = 7  -- NOT RELIABLE (< 30)
+  Stage 3 (<= 0.0): flagged 3 of 7, exact first wrong step 3
+  Stage 3 (<= 0.2): flagged 3 of 7, exact first wrong step 3
+  Stage 3 (<= 0.4): flagged 3 of 7, exact first wrong step 3
+  Stage 4: flagged 0 of 7, exact 0
+
+-> results\stage3_summary_gsm8k.csv
+
+## 10 most confident Stage 3 flags (support_min <= 0.2) that are NOT the human first wrong step
+(confidence: lower support_min, then lower support_mean, then more key numbers)
+
+- gsm8k-144 | label 1 | flagged step 2 | key numbers ['21', '12', '15'] | support_min 0.0 mean 0.00
+    Now, let's find out how many cookies Jenny eats. Jenny starts with 36 cookies in a bag. She uses 21 cookies (for her son and her husband) over the course of 12 days (7 days for her husband and 5 days for her son). This leaves her with: 36 cookies - 21 cookies = 15 cookies
+- gsm8k-162 | label 1 | flagged step 0 | key numbers ['24', '96'] | support_min 0.0 mean 0.00
+    The total cost of the pot and pan is $120.00, and the discount is 20%, so the discount amount is 20/100 * $120 = $24. The discounted price of the pot and pan is $120 - $24 = $96.
+- gsm8k-54 | label 0 | flagged step 2 | key numbers ['2.25', '25'] | support_min 0.0 mean 0.00
+    For the first part of the day, the power bank loses 9% of its capacity every hour for 5 hours: 0.09x = 0.09 \times 5 \times 5 0.09x = 2.25 x = \frac{2.25}{0.09} x = 25
+- gsm8k-103 | label 2 | flagged step 1 | key numbers ['0.5'] | support_min 0.0 mean 0.00
+    Since Grandma walks at twice the rate of speed on the sidewalk as she does on the beach, we can set up a ratio:  \frac{speed on beach}{speed on sidewalk} = \frac{1}{2}
+- gsm8k-106 | label 1 | flagged step 2 | key numbers ['4/3'] | support_min 0.0 mean 0.00
+    We then solve for x in the equation from the previous step. Multiply both sides of the equation by 2 to eliminate the fraction: 8 = 10 - 1.5x . Subtract 10 from both sides: -2 = -1.5x . Divide both sides by -1.5: x = 4/3 .
+- gsm8k-11 | label 2 | flagged step 0 | key numbers ['18'] | support_min 0.0 mean 0.00
+    To find out how many cookies Randy has now, we need to go through the steps of the problem. First, initially, Randy has: 9 oatmeal cookies, 4 chocolate chip cookies, and 5 sugar cookies. Total cookies = 9 + 4 + 5 = 18.
+- gsm8k-111 | label 1 | flagged step 0 | key numbers ['7000'] | support_min 0.0 mean 0.00
+    To find the distance Oliver must climb, we first need to determine the initial elevation difference between Stanley and Oliver. Elevation of Stanley = 10,000 feet, Elevation of Oliver = 3,000 feet. Elevation difference = Elevation of Stanley - Elevation of Oliver. Elevation difference = 10,000 - 3,000. Elevation difference = 7,000 feet.
+- gsm8k-113 | label 3 | flagged step 4 | key numbers ['44'] | support_min 0.0 mean 0.00
+    At the end of the third day, they had 78 bandages left. Therefore, we set up the equation: x + 44 = 78 .
+- gsm8k-125 | label 3 | flagged step 2 | key numbers ['45'] | support_min 0.0 mean 0.00
+    Now, to find the total weight of Elijah's dogs: Total weight of Elijah's dogs = Weight of Elijah's first dog + Weight of Elijah's second dog = 15 + 30 = 45 pounds
+- gsm8k-127 | label 2 | flagged step 3 | key numbers ['750'] | support_min 0.0 mean 0.00
+    Finally, add up the total number of chimichangas made on all three days. We have 250 chimichangas from Tuesday and Wednesday, and 500 chimichangas from Friday, so: 250 + 500 = 750 chimichangas.
+(118 such flags in total; 79 with support_min 0, tied in support -> ordered by more key numbers, then id)

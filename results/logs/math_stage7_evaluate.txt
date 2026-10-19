@@ -1,0 +1,93 @@
+===== Stage 7 evaluation: math, 300 problems
+(a) process_error: 167 of 300  base rate 0.557
+(b) wrong_answer : 137 of 300  base rate 0.457
+HARD subset (final answer correct): 163 problems, 30 with a wrong step (base rate 0.184)
+Chance level: AUROC 0.500 for every target; average precision (AP) = base rate.
+
+## Single-feature AUROC (sign-corrected: max(auc, 1-auc); chance 0.5)
+
+| feature | (a) process_error, base 0.557 | direction | (b) wrong_answer, base 0.457 | direction | HARD, base 0.184 (n_pos=30) | direction |
+|---|---|---|---|---|---|---|
+| majority_share | 0.687 | lower = error | 0.644 | lower = error | 0.715 | lower = error |
+| agree_with_original | 0.901 | lower = error | 0.900 | lower = error | 0.746 | lower = error |
+| n_clusters | 0.683 | higher = error | 0.638 | higher = error | 0.716 | higher = error |
+| semantic_entropy | 0.685 | higher = error | 0.641 | higher = error | 0.716 | higher = error |
+| no_answer_rate | nan | constant | nan | constant | nan | constant |
+| mean_logprob_mean | 0.649 | lower = error | 0.607 | lower = error | 0.685 | lower = error |
+| mean_logprob_min | 0.653 | lower = error | 0.606 | lower = error | 0.699 | lower = error |
+| mean_entropy_mean | 0.647 | higher = error | 0.601 | higher = error | 0.694 | higher = error |
+| mean_entropy_max | 0.655 | higher = error | 0.602 | higher = error | 0.721 | higher = error |
+| n_tokens_mean | 0.715 | higher = error | 0.700 | higher = error | 0.653 | higher = error |
+| truncated_rate | 0.583 | higher = error | 0.559 | higher = error | 0.601 | higher = error |
+| n_fail | 0.559 | higher = error | 0.560 | higher = error | 0.530 | higher = error |
+| n_checked | 0.511 | higher = error | 0.519 | lower = error | 0.579 | higher = error |
+| first_fail_step | 0.559 | higher = error | 0.560 | higher = error | 0.529 | higher = error |
+| sympy_flag | 0.559 | higher = error | 0.560 | higher = error | 0.530 | higher = error |
+| n_equations | 0.544 | higher = error | 0.544 | higher = error | 0.525 | higher = error |
+(the direction is chosen on the same data, so single-feature AUROCs are slightly optimistic)
+
+## Ablation, target (a) process_error: AUROC mean over 10x5-fold CV [bootstrap 95% CI]; chance 0.5, base rate 0.557
+
+| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 4 only | 5 | 0.554 [0.474, 0.604] | 0.658 | 0.514 [0.447, 0.577] | 0.630 | 0.557 |
+| Stage 2 agreement only | 1 | 0.887 [0.805, 0.909] | 0.878 | 0.881 [0.791, 0.900] | 0.871 | 0.557 |
+| Stage 7 only (all but Stage 4) | 11 | 0.906 [0.867, 0.943] | 0.879 | 0.878 [0.834, 0.923] | 0.845 | 0.557 |
+| Stage 4 + agreement | 6 | 0.906 [0.865, 0.941] | 0.918 | 0.890 [0.850, 0.931] | 0.903 | 0.557 |
+| ALL | 16 | 0.913 [0.879, 0.949] | 0.904 | 0.878 [0.833, 0.923] | 0.847 | 0.557 |
+| ALL minus semantic_entropy | 15 | 0.913 [0.878, 0.948] | 0.903 | 0.876 [0.831, 0.921] | 0.843 | 0.557 |
+| ALL minus Stage 4 | 11 | 0.906 [0.867, 0.943] | 0.879 | 0.878 [0.834, 0.923] | 0.845 | 0.557 |
+-> results\stage7_ablation_math.csv
+
+## Paired bootstrap: AUROC difference on the repeat-averaged out-of-fold predictions (target a, base rate 0.557)
+
+LR: ALL - (ALL minus semantic_entropy)            = +0.0010  [95% CI -0.0002, +0.0025]
+LR: (agreement + semantic_entropy) - agreement    = +0.0247  [95% CI +0.0056, +0.0462]   (agreement + SE: 0.899 [0.837, 0.925])
+LR: ALL - agreement only                          = +0.0575  [95% CI +0.0249, +0.0912]
+RF: ALL - (ALL minus semantic_entropy)            = +0.0025  [95% CI -0.0040, +0.0096]
+RF: (agreement + semantic_entropy) - agreement    = +0.0319  [95% CI +0.0097, +0.0568]   (agreement + SE: 0.894 [0.831, 0.923])
+RF: ALL - agreement only                          = +0.0343  [95% CI +0.0040, +0.0633]
+
+## Ablation with Stage 3 features (data/processed/s3_math.jsonl), target (a); same CV protocol
+
+| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 3 only | 6 | 0.774 [0.720, 0.827] | 0.797 | 0.765 [0.710, 0.820] | 0.781 | 0.557 |
+| Stage 4 + agreement + Stage 3 | 12 | 0.911 [0.876, 0.947] | 0.914 | 0.898 [0.858, 0.938] | 0.893 | 0.557 |
+| ALL + Stage 3 | 22 | 0.910 [0.875, 0.947] | 0.901 | 0.895 [0.855, 0.938] | 0.876 | 0.557 |
+| ALL + Stage 3 minus semantic_entropy | 21 | 0.909 [0.874, 0.946] | 0.900 | 0.898 [0.857, 0.939] | 0.879 | 0.557 |
+-> results\stage7_ablation_math_with_s3.csv
+
+LR: (ALL + Stage 3) - ALL                         = -0.0025  [95% CI -0.0166, +0.0118]  -> no evidence that Stage 3 adds anything
+RF: (ALL + Stage 3) - ALL                         = +0.0180  [95% CI -0.0026, +0.0395]  -> no evidence that Stage 3 adds anything
+
+## Target (b) wrong_answer, base rate 0.457 (chance AUROC 0.5)
+  Stage 2 agreement only   LR 0.888 [0.818, 0.911]  AP 0.803 | RF 0.883 [0.813, 0.910]  AP 0.793 | base 0.457
+  Stage 4 only             LR 0.585 [0.526, 0.656]  AP 0.580 | RF 0.556 [0.488, 0.616]  AP 0.541 | base 0.457
+  ALL                      LR 0.913 [0.884, 0.945]  AP 0.883 | RF 0.903 [0.873, 0.938]  AP 0.853 | base 0.457
+
+## HARD subset: target (a) among 163 correct-answer solutions, 30 with a wrong step, base rate 0.184
+  Stage 2 agreement only   LR 0.706 [0.474, 0.773]  AP 0.378 | RF 0.630 [0.391, 0.700]  AP 0.318 | base 0.184
+  Stage 4 only             LR 0.471 [0.315, 0.576]  AP 0.216 | RF 0.483 [0.338, 0.567]  AP 0.214 | base 0.184
+  ALL                      LR 0.763 [0.697, 0.863]  AP 0.409 | RF 0.732 [0.623, 0.841]  AP 0.414 | base 0.184
+
+## Combined model (LR, ALL features), target (a), threshold 0.422 = max F1 on the same out-of-fold predictions (OPTIMISTIC: the threshold was not chosen on held-out data)
+  precision 0.888 (chance = base rate 0.557)   recall 0.904   F1 0.896
+  confusion matrix          predicted ok   predicted error
+    actual ok    (label -1)           114                19
+    actual error                      16               151
+
+## 10 most confidently wrong problems (LR, ALL; repeat-averaged out-of-fold P(process error))
+
+| id | label | final_answer_correct | P(error) | original answer | sample answers |
+|---|---|---|---|---|---|
+| math-717 | -1 | True | 0.984 | 0 | 2, 2, 2, 2, 2 |
+| math-971 | -1 | True | 0.981 | \frac{13}{4} | 3, 2, 3, 2, 3 |
+| math-883 | -1 | True | 0.966 | 8 | 8, 8, 8, 8, 8 |
+| math-870 | -1 | True | 0.961 | 50 | 5000, 5000, 100, 50, 200 |
+| math-829 | -1 | True | 0.959 | \frac{24}{5} | 1, 24, 4, 1, 24 |
+| math-847 | -1 | True | 0.935 | (bc)=(65) | \left(\frac{28}{5}3\right), 3, (0-25), 0, \left(\frac{28}{5}3\right) |
+| math-515 | -1 | True | 0.926 | AD | ACE, E, C, ACE, CE |
+| math-749 | -1 | True | 0.926 | 4 | 2, 2, 4, 2, 2 |
+| math-247 | 5 | False | 0.082 | -\frac{58}{87} | -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3} |
+| math-802 | -1 | True | 0.912 | 180 | 3, 360, 300, 270, 270 |

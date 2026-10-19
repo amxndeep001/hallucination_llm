@@ -1,0 +1,10 @@
+300 problems, 2377 steps -> data/processed/s3_omnimath.jsonl
+numbers in original steps: 19444; excluded as problem numbers: 10070 (51.8%); trivial constants (0,1,2,10,100) not counted unless an equation result: 3145 (16.2%)
+key numbers from: {'derived': 811, 'rhs': 533} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational      284 of  1065 (26.7%)
+  knowledge_claim     63 of    99 (63.6%)
+  reasoning          686 of  1213 (56.6%)
+  all               1033 of  2377 (43.5%)
+support_min distribution over steps with a signal: {0.0: 384, 0.2: 133, 0.4: 113, 0.6: 119, 0.8: 137, 1.0: 458}
+solutions with a low step (support_min <= 0.2): 179 of 300

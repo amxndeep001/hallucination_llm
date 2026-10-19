@@ -1,0 +1,5 @@
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens)
+-> data/processed/s7_math.jsonl
+  mean majority_share 0.809 | mean agree_with_original 0.469 | mean semantic_entropy 0.404
+  n_clusters distribution: {1: 179, 2: 45, 3: 28, 4: 33, 5: 15}
+  samples truncated: 8.067% | no answer: 0.000% | answers matched by string only (unparsable or text): 33 of 349 distinct

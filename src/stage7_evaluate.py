@@ -18,6 +18,7 @@ CV protocol) and writes all rows to results/stage7_ablation_<split>_with_s3.csv;
 """
 import argparse, csv, json, os, re, warnings
 import numpy as np
+from joblib import Parallel, delayed
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, confusion_matrix, precision_recall_curve, roc_auc_score
@@ -54,14 +55,21 @@ def matrix(recs, feats):
     return np.array([[val(r, f) for f in feats] for r in recs], dtype=float)
 
 
+def _fold(model, X, y, tr, te):
+    m = MODELS[model]()
+    if "n_jobs" in m.get_params():                           # folds run in parallel instead; same seeded result
+        m.set_params(n_jobs=1)
+    m.fit(X[tr], y[tr])
+    return m.predict_proba(X[te])[:, 1]
+
+
 def oof_predictions(X, y, model):
-    """(N_REPEATS, n) out-of-fold probabilities."""
+    """(N_REPEATS, n) out-of-fold probabilities. The 50 fits run in parallel processes."""
     oof = np.zeros((N_REPEATS, len(y)))
-    cv = RepeatedStratifiedKFold(n_splits=N_SPLITS, n_repeats=N_REPEATS, random_state=SEED)
-    for i, (tr, te) in enumerate(cv.split(X, y)):
-        m = MODELS[model]()
-        m.fit(X[tr], y[tr])
-        oof[i // N_SPLITS, te] = m.predict_proba(X[te])[:, 1]
+    cv = list(RepeatedStratifiedKFold(n_splits=N_SPLITS, n_repeats=N_REPEATS, random_state=SEED).split(X, y))
+    preds = Parallel(n_jobs=-1)(delayed(_fold)(model, X, y, tr, te) for tr, te in cv)
+    for i, ((_, te), p) in enumerate(zip(cv, preds)):
+        oof[i // N_SPLITS, te] = p
     return oof
 
 

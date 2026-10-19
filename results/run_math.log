@@ -1,0 +1,128 @@
+samples_math.jsonl: 300 problems x 5 samples, Qwen/Qwen2.5-Math-1.5B-Instruct: ok
+
+######## stage2_check: python src/stage2_check.py data/processed/samples_math.jsonl data/raw/processbench_math.jsonl
+300 problems, 1500 samples
+samples with no extractable answer : 0.0%   (high => truncated or format problem)
+mean generated tokens per sample   : 539
+mean self-agreement (majority share): 0.81
+mean agreement with ORIGINAL answer : 0.46
+
+[has a process error (label != -1)] n=167 vs 133
+  agreement with original: 0.14 (wrong) vs 0.85 (fine)
+  AUROC of (1 - agreement with original): 0.910   (0.5 = no signal)
+
+[final answer is wrong] n=137 vs 163
+  agreement with original: 0.08 (wrong) vs 0.77 (fine)
+  AUROC of (1 - agreement with original): 0.908   (0.5 = no signal)
+
+
+######## stage2_check_truncnone: python src/stage2_check.py data/processed/samples_math.jsonl data/raw/processbench_math.jsonl --truncated-no-answer --max-new-tokens 1024
+300 problems, 1500 samples; truncated at 1024 tokens without \boxed = no answer
+samples with no extractable answer : 8.0%   (high => truncated or format problem)
+mean generated tokens per sample   : 539
+mean self-agreement (majority share): 0.84
+mean agreement with ORIGINAL answer : 0.45
+
+[has a process error (label != -1)] n=167 vs 133
+  agreement with original: 0.14 (wrong) vs 0.85 (fine)
+  AUROC of (1 - agreement with original): 0.910   (0.5 = no signal)
+
+[final answer is wrong] n=137 vs 163
+  agreement with original: 0.07 (wrong) vs 0.77 (fine)
+  AUROC of (1 - agreement with original): 0.908   (0.5 = no signal)
+
+
+######## stage3_align: python src/stage3_align.py data/processed/pb_math.jsonl data/processed/samples_math.jsonl data/processed/s3_math.jsonl --sampled-only
+300 problems, 1908 steps -> data/processed/s3_math.jsonl
+numbers in original steps: 15059; excluded as problem numbers: 7619 (50.6%); trivial constants (0,1,2,10,100) not counted unless an equation result: 2173 (14.4%)
+key numbers from: {'derived': 747, 'rhs': 501} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational      182 of   925 (19.7%)
+  knowledge_claim     56 of    89 (62.9%)
+  reasoning          422 of   894 (47.2%)
+  all                660 of  1908 (34.6%)
+support_min distribution over steps with a signal: {0.0: 332, 0.2: 81, 0.4: 52, 0.6: 69, 0.8: 54, 1.0: 660}
+solutions with a low step (support_min <= 0.2): 149 of 300
+
+
+######## stage3_evaluate: python src/stage3_evaluate.py data/processed/s3_math.jsonl data/processed/s4_math.jsonl data/processed/pb_math.jsonl data/raw/processbench_math.jsonl
+tep 2 | key numbers ['15', '24'] | support_min 0.0 mean 0.00
+    Second, the second term is:  \frac{(x+3)(x-5)}{9(x+4)(x-6)} = \frac{x^2 - 2x - 15}{9(x^2 - 2x - 24)}.
+- math-189 | label 8 | flagged step 7 | key numbers ['7', '12'] | support_min 0.0 mean 0.00
+    Example Calculation: Let's assume m = 7 (a common prime number) and try to find suitable k and t. Given m = 7, we have: - k + t = 7 - Let's try k = 4 and t = 3 as a simple case where k and t are positive integers that sum up to 7. Thus, n = k \cdot t = 4 \cdot 3 = 12, which is not prime. So, we must adjust our approach.
+- math-324 | label 2 | flagged step 3 | key numbers ['3', '5'] | support_min 0.0 mean 0.00
+    Now, let's multiply through by (x^2 + y^2) to clear the fraction: 2x^2 - (x^2 + y^2) = 4(x^2 + y^2) \Rightarrow 2x^2 - x^2 - y^2 = 4x^2 + 4y^2 \Rightarrow x^2 - 4x^2 - y^2 = 4y^2 \Rightarrow -3x^2 - y^2 = 4y^2 \Rightarrow -3x^2 = 5y^2.
+- math-46 | label 3 | flagged step 1 | key numbers ['20/7', '6/7'] | support_min 0.0 mean 0.00
+    Now, let's try to find the values of k that satisfy these conditions. Since C is a multiple of 7, we can write C = 7k , where k is an integer. We know that C is greater than 20, so we can write:  7k > 20  Dividing both sides by 7, we get:  k > \frac{20}{7} = 2\frac{6}{7}  Since k is an integer, this means that k must be at least 3.
+- math-488 | label 1 | flagged step 3 | key numbers ['4/3', '0.5'] | support_min 0.0 mean 0.00
+    Equality occurs when a=2b=3c=4d. Solving these equations, we find that a=4, b=2, c=\frac{4}{3}, and d=\frac{1}{2}. Therefore, the maximum value of ab^2c^3d^4 is 1. Final Answer: The final answer is 1. I hope it is correct.
+- math-831 | label -1 | flagged step 0 | key numbers ['4', '9'] | support_min 0.0 mean 0.00
+    To find the simplest radical form of \sqrt{53}, we need to look for perfect square factors of 53. First, we can start by checking if 53 is a perfect square itself. However, it is not because it does not end with a perfect square number like 0, 1, 4, 9, etc.
+- math-971 | label -1 | flagged step 8 | key numbers ['0.25', '3.25'] | support_min 0.0 mean 0.00
+    **Case 2: 4x^2 < 3 **  0 \leq x < \frac{\sqrt{3}}{2}  The expression is:  2x + (3 - 4x^2) = -4x^2 + 2x + 3  This is a quadratic function in x that opens downwards. The maximum value occurs at the vertex x = -\frac{b}{2a} = \frac{2}{8} = \frac{1}{4} :  -4(\frac{1}{4})^2 + 2(\frac{1}{4}) + 3 = -4(\frac{1}{16}) + \frac{2}{4} + 3 = -\frac{1}{4} + \frac{1}{2} + 3 = \frac{1}{4} + 3 = \frac{13}{4}
+- math-980 | label -1 | flagged step 5 | key numbers ['72', '425'] | support_min 0.0 mean 0.00
+    Thus, the probability that 3 cards chosen at random from a standard 52-card deck form a pair is \frac{72{425}}.
+- math-101 | label 3 | flagged step 4 | key numbers ['0.25'] | support_min 0.0 mean 0.00
+    Final Answer: The final answer is \frac{1}{4}. I hope it is correct.
+(114 such flags in total; 85 with support_min 0, tied in support -> ordered by more key numbers, then id)
+
+
+######## stage7_consistency: python src/stage7_consistency.py data/processed/samples_math.jsonl data/processed/s4_math.jsonl data/raw/processbench_math.jsonl data/processed/s7_math.jsonl --max-new-tokens 1024
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens)
+-> data/processed/s7_math.jsonl
+  mean majority_share 0.809 | mean agree_with_original 0.469 | mean semantic_entropy 0.404
+  n_clusters distribution: {1: 179, 2: 45, 3: 28, 4: 33, 5: 15}
+  samples truncated: 8.067% | no answer: 0.000% | answers matched by string only (unparsable or text): 33 of 349 distinct
+
+
+######## stage7_consistency_truncnone: python src/stage7_consistency.py data/processed/samples_math.jsonl data/processed/s4_math.jsonl data/raw/processbench_math.jsonl data/processed/s7_math_truncnone.jsonl --max-new-tokens 1024 --truncated-no-answer
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens); truncated without a boxed answer = no answer
+-> data/processed/s7_math_truncnone.jsonl
+  mean majority_share 0.840 | mean agree_with_original 0.467 | mean semantic_entropy 0.283
+  n_clusters distribution: {0: 6, 1: 195, 2: 50, 3: 32, 4: 15, 5: 2}
+  samples truncated: 8.067% | no answer: 8.000% | answers matched by string only (unparsable or text): 33 of 323 distinct
+
+
+######## stage7_evaluate: python src/stage7_evaluate.py data/processed/s7_math.jsonl --s3 data/processed/s3_math.jsonl
+re set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 3 only | 6 | 0.774 [0.720, 0.827] | 0.797 | 0.765 [0.710, 0.820] | 0.781 | 0.557 |
+| Stage 4 + agreement + Stage 3 | 12 | 0.911 [0.876, 0.947] | 0.914 | 0.898 [0.858, 0.938] | 0.893 | 0.557 |
+| ALL + Stage 3 | 22 | 0.910 [0.875, 0.947] | 0.901 | 0.895 [0.855, 0.938] | 0.876 | 0.557 |
+| ALL + Stage 3 minus semantic_entropy | 21 | 0.909 [0.874, 0.946] | 0.900 | 0.898 [0.857, 0.939] | 0.879 | 0.557 |
+-> results\stage7_ablation_math_with_s3.csv
+
+LR: (ALL + Stage 3) - ALL                         = -0.0025  [95% CI -0.0166, +0.0118]  -> no evidence that Stage 3 adds anything
+RF: (ALL + Stage 3) - ALL                         = +0.0180  [95% CI -0.0026, +0.0395]  -> no evidence that Stage 3 adds anything
+
+## Target (b) wrong_answer, base rate 0.457 (chance AUROC 0.5)
+  Stage 2 agreement only   LR 0.888 [0.818, 0.911]  AP 0.803 | RF 0.883 [0.813, 0.910]  AP 0.793 | base 0.457
+  Stage 4 only             LR 0.585 [0.526, 0.656]  AP 0.580 | RF 0.556 [0.488, 0.616]  AP 0.541 | base 0.457
+  ALL                      LR 0.913 [0.884, 0.945]  AP 0.883 | RF 0.903 [0.873, 0.938]  AP 0.853 | base 0.457
+
+## HARD subset: target (a) among 163 correct-answer solutions, 30 with a wrong step, base rate 0.184
+  Stage 2 agreement only   LR 0.706 [0.474, 0.773]  AP 0.378 | RF 0.630 [0.391, 0.700]  AP 0.318 | base 0.184
+  Stage 4 only             LR 0.471 [0.315, 0.576]  AP 0.216 | RF 0.483 [0.338, 0.567]  AP 0.214 | base 0.184
+  ALL                      LR 0.763 [0.697, 0.863]  AP 0.409 | RF 0.732 [0.623, 0.841]  AP 0.414 | base 0.184
+
+## Combined model (LR, ALL features), target (a), threshold 0.422 = max F1 on the same out-of-fold predictions (OPTIMISTIC: the threshold was not chosen on held-out data)
+  precision 0.888 (chance = base rate 0.557)   recall 0.904   F1 0.896
+  confusion matrix          predicted ok   predicted error
+    actual ok    (label -1)           114                19
+    actual error                      16               151
+
+## 10 most confidently wrong problems (LR, ALL; repeat-averaged out-of-fold P(process error))
+
+| id | label | final_answer_correct | P(error) | original answer | sample answers |
+|---|---|---|---|---|---|
+| math-717 | -1 | True | 0.984 | 0 | 2, 2, 2, 2, 2 |
+| math-971 | -1 | True | 0.981 | \frac{13}{4} | 3, 2, 3, 2, 3 |
+| math-883 | -1 | True | 0.966 | 8 | 8, 8, 8, 8, 8 |
+| math-870 | -1 | True | 0.961 | 50 | 5000, 5000, 100, 50, 200 |
+| math-829 | -1 | True | 0.959 | \frac{24}{5} | 1, 24, 4, 1, 24 |
+| math-847 | -1 | True | 0.935 | (bc)=(65) | \left(\frac{28}{5}3\right), 3, (0-25), 0, \left(\frac{28}{5}3\right) |
+| math-515 | -1 | True | 0.926 | AD | ACE, E, C, ACE, CE |
+| math-749 | -1 | True | 0.926 | 4 | 2, 2, 4, 2, 2 |
+| math-247 | 5 | False | 0.082 | -\frac{58}{87} | -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3}, -\frac{2}{3} |
+| math-802 | -1 | True | 0.912 | 180 | 3, 360, 300, 270, 270 |
+

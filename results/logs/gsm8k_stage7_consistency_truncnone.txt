@@ -1,0 +1,5 @@
+400 problems; truncation cap = 768 tokens (from --max-new-tokens); truncated without a boxed answer = no answer
+-> data/processed/s7_gsm8k_truncnone.jsonl
+  mean majority_share 0.870 | mean agree_with_original 0.472 | mean semantic_entropy 0.275
+  n_clusters distribution: {1: 263, 2: 76, 3: 42, 4: 16, 5: 3}
+  samples truncated: 1.000% | no answer: 1.000% | answers matched by string only (unparsable or text): 3 of 310 distinct

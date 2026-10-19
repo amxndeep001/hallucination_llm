@@ -1,0 +1,10 @@
+300 problems, 2655 steps -> data/processed/s3_olympiadbench.jsonl
+numbers in original steps: 22644; excluded as problem numbers: 11781 (52.0%); trivial constants (0,1,2,10,100) not counted unless an equation result: 3592 (15.9%)
+key numbers from: {'derived': 995, 'rhs': 704} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational      359 of  1443 (24.9%)
+  knowledge_claim     38 of    83 (45.8%)
+  reasoning          559 of  1129 (49.5%)
+  all                956 of  2655 (36.0%)
+support_min distribution over steps with a signal: {0.0: 442, 0.2: 147, 0.4: 114, 0.6: 138, 0.8: 183, 1.0: 675}
+solutions with a low step (support_min <= 0.2): 175 of 300

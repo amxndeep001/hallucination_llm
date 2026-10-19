@@ -1,0 +1,10 @@
+300 problems, 1908 steps -> data/processed/s3_math.jsonl
+numbers in original steps: 15059; excluded as problem numbers: 7619 (50.6%); trivial constants (0,1,2,10,100) not counted unless an equation result: 2173 (14.4%)
+key numbers from: {'derived': 747, 'rhs': 501} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational      182 of   925 (19.7%)
+  knowledge_claim     56 of    89 (62.9%)
+  reasoning          422 of   894 (47.2%)
+  all                660 of  1908 (34.6%)
+support_min distribution over steps with a signal: {0.0: 332, 0.2: 81, 0.4: 52, 0.6: 69, 0.8: 54, 1.0: 660}
+solutions with a low step (support_min <= 0.2): 149 of 300

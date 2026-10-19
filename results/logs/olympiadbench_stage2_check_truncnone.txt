@@ -1,0 +1,13 @@
+300 problems, 1500 samples; truncated at 1024 tokens without \boxed = no answer
+samples with no extractable answer : 21.4%   (high => truncated or format problem)
+mean generated tokens per sample   : 708
+mean self-agreement (majority share): 0.67
+mean agreement with ORIGINAL answer : 0.28
+
+[has a process error (label != -1)] n=189 vs 111
+  agreement with original: 0.14 (wrong) vs 0.51 (fine)
+  AUROC of (1 - agreement with original): 0.737   (0.5 = no signal)
+
+[final answer is wrong] n=137 vs 163
+  agreement with original: 0.09 (wrong) vs 0.43 (fine)
+  AUROC of (1 - agreement with original): 0.726   (0.5 = no signal)

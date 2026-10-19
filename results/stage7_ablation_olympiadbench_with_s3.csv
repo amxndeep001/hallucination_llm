@@ -1,0 +1,23 @@
+split,target,feature_set,n_features,model,auroc_mean,auroc_sd_over_repeats,ci_low,ci_high,ap_mean,base_rate,n
+olympiadbench,process_error,Stage 4 only,5,LR,0.499,0.0266,0.4107,0.5499,0.6639,0.63,300
+olympiadbench,process_error,Stage 4 only,5,RF,0.5034,0.0204,0.4365,0.5704,0.6654,0.63,300
+olympiadbench,process_error,Stage 2 agreement only,1,LR,0.7174,0.0078,0.5997,0.7493,0.7529,0.63,300
+olympiadbench,process_error,Stage 2 agreement only,1,RF,0.6985,0.0125,0.5877,0.7347,0.7398,0.63,300
+olympiadbench,process_error,Stage 7 only (all but Stage 4),11,LR,0.7619,0.0043,0.7017,0.8191,0.8163,0.63,300
+olympiadbench,process_error,Stage 7 only (all but Stage 4),11,RF,0.717,0.012,0.6517,0.7834,0.7512,0.63,300
+olympiadbench,process_error,Stage 4 + agreement,6,LR,0.7406,0.0057,0.676,0.7989,0.7967,0.63,300
+olympiadbench,process_error,Stage 4 + agreement,6,RF,0.7144,0.0111,0.652,0.7802,0.7737,0.63,300
+olympiadbench,process_error,ALL,16,LR,0.7692,0.0072,0.7147,0.827,0.8302,0.63,300
+olympiadbench,process_error,ALL,16,RF,0.7225,0.0084,0.6604,0.7911,0.7522,0.63,300
+olympiadbench,process_error,ALL minus semantic_entropy,15,LR,0.7663,0.0072,0.7069,0.822,0.8272,0.63,300
+olympiadbench,process_error,ALL minus semantic_entropy,15,RF,0.7192,0.0093,0.6518,0.7834,0.7507,0.63,300
+olympiadbench,process_error,ALL minus Stage 4,11,LR,0.7619,0.0043,0.7017,0.8191,0.8163,0.63,300
+olympiadbench,process_error,ALL minus Stage 4,11,RF,0.717,0.012,0.6517,0.7834,0.7512,0.63,300
+olympiadbench,process_error,Stage 3 only,6,LR,0.6414,0.0076,0.5743,0.7079,0.7081,0.63,300
+olympiadbench,process_error,Stage 3 only,6,RF,0.6539,0.0218,0.5855,0.7245,0.7105,0.63,300
+olympiadbench,process_error,Stage 4 + agreement + Stage 3,12,LR,0.7546,0.006,0.6995,0.8131,0.8115,0.63,300
+olympiadbench,process_error,Stage 4 + agreement + Stage 3,12,RF,0.737,0.0098,0.6815,0.8034,0.7793,0.63,300
+olympiadbench,process_error,ALL + Stage 3,22,LR,0.7728,0.0071,0.7225,0.8291,0.8298,0.63,300
+olympiadbench,process_error,ALL + Stage 3,22,RF,0.7212,0.0119,0.6587,0.7863,0.7506,0.63,300
+olympiadbench,process_error,ALL + Stage 3 minus semantic_entropy,21,LR,0.7707,0.007,0.7212,0.828,0.8282,0.63,300
+olympiadbench,process_error,ALL + Stage 3 minus semantic_entropy,21,RF,0.7243,0.01,0.6627,0.7902,0.7533,0.63,300

@@ -1,0 +1,131 @@
+samples_gsm8k.jsonl: 400 problems x 5 samples, Qwen/Qwen2.5-Math-1.5B-Instruct: ok
+
+######## stage2_check: python src/stage2_check.py data/processed/samples_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl
+400 problems, 2000 samples
+samples with no extractable answer : 0.1%   (high => truncated or format problem)
+mean generated tokens per sample   : 319
+mean self-agreement (majority share): 0.86
+mean agreement with ORIGINAL answer : 0.47
+
+[has a process error (label != -1)] n=207 vs 193
+  agreement with original: 0.09 (wrong) vs 0.87 (fine)
+  AUROC of (1 - agreement with original): 0.946   (0.5 = no signal)
+
+[final answer is wrong] n=200 vs 200
+  agreement with original: 0.07 (wrong) vs 0.87 (fine)
+  AUROC of (1 - agreement with original): 0.954   (0.5 = no signal)
+
+
+######## stage2_check_truncnone: python src/stage2_check.py data/processed/samples_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl --truncated-no-answer --max-new-tokens 768
+400 problems, 2000 samples; truncated at 768 tokens without \boxed = no answer
+samples with no extractable answer : 1.0%   (high => truncated or format problem)
+mean generated tokens per sample   : 319
+mean self-agreement (majority share): 0.86
+mean agreement with ORIGINAL answer : 0.47
+
+[has a process error (label != -1)] n=207 vs 193
+  agreement with original: 0.09 (wrong) vs 0.87 (fine)
+  AUROC of (1 - agreement with original): 0.946   (0.5 = no signal)
+
+[final answer is wrong] n=200 vs 200
+  agreement with original: 0.07 (wrong) vs 0.86 (fine)
+  AUROC of (1 - agreement with original): 0.954   (0.5 = no signal)
+
+
+######## stage3_align: python src/stage3_align.py data/processed/pb_gsm8k.jsonl data/processed/samples_gsm8k.jsonl data/processed/s3_gsm8k.jsonl --sampled-only
+400 problems, 2082 steps -> data/processed/s3_gsm8k.jsonl
+numbers in original steps: 8772; excluded as problem numbers: 4040 (46.1%); trivial constants (0,1,2,10,100) not counted unless an equation result: 676 (7.7%)
+key numbers from: {'rhs': 840, 'derived': 784} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational       48 of   958 (5.0%)
+  knowledge_claim     20 of    41 (48.8%)
+  reasoning          390 of  1083 (36.0%)
+  all                458 of  2082 (22.0%)
+support_min distribution over steps with a signal: {0.0: 491, 0.2: 100, 0.4: 66, 0.6: 74, 0.8: 101, 1.0: 792}
+solutions with a low step (support_min <= 0.2): 210 of 400
+
+
+######## stage3_evaluate: python src/stage3_evaluate.py data/processed/s3_gsm8k.jsonl data/processed/s4_gsm8k.jsonl data/processed/pb_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl
+0.0 mean 0.00
+    Now, let's find out how many cookies Jenny eats. Jenny starts with 36 cookies in a bag. She uses 21 cookies (for her son and her husband) over the course of 12 days (7 days for her husband and 5 days for her son). This leaves her with: 36 cookies - 21 cookies = 15 cookies
+- gsm8k-162 | label 1 | flagged step 0 | key numbers ['24', '96'] | support_min 0.0 mean 0.00
+    The total cost of the pot and pan is $120.00, and the discount is 20%, so the discount amount is 20/100 * $120 = $24. The discounted price of the pot and pan is $120 - $24 = $96.
+- gsm8k-54 | label 0 | flagged step 2 | key numbers ['2.25', '25'] | support_min 0.0 mean 0.00
+    For the first part of the day, the power bank loses 9% of its capacity every hour for 5 hours: 0.09x = 0.09 \times 5 \times 5 0.09x = 2.25 x = \frac{2.25}{0.09} x = 25
+- gsm8k-103 | label 2 | flagged step 1 | key numbers ['0.5'] | support_min 0.0 mean 0.00
+    Since Grandma walks at twice the rate of speed on the sidewalk as she does on the beach, we can set up a ratio:  \frac{speed on beach}{speed on sidewalk} = \frac{1}{2}
+- gsm8k-106 | label 1 | flagged step 2 | key numbers ['4/3'] | support_min 0.0 mean 0.00
+    We then solve for x in the equation from the previous step. Multiply both sides of the equation by 2 to eliminate the fraction: 8 = 10 - 1.5x . Subtract 10 from both sides: -2 = -1.5x . Divide both sides by -1.5: x = 4/3 .
+- gsm8k-11 | label 2 | flagged step 0 | key numbers ['18'] | support_min 0.0 mean 0.00
+    To find out how many cookies Randy has now, we need to go through the steps of the problem. First, initially, Randy has: 9 oatmeal cookies, 4 chocolate chip cookies, and 5 sugar cookies. Total cookies = 9 + 4 + 5 = 18.
+- gsm8k-111 | label 1 | flagged step 0 | key numbers ['7000'] | support_min 0.0 mean 0.00
+    To find the distance Oliver must climb, we first need to determine the initial elevation difference between Stanley and Oliver. Elevation of Stanley = 10,000 feet, Elevation of Oliver = 3,000 feet. Elevation difference = Elevation of Stanley - Elevation of Oliver. Elevation difference = 10,000 - 3,000. Elevation difference = 7,000 feet.
+- gsm8k-113 | label 3 | flagged step 4 | key numbers ['44'] | support_min 0.0 mean 0.00
+    At the end of the third day, they had 78 bandages left. Therefore, we set up the equation: x + 44 = 78 .
+- gsm8k-125 | label 3 | flagged step 2 | key numbers ['45'] | support_min 0.0 mean 0.00
+    Now, to find the total weight of Elijah's dogs: Total weight of Elijah's dogs = Weight of Elijah's first dog + Weight of Elijah's second dog = 15 + 30 = 45 pounds
+- gsm8k-127 | label 2 | flagged step 3 | key numbers ['750'] | support_min 0.0 mean 0.00
+    Finally, add up the total number of chimichangas made on all three days. We have 250 chimichangas from Tuesday and Wednesday, and 500 chimichangas from Friday, so: 250 + 500 = 750 chimichangas.
+(118 such flags in total; 79 with support_min 0, tied in support -> ordered by more key numbers, then id)
+
+
+######## stage7_consistency: python src/stage7_consistency.py data/processed/samples_gsm8k.jsonl data/processed/s4_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl data/processed/s7_gsm8k.jsonl --max-new-tokens 768
+400 problems; truncation cap = 768 tokens (from --max-new-tokens)
+-> data/processed/s7_gsm8k.jsonl
+  mean majority_share 0.863 | mean agree_with_original 0.472 | mean semantic_entropy 0.292
+  n_clusters distribution: {1: 257, 2: 77, 3: 44, 4: 16, 5: 6}
+  samples truncated: 1.000% | no answer: 0.100% | answers matched by string only (unparsable or text): 3 of 315 distinct
+
+
+######## stage7_consistency_truncnone: python src/stage7_consistency.py data/processed/samples_gsm8k.jsonl data/processed/s4_gsm8k.jsonl data/raw/processbench_gsm8k.jsonl data/processed/s7_gsm8k_truncnone.jsonl --max-new-tokens 768 --truncated-no-answer
+400 problems; truncation cap = 768 tokens (from --max-new-tokens); truncated without a boxed answer = no answer
+-> data/processed/s7_gsm8k_truncnone.jsonl
+  mean majority_share 0.870 | mean agree_with_original 0.472 | mean semantic_entropy 0.275
+  n_clusters distribution: {1: 263, 2: 76, 3: 42, 4: 16, 5: 3}
+  samples truncated: 1.000% | no answer: 1.000% | answers matched by string only (unparsable or text): 3 of 310 distinct
+
+
+######## stage7_evaluate: python src/stage7_evaluate.py data/processed/s7_gsm8k.jsonl --s3 data/processed/s3_gsm8k.jsonl
+
+| feature set | n features | LR AUROC [95% CI] | LR AP | RF AUROC [95% CI] | RF AP | base rate |
+|---|---|---|---|---|---|---|
+| Stage 3 only | 6 | 0.894 [0.859, 0.925] | 0.891 | 0.887 [0.852, 0.921] | 0.866 | 0.517 |
+| Stage 4 + agreement + Stage 3 | 12 | 0.952 [0.929, 0.973] | 0.938 | 0.940 [0.913, 0.964] | 0.919 | 0.517 |
+| ALL + Stage 3 | 22 | 0.947 [0.921, 0.970] | 0.930 | 0.943 [0.919, 0.966] | 0.931 | 0.517 |
+| ALL + Stage 3 minus semantic_entropy | 21 | 0.947 [0.922, 0.971] | 0.930 | 0.945 [0.920, 0.967] | 0.935 | 0.517 |
+-> results\stage7_ablation_gsm8k_with_s3.csv
+
+LR: (ALL + Stage 3) - ALL                         = +0.0077  [95% CI -0.0009, +0.0165]  -> no evidence that Stage 3 adds anything
+RF: (ALL + Stage 3) - ALL                         = -0.0002  [95% CI -0.0124, +0.0125]  -> no evidence that Stage 3 adds anything
+
+## Target (b) wrong_answer, base rate 0.500 (chance AUROC 0.5)
+  Stage 2 agreement only   LR 0.949 [0.905, 0.963]  AP 0.924 | RF 0.946 [0.903, 0.962]  AP 0.920 | base 0.500
+  Stage 4 only             LR 0.551 [0.490, 0.601]  AP 0.610 | RF 0.543 [0.447, 0.568]  AP 0.586 | base 0.500
+  ALL                      LR 0.953 [0.929, 0.973]  AP 0.933 | RF 0.954 [0.936, 0.977]  AP 0.927 | base 0.500
+
+## HARD subset: target (a) among 200 correct-answer solutions, 7 with a wrong step, base rate 0.035  -- NOT RELIABLE (< 30 positives)
+  Stage 2 agreement only   LR 0.522 [0.134, 0.846]  AP 0.054 | RF 0.348 [0.033, 0.606]  AP 0.035 | base 0.035
+  Stage 4 only             LR 0.379 [0.213, 0.529]  AP 0.030 | RF 0.646 [0.365, 0.869]  AP 0.088 | base 0.035
+  ALL                      LR 0.281 [0.079, 0.432]  AP 0.026 | RF 0.376 [0.162, 0.549]  AP 0.031 | base 0.035
+
+## Combined model (LR, ALL features), target (a), threshold 0.462 = max F1 on the same out-of-fold predictions (OPTIMISTIC: the threshold was not chosen on held-out data)
+  precision 0.910 (chance = base rate 0.517)   recall 0.928   F1 0.919
+  confusion matrix          predicted ok   predicted error
+    actual ok    (label -1)           174                19
+    actual error                      15               192
+
+## 10 most confidently wrong problems (LR, ALL; repeat-averaged out-of-fold P(process error))
+
+| id | label | final_answer_correct | P(error) | original answer | sample answers |
+|---|---|---|---|---|---|
+| gsm8k-307 | 1 | True | 0.029 | 45 | 45, 45, 45, 45, 45 |
+| gsm8k-243 | -1 | True | 0.967 | 92 | 201.25, 259.49, 2594.93, 2594.92, 259.49 |
+| gsm8k-282 | -1 | True | 0.966 | 56 | 52, 52, 52, 52, 44 |
+| gsm8k-260 | -1 | True | 0.959 | 150 | 50, 50, 50, 50, 50 |
+| gsm8k-238 | -1 | True | 0.956 | 4 | 34, 34, 34, 34, 34 |
+| gsm8k-319 | -1 | True | 0.953 | 4blueshoeboxesand6redshoeboxes | 6red4blue, 10, 4blue6red, 4blue6red, 6red4blue |
+| gsm8k-262 | -1 | True | 0.952 | 18 | 10, 10, 10, 10, 10 |
+| gsm8k-290 | 0 | True | 0.050 | 40 | 40, 40, 40, 40, 40 |
+| gsm8k-230 | -1 | True | 0.948 | 11 | 6, 6, 6, 6, 6 |
+| gsm8k-174 | 2 | False | 0.054 | 96 | 96, 96, 96, 96, 96 |
+

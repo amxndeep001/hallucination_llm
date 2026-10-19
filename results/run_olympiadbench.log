@@ -1,0 +1,123 @@
+samples_olympiadbench.jsonl: 300 problems x 5 samples, Qwen/Qwen2.5-Math-1.5B-Instruct: ok
+
+######## stage2_check: python src/stage2_check.py data/processed/samples_olympiadbench.jsonl data/raw/processbench_olympiadbench.jsonl
+300 problems, 1500 samples
+samples with no extractable answer : 0.0%   (high => truncated or format problem)
+mean generated tokens per sample   : 708
+mean self-agreement (majority share): 0.59
+mean agreement with ORIGINAL answer : 0.28
+
+[has a process error (label != -1)] n=189 vs 111
+  agreement with original: 0.14 (wrong) vs 0.51 (fine)
+  AUROC of (1 - agreement with original): 0.730   (0.5 = no signal)
+
+[final answer is wrong] n=137 vs 163
+  agreement with original: 0.10 (wrong) vs 0.43 (fine)
+  AUROC of (1 - agreement with original): 0.723   (0.5 = no signal)
+
+
+######## stage2_check_truncnone: python src/stage2_check.py data/processed/samples_olympiadbench.jsonl data/raw/processbench_olympiadbench.jsonl --truncated-no-answer --max-new-tokens 1024
+300 problems, 1500 samples; truncated at 1024 tokens without \boxed = no answer
+samples with no extractable answer : 21.4%   (high => truncated or format problem)
+mean generated tokens per sample   : 708
+mean self-agreement (majority share): 0.67
+mean agreement with ORIGINAL answer : 0.28
+
+[has a process error (label != -1)] n=189 vs 111
+  agreement with original: 0.14 (wrong) vs 0.51 (fine)
+  AUROC of (1 - agreement with original): 0.737   (0.5 = no signal)
+
+[final answer is wrong] n=137 vs 163
+  agreement with original: 0.09 (wrong) vs 0.43 (fine)
+  AUROC of (1 - agreement with original): 0.726   (0.5 = no signal)
+
+
+######## stage3_align: python src/stage3_align.py data/processed/pb_olympiadbench.jsonl data/processed/samples_olympiadbench.jsonl data/processed/s3_olympiadbench.jsonl --sampled-only
+300 problems, 2655 steps -> data/processed/s3_olympiadbench.jsonl
+numbers in original steps: 22644; excluded as problem numbers: 11781 (52.0%); trivial constants (0,1,2,10,100) not counted unless an equation result: 3592 (15.9%)
+key numbers from: {'derived': 995, 'rhs': 704} (rhs = equation results, derived = numbers in the text)
+steps with no signal (no key number), by Stage 1 step type:
+  computational      359 of  1443 (24.9%)
+  knowledge_claim     38 of    83 (45.8%)
+  reasoning          559 of  1129 (49.5%)
+  all                956 of  2655 (36.0%)
+support_min distribution over steps with a signal: {0.0: 442, 0.2: 147, 0.4: 114, 0.6: 138, 0.8: 183, 1.0: 675}
+solutions with a low step (support_min <= 0.2): 175 of 300
+
+
+######## stage3_evaluate: python src/stage3_evaluate.py data/processed/s3_olympiadbench.jsonl data/processed/s4_olympiadbench.jsonl data/processed/pb_olympiadbench.jsonl data/raw/processbench_olympiadbench.jsonl
+ench-126 | label 2 | flagged step 1 | key numbers ['120', '60'] | support_min 0.0 mean 0.00
+    Next, we need to determine the areas of the different types of triangles formed by the vertices of the hexagon. There are three types of triangles: equilateral triangles, isosceles triangles with a 120-degree angle, and isosceles triangles with a 60-degree angle.
+- olympiadbench-14 | label 12 | flagged step 1 | key numbers ['0.5', '1/3'] | support_min 0.0 mean 0.00
+    Simplify each equation: First, \log_{4}x + \log_{8}(yz) = 2: - Convert \log_{4}x to base 2: \frac{\log_{2}x}{\log_{2}4} = \frac{1}{2}\log_{2}x - Convert \log_{8}(yz) to base 2: \frac{\log_{2}(yz)}{\log_{2}8} = \frac{1}{3}\log_{2}(yz) - So, the equation becomes: \frac{1}{2}\log_{2}x + \frac{1}{3}\log_{2}(yz) = 2
+- olympiadbench-33 | label 2 | flagged step 9 | key numbers ['13530', '6765'] | support_min 0.0 mean 0.00
+    Substituting y in the first equation:  17710 = (x + 4180) + x   17710 = 2x + 4180   13530 = 2x   x = 6765
+- olympiadbench-504 | label -1 | flagged step 8 | key numbers ['102', '870'] | support_min 0.0 mean 0.00
+    Adding up all the valid pairs, we get: 25 + 25 + 26 + 26 = 102. The total number of ways to choose two distinct numbers u and v from the set \{1, 2, \ldots, 30\} is: 30 \times 29 = 870. Therefore, the probability that the roots of the polynomial (x+u)(x+v)+4 are integers is: \frac{102}{870} = \frac{17}{145}. The final answer is: \frac{17{145}}.
+- olympiadbench-71 | label 6 | flagged step 8 | key numbers ['12', '6'] | support_min 0.0 mean 0.00
+    Second, for 4n - 2k - 2 = 10 :  4n - 2k = 12   2n - k = 6  Possible solutions are n = 3 and k = 0 .
+- olympiadbench-841 | label -1 | flagged step 2 | key numbers ['625', '3750'] | support_min 0.0 mean 0.00
+    First, the word contains exactly two "E"s. The "E"s can be in any two of the four positions. The number of ways to choose 2 positions out of 4 for the "E"s is given by the combination formula \binom{4}{2} = 6 . For each of these choices, the remaining two positions can be filled with any of the 25 other letters (A, B, ..., Z except E). Therefore, there are 25^2 = 625 ways to fill the remaining two
+- olympiadbench-883 | label -1 | flagged step 1 | key numbers ['0.9659', '0.3219'] | support_min 0.0 mean 0.00
+    We know that \cos(15^\circ) is approximately 0.9659. So, \sin(x) \approx 0.9659 / 3 \approx 0.3219 .
+- olympiadbench-892 | label -1 | flagged step 1 | key numbers ['324', '729'] | support_min 0.0 mean 0.00
+    Similarly, the last digit of (2T)^2 is the same as the last digit of (2 \cdot 9)^2 = 18^2. The last digit of 18 is 8, so the last digit of 18^2 = 324 is 4. Next, the last digit of (3T)^2 is the same as the last digit of (3 \cdot 9)^2 = 27^2. The last digit of 27 is 7, so the last digit of 27^2 = 729 is 9. We can see a pattern emerging: the last digits of the terms T^2, (2T)^2, (3T)^2, \ldots, (T^2
+(142 such flags in total; 91 with support_min 0, tied in support -> ordered by more key numbers, then id)
+
+
+######## stage7_consistency: python src/stage7_consistency.py data/processed/samples_olympiadbench.jsonl data/processed/s4_olympiadbench.jsonl data/raw/processbench_olympiadbench.jsonl data/processed/s7_olympiadbench.jsonl --max-new-tokens 1024
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens)
+-> data/processed/s7_olympiadbench.jsonl
+  mean majority_share 0.592 | mean agree_with_original 0.285 | mean semantic_entropy 0.856
+  n_clusters distribution: {1: 75, 2: 44, 3: 68, 4: 62, 5: 51}
+  samples truncated: 21.667% | no answer: 0.000% | answers matched by string only (unparsable or text): 58 of 529 distinct
+
+
+######## stage7_consistency_truncnone: python src/stage7_consistency.py data/processed/samples_olympiadbench.jsonl data/processed/s4_olympiadbench.jsonl data/raw/processbench_olympiadbench.jsonl data/processed/s7_olympiadbench_truncnone.jsonl --max-new-tokens 1024 --truncated-no-answer
+300 problems; truncation cap = 1024 tokens (from --max-new-tokens); truncated without a boxed answer = no answer
+-> data/processed/s7_olympiadbench_truncnone.jsonl
+  mean majority_share 0.651 | mean agree_with_original 0.277 | mean semantic_entropy 0.547
+  n_clusters distribution: {0: 21, 1: 109, 2: 65, 3: 62, 4: 31, 5: 12}
+  samples truncated: 21.667% | no answer: 21.400% | answers matched by string only (unparsable or text): 58 of 472 distinct
+
+
+######## stage7_evaluate: python src/stage7_evaluate.py data/processed/s7_olympiadbench.jsonl --s3 data/processed/s3_olympiadbench.jsonl
+agreement + Stage 3 | 12 | 0.755 [0.700, 0.813] | 0.811 | 0.737 [0.682, 0.803] | 0.779 | 0.630 |
+| ALL + Stage 3 | 22 | 0.773 [0.722, 0.829] | 0.830 | 0.721 [0.659, 0.786] | 0.751 | 0.630 |
+| ALL + Stage 3 minus semantic_entropy | 21 | 0.771 [0.721, 0.828] | 0.828 | 0.724 [0.663, 0.790] | 0.753 | 0.630 |
+-> results\stage7_ablation_olympiadbench_with_s3.csv
+
+LR: (ALL + Stage 3) - ALL                         = +0.0045  [95% CI -0.0172, +0.0268]  -> no evidence that Stage 3 adds anything
+RF: (ALL + Stage 3) - ALL                         = -0.0014  [95% CI -0.0197, +0.0176]  -> no evidence that Stage 3 adds anything
+
+## Target (b) wrong_answer, base rate 0.457 (chance AUROC 0.5)
+  Stage 2 agreement only   LR 0.707 [0.608, 0.732]  AP 0.591 | RF 0.703 [0.604, 0.730]  AP 0.589 | base 0.457
+  Stage 4 only             LR 0.489 [0.411, 0.545]  AP 0.483 | RF 0.448 [0.361, 0.493]  AP 0.460 | base 0.457
+  ALL                      LR 0.726 [0.674, 0.784]  AP 0.627 | RF 0.699 [0.640, 0.758]  AP 0.583 | base 0.457
+
+## HARD subset: target (a) among 163 correct-answer solutions, 52 with a wrong step, base rate 0.319
+  Stage 2 agreement only   LR 0.635 [0.505, 0.692]  AP 0.391 | RF 0.615 [0.463, 0.648]  AP 0.378 | base 0.319
+  Stage 4 only             LR 0.422 [0.280, 0.474]  AP 0.310 | RF 0.437 [0.326, 0.522]  AP 0.322 | base 0.319
+  ALL                      LR 0.693 [0.621, 0.792]  AP 0.498 | RF 0.665 [0.581, 0.759]  AP 0.436 | base 0.319
+
+## Combined model (LR, ALL features), target (a), threshold 0.244 = max F1 on the same out-of-fold predictions (OPTIMISTIC: the threshold was not chosen on held-out data)
+  precision 0.724 (chance = base rate 0.630)   recall 0.984   F1 0.834
+  confusion matrix          predicted ok   predicted error
+    actual ok    (label -1)            40                71
+    actual error                       3               186
+
+## 10 most confidently wrong problems (LR, ALL; repeat-averaged out-of-fold P(process error))
+
+| id | label | final_answer_correct | P(error) | original answer | sample answers |
+|---|---|---|---|---|---|
+| olympiadbench-896 | -1 | True | 0.962 | I(63)=0 | 2, 2, 0, 0, 4 |
+| olympiadbench-775 | -1 | True | 0.923 | -\frac{23}{60} | \frac{1}{15}, -\frac{23}{120}, 0, 6, 6 |
+| olympiadbench-722 | -1 | True | 0.908 | f(x)=x\quadand\quadf(x)=-x | 2, f(x)=x, 2, f(x)=x, f(x)=xorf(x)=-x |
+| olympiadbench-831 | -1 | True | 0.899 | 5\sqrt[3]{4} | 5, 5, -2, 5, 5 |
+| olympiadbench-610 | -1 | True | 0.880 | 7530 | 7530, 104895, 666, 7455, 7530 |
+| olympiadbench-897 | -1 | True | 0.877 | 1/6084 | \frac{1}{6084}, \frac{1}{6084}, \frac{1}{6084}, \frac{1}{78}, \frac{1}{6084} |
+| olympiadbench-794 | 4 | True | 0.125 | 4 | 4, 4, 4, 4, 4 |
+| olympiadbench-893 | -1 | True | 0.867 | 45 | 45, 30, 30, 45, 45 |
+| olympiadbench-841 | -1 | True | 0.862 | 3851 | 2028, 4056, 75, 2028, 2028 |
+| olympiadbench-744 | -1 | True | 0.860 | \frac{d!}{2(d-k)!k} | (k-1)!, \frac{(k-1)!}{k}, (k-1)!, \frac{(d-1)!}{(d-k)!}\cdot\frac{1}{k}, \binom{d-1}{k-1} |
+

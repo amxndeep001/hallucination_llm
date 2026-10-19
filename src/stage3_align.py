@@ -23,6 +23,8 @@ The human label is copied as the target only; label and final_answer_correct are
 Usage:
   python src/stage3_align.py data/processed/pb_gsm8k.jsonl data/processed/samples_gsm8k.jsonl \
          data/processed/s3_gsm8k.jsonl
+  python src/stage3_align.py data/processed/pb_math.jsonl data/processed/samples_math.jsonl \
+         data/processed/s3_math.jsonl --sampled-only          # only the 300 sampled problems
 """
 import argparse, json, re, sys
 from collections import Counter
@@ -171,9 +173,15 @@ if __name__ == "__main__":
     ap.add_argument("pb")
     ap.add_argument("samples")
     ap.add_argument("output")
+    ap.add_argument("--sampled-only", action="store_true",
+                    help="keep only the Stage 1 problems that have samples (MATH/OlympiadBench/Omni-MATH: 300 of 1000)")
     a = ap.parse_args()
 
     pb, samples = read_jsonl(a.pb), {r["id"]: r for r in read_jsonl(a.samples)}
+    if a.sampled_only:
+        pb = [r for r in pb if r["id"] in samples]
+        if len(pb) != len(samples):
+            sys.exit(f"ERROR: {len(samples) - len(pb)} sampled ids are not in {a.pb}")
     missing = [r["id"] for r in pb if r["id"] not in samples]
     if missing:
         sys.exit(f"ERROR: {len(missing)} Stage 1 ids have no samples, e.g. {missing[:5]}")

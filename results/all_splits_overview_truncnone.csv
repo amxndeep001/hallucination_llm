@@ -1,0 +1,6 @@
+group,n,n_erroneous,base_rate,n_wrong_answer,base_rate_wrong_answer,n_hard,n_hard_correct_steps,hard_reliable,truncated_samples_pct,problems_3of5_truncated,no_answer_samples_pct,mean_majority_share,mean_agree_on_correct,orig_answer_empty,orig_answer_string_only,agree_auroc_no_truncation,n_no_truncation,agree_auroc_some_truncation,n_some_truncation
+gsm8k,400,207,0.518,200,0.5,7,193,False,1.0,2,1.0,0.87,0.877,0,1,0.949,388,1.0,12
+math,300,167,0.557,137,0.457,30,133,True,8.1,20,8.0,0.84,0.86,3,21,0.914,252,0.574,48
+olympiadbench,300,189,0.63,137,0.457,52,111,True,21.7,56,21.4,0.651,0.519,6,27,0.829,175,0.519,125
+omnimath,300,214,0.713,137,0.457,77,86,True,18.8,46,18.1,0.681,0.598,6,42,0.841,176,0.656,124
+pooled (gsm8k + math + olympiadbench + omnimath),1300,777,0.598,611,0.47,166,523,True,11.5,124,11.3,0.769,0.751,15,91,0.901,991,0.608,309

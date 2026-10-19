@@ -1,0 +1,339 @@
+===== All-splits evaluation: gsm8k, math, olympiadbench, omnimath
+
+| group | n | n_erroneous | base_rate | n_wrong_answer | base_rate_wrong_answer | n_hard | hard_reliable |
+|---|---|---|---|---|---|---|---|
+| gsm8k | 400 | 207 | 0.518 | 200 | 0.5 | 7 | False |
+| math | 300 | 167 | 0.557 | 137 | 0.457 | 30 | True |
+| olympiadbench | 300 | 189 | 0.63 | 137 | 0.457 | 52 | True |
+| omnimath | 300 | 214 | 0.713 | 137 | 0.457 | 77 | True |
+| pooled (gsm8k + math + olympiadbench + omnimath) | 1300 | 777 | 0.598 | 611 | 0.47 | 166 | True |
+
+| group | truncated_samples_pct | problems_3of5_truncated | no_answer_samples_pct | mean_majority_share | mean_agree_on_correct | orig_answer_empty | orig_answer_string_only | agree_auroc_no_truncation | n_no_truncation | agree_auroc_some_truncation | n_some_truncation |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| gsm8k | 1.0 | 2 | 0.1 | 0.863 | 0.878 | 0 | 1 | 0.949 | 388 | 1.0 | 12 |
+| math | 8.1 | 20 | 0.0 | 0.809 | 0.86 | 3 | 21 | 0.914 | 252 | 0.55 | 48 |
+| olympiadbench | 21.7 | 56 | 0.0 | 0.592 | 0.523 | 6 | 27 | 0.829 | 175 | 0.5 | 125 |
+| omnimath | 18.8 | 46 | 0.0 | 0.611 | 0.602 | 6 | 42 | 0.841 | 176 | 0.636 | 124 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | 11.5 | 124 | 0.0 | 0.73 | 0.753 | 15 | 91 | 0.901 | 991 | 0.59 | 309 |
+  gsm8k: HARD subset has 7 correct-answer-wrong-step and 193 fully correct solutions (< 30 in a class): too small to trust
+-> results\all_splits_overview.csv
+
+## AUROC [95% CI], target process_error, 5-fold CV x 10 repeats
+
+| group | feature_set | model | auroc [95% CI] | ap_mean_over_repeats | base_rate | n |
+|---|---|---|---|---|---|---|
+| gsm8k | Stage 4 only | LR | 0.550 [0.496, 0.606] | 0.622 | 0.518 | 400 |
+| gsm8k | Stage 4 only | RF | 0.516 [0.459, 0.575] | 0.596 | 0.518 | 400 |
+| gsm8k | agreement only | LR | 0.922 [0.889, 0.955] | 0.921 | 0.518 | 400 |
+| gsm8k | agreement only | RF | 0.922 [0.888, 0.955] | 0.919 | 0.518 | 400 |
+| gsm8k | Stage 3 only | LR | 0.894 [0.859, 0.925] | 0.891 | 0.518 | 400 |
+| gsm8k | Stage 3 only | RF | 0.888 [0.852, 0.921] | 0.866 | 0.518 | 400 |
+| gsm8k | Stage 4 + agreement | LR | 0.942 [0.915, 0.967] | 0.941 | 0.518 | 400 |
+| gsm8k | Stage 4 + agreement | RF | 0.938 [0.911, 0.965] | 0.928 | 0.518 | 400 |
+| gsm8k | ALL (Stage 4 + 7) | LR | 0.940 [0.912, 0.965] | 0.927 | 0.518 | 400 |
+| gsm8k | ALL (Stage 4 + 7) | RF | 0.944 [0.918, 0.967] | 0.921 | 0.518 | 400 |
+| gsm8k | ALL + Stage 3 | LR | 0.948 [0.921, 0.970] | 0.93 | 0.518 | 400 |
+| gsm8k | ALL + Stage 3 | RF | 0.944 [0.919, 0.966] | 0.931 | 0.518 | 400 |
+| math | Stage 4 only | LR | 0.538 [0.474, 0.604] | 0.658 | 0.557 | 300 |
+| math | Stage 4 only | RF | 0.512 [0.447, 0.577] | 0.63 | 0.557 | 300 |
+| math | agreement only | LR | 0.857 [0.805, 0.909] | 0.878 | 0.557 | 300 |
+| math | agreement only | RF | 0.846 [0.791, 0.900] | 0.871 | 0.557 | 300 |
+| math | Stage 3 only | LR | 0.774 [0.720, 0.827] | 0.797 | 0.557 | 300 |
+| math | Stage 3 only | RF | 0.765 [0.710, 0.820] | 0.781 | 0.557 | 300 |
+| math | Stage 4 + agreement | LR | 0.904 [0.865, 0.941] | 0.918 | 0.557 | 300 |
+| math | Stage 4 + agreement | RF | 0.891 [0.850, 0.931] | 0.903 | 0.557 | 300 |
+| math | ALL (Stage 4 + 7) | LR | 0.915 [0.879, 0.949] | 0.904 | 0.557 | 300 |
+| math | ALL (Stage 4 + 7) | RF | 0.880 [0.833, 0.923] | 0.847 | 0.557 | 300 |
+| math | ALL + Stage 3 | LR | 0.912 [0.875, 0.947] | 0.901 | 0.557 | 300 |
+| math | ALL + Stage 3 | RF | 0.898 [0.855, 0.938] | 0.876 | 0.557 | 300 |
+| olympiadbench | Stage 4 only | LR | 0.479 [0.411, 0.550] | 0.664 | 0.63 | 300 |
+| olympiadbench | Stage 4 only | RF | 0.503 [0.436, 0.570] | 0.665 | 0.63 | 300 |
+| olympiadbench | agreement only | LR | 0.675 [0.600, 0.749] | 0.753 | 0.63 | 300 |
+| olympiadbench | agreement only | RF | 0.660 [0.588, 0.735] | 0.74 | 0.63 | 300 |
+| olympiadbench | Stage 3 only | LR | 0.640 [0.574, 0.708] | 0.708 | 0.63 | 300 |
+| olympiadbench | Stage 3 only | RF | 0.655 [0.586, 0.724] | 0.71 | 0.63 | 300 |
+| olympiadbench | Stage 4 + agreement | LR | 0.738 [0.676, 0.799] | 0.797 | 0.63 | 300 |
+| olympiadbench | Stage 4 + agreement | RF | 0.717 [0.652, 0.780] | 0.774 | 0.63 | 300 |
+| olympiadbench | ALL (Stage 4 + 7) | LR | 0.773 [0.715, 0.827] | 0.83 | 0.63 | 300 |
+| olympiadbench | ALL (Stage 4 + 7) | RF | 0.726 [0.660, 0.791] | 0.752 | 0.63 | 300 |
+| olympiadbench | ALL + Stage 3 | LR | 0.777 [0.722, 0.829] | 0.83 | 0.63 | 300 |
+| olympiadbench | ALL + Stage 3 | RF | 0.725 [0.659, 0.786] | 0.751 | 0.63 | 300 |
+| omnimath | Stage 4 only | LR | 0.648 [0.580, 0.713] | 0.822 | 0.713 | 300 |
+| omnimath | Stage 4 only | RF | 0.665 [0.598, 0.726] | 0.836 | 0.713 | 300 |
+| omnimath | agreement only | LR | 0.713 [0.635, 0.786] | 0.84 | 0.713 | 300 |
+| omnimath | agreement only | RF | 0.688 [0.609, 0.765] | 0.83 | 0.713 | 300 |
+| omnimath | Stage 3 only | LR | 0.757 [0.697, 0.815] | 0.882 | 0.713 | 300 |
+| omnimath | Stage 3 only | RF | 0.752 [0.693, 0.809] | 0.873 | 0.713 | 300 |
+| omnimath | Stage 4 + agreement | LR | 0.791 [0.732, 0.850] | 0.887 | 0.713 | 300 |
+| omnimath | Stage 4 + agreement | RF | 0.794 [0.736, 0.853] | 0.881 | 0.713 | 300 |
+| omnimath | ALL (Stage 4 + 7) | LR | 0.835 [0.785, 0.884] | 0.912 | 0.713 | 300 |
+| omnimath | ALL (Stage 4 + 7) | RF | 0.799 [0.740, 0.854] | 0.881 | 0.713 | 300 |
+| omnimath | ALL + Stage 3 | LR | 0.851 [0.800, 0.897] | 0.925 | 0.713 | 300 |
+| omnimath | ALL + Stage 3 | RF | 0.812 [0.758, 0.865] | 0.9 | 0.713 | 300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | LR | 0.586 [0.556, 0.616] | 0.693 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | RF | 0.580 [0.549, 0.611] | 0.687 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | LR | 0.836 [0.810, 0.860] | 0.854 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | RF | 0.831 [0.804, 0.855] | 0.852 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | LR | 0.777 [0.751, 0.803] | 0.808 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | RF | 0.790 [0.764, 0.815] | 0.818 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 + agreement | LR | 0.879 [0.858, 0.897] | 0.9 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 + agreement | RF | 0.875 [0.853, 0.894] | 0.892 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | LR | 0.897 [0.877, 0.914] | 0.909 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | RF | 0.874 [0.852, 0.894] | 0.882 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | LR | 0.895 [0.874, 0.912] | 0.907 | 0.598 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | RF | 0.882 [0.861, 0.900] | 0.893 | 0.598 | 1300 |
+
+## AUROC [95% CI], target wrong_answer, 5-fold CV x 10 repeats
+
+| group | feature_set | model | auroc [95% CI] | ap_mean_over_repeats | base_rate | n |
+|---|---|---|---|---|---|---|
+| gsm8k | Stage 4 only | LR | 0.547 [0.490, 0.601] | 0.61 | 0.5 | 400 |
+| gsm8k | Stage 4 only | RF | 0.508 [0.447, 0.568] | 0.586 | 0.5 | 400 |
+| gsm8k | agreement only | LR | 0.935 [0.905, 0.963] | 0.924 | 0.5 | 400 |
+| gsm8k | agreement only | RF | 0.934 [0.903, 0.962] | 0.92 | 0.5 | 400 |
+| gsm8k | Stage 3 only | LR | 0.899 [0.864, 0.930] | 0.89 | 0.5 | 400 |
+| gsm8k | Stage 3 only | RF | 0.897 [0.862, 0.927] | 0.868 | 0.5 | 400 |
+| gsm8k | Stage 4 + agreement | LR | 0.950 [0.926, 0.972] | 0.939 | 0.5 | 400 |
+| gsm8k | Stage 4 + agreement | RF | 0.949 [0.925, 0.970] | 0.929 | 0.5 | 400 |
+| gsm8k | ALL (Stage 4 + 7) | LR | 0.952 [0.929, 0.973] | 0.933 | 0.5 | 400 |
+| gsm8k | ALL (Stage 4 + 7) | RF | 0.957 [0.936, 0.977] | 0.927 | 0.5 | 400 |
+| gsm8k | ALL + Stage 3 | LR | 0.956 [0.932, 0.975] | 0.932 | 0.5 | 400 |
+| gsm8k | ALL + Stage 3 | RF | 0.955 [0.933, 0.974] | 0.934 | 0.5 | 400 |
+| math | Stage 4 only | LR | 0.590 [0.526, 0.656] | 0.58 | 0.457 | 300 |
+| math | Stage 4 only | RF | 0.554 [0.488, 0.616] | 0.541 | 0.457 | 300 |
+| math | agreement only | LR | 0.863 [0.818, 0.911] | 0.803 | 0.457 | 300 |
+| math | agreement only | RF | 0.859 [0.813, 0.910] | 0.793 | 0.457 | 300 |
+| math | Stage 3 only | LR | 0.733 [0.677, 0.792] | 0.68 | 0.457 | 300 |
+| math | Stage 3 only | RF | 0.728 [0.672, 0.786] | 0.669 | 0.457 | 300 |
+| math | Stage 4 + agreement | LR | 0.905 [0.870, 0.939] | 0.869 | 0.457 | 300 |
+| math | Stage 4 + agreement | RF | 0.903 [0.867, 0.937] | 0.867 | 0.457 | 300 |
+| math | ALL (Stage 4 + 7) | LR | 0.916 [0.884, 0.945] | 0.883 | 0.457 | 300 |
+| math | ALL (Stage 4 + 7) | RF | 0.907 [0.873, 0.938] | 0.853 | 0.457 | 300 |
+| math | ALL + Stage 3 | LR | 0.903 [0.868, 0.935] | 0.865 | 0.457 | 300 |
+| math | ALL + Stage 3 | RF | 0.899 [0.864, 0.934] | 0.846 | 0.457 | 300 |
+| olympiadbench | Stage 4 only | LR | 0.478 [0.411, 0.545] | 0.483 | 0.457 | 300 |
+| olympiadbench | Stage 4 only | RF | 0.429 [0.361, 0.493] | 0.46 | 0.457 | 300 |
+| olympiadbench | agreement only | LR | 0.671 [0.608, 0.732] | 0.591 | 0.457 | 300 |
+| olympiadbench | agreement only | RF | 0.668 [0.604, 0.730] | 0.589 | 0.457 | 300 |
+| olympiadbench | Stage 3 only | LR | 0.643 [0.577, 0.705] | 0.588 | 0.457 | 300 |
+| olympiadbench | Stage 3 only | RF | 0.630 [0.567, 0.691] | 0.577 | 0.457 | 300 |
+| olympiadbench | Stage 4 + agreement | LR | 0.724 [0.667, 0.780] | 0.626 | 0.457 | 300 |
+| olympiadbench | Stage 4 + agreement | RF | 0.690 [0.631, 0.749] | 0.583 | 0.457 | 300 |
+| olympiadbench | ALL (Stage 4 + 7) | LR | 0.730 [0.674, 0.784] | 0.627 | 0.457 | 300 |
+| olympiadbench | ALL (Stage 4 + 7) | RF | 0.701 [0.640, 0.758] | 0.583 | 0.457 | 300 |
+| olympiadbench | ALL + Stage 3 | LR | 0.739 [0.683, 0.793] | 0.643 | 0.457 | 300 |
+| olympiadbench | ALL + Stage 3 | RF | 0.697 [0.639, 0.758] | 0.585 | 0.457 | 300 |
+| omnimath | Stage 4 only | LR | 0.547 [0.478, 0.612] | 0.527 | 0.457 | 300 |
+| omnimath | Stage 4 only | RF | 0.583 [0.515, 0.646] | 0.533 | 0.457 | 300 |
+| omnimath | agreement only | LR | 0.674 [0.614, 0.735] | 0.6 | 0.457 | 300 |
+| omnimath | agreement only | RF | 0.646 [0.583, 0.709] | 0.592 | 0.457 | 300 |
+| omnimath | Stage 3 only | LR | 0.641 [0.581, 0.700] | 0.548 | 0.457 | 300 |
+| omnimath | Stage 3 only | RF | 0.618 [0.556, 0.681] | 0.52 | 0.457 | 300 |
+| omnimath | Stage 4 + agreement | LR | 0.727 [0.667, 0.781] | 0.644 | 0.457 | 300 |
+| omnimath | Stage 4 + agreement | RF | 0.715 [0.659, 0.771] | 0.613 | 0.457 | 300 |
+| omnimath | ALL (Stage 4 + 7) | LR | 0.714 [0.654, 0.770] | 0.616 | 0.457 | 300 |
+| omnimath | ALL (Stage 4 + 7) | RF | 0.708 [0.650, 0.766] | 0.602 | 0.457 | 300 |
+| omnimath | ALL + Stage 3 | LR | 0.734 [0.677, 0.788] | 0.637 | 0.457 | 300 |
+| omnimath | ALL + Stage 3 | RF | 0.715 [0.657, 0.773] | 0.618 | 0.457 | 300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | LR | 0.539 [0.508, 0.571] | 0.537 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | RF | 0.551 [0.520, 0.583] | 0.536 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | LR | 0.818 [0.793, 0.841] | 0.739 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | RF | 0.812 [0.787, 0.835] | 0.738 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | LR | 0.744 [0.717, 0.770] | 0.672 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | RF | 0.756 [0.730, 0.782] | 0.702 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 + agreement | LR | 0.863 [0.842, 0.882] | 0.804 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 + agreement | RF | 0.857 [0.836, 0.876] | 0.789 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | LR | 0.871 [0.851, 0.888] | 0.832 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | RF | 0.871 [0.851, 0.888] | 0.827 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | LR | 0.870 [0.850, 0.888] | 0.824 | 0.47 | 1300 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | RF | 0.869 [0.849, 0.887] | 0.831 | 0.47 | 1300 |
+-> results\all_splits_auroc.csv
+
+## HARD subset (correct final answer): target process_error = a wrong step despite the right answer; which feature groups carry the signal (only where both classes have >= 30)
+
+  gsm8k: NOT EVALUATED: only 7 correct-answer-wrong-step cases (vs 193 fully correct), too few to train or score a classifier
+| group | feature_set | model | auroc [95% CI] | base_rate | n | n_pos |
+|---|---|---|---|---|---|---|
+| math | Stage 4 only | LR | 0.446 [0.315, 0.576] | 0.184 | 163 | 30 |
+| math | Stage 4 only | RF | 0.452 [0.338, 0.567] | 0.184 | 163 | 30 |
+| math | Stage 3 only | LR | 0.661 [0.530, 0.785] | 0.184 | 163 | 30 |
+| math | Stage 3 only | RF | 0.649 [0.519, 0.772] | 0.184 | 163 | 30 |
+| math | agreement only | LR | 0.630 [0.474, 0.773] | 0.184 | 163 | 30 |
+| math | agreement only | RF | 0.548 [0.391, 0.700] | 0.184 | 163 | 30 |
+| math | Stage 7 only (agreement + entropy) | LR | 0.724 [0.607, 0.835] | 0.184 | 163 | 30 |
+| math | Stage 7 only (agreement + entropy) | RF | 0.739 [0.634, 0.837] | 0.184 | 163 | 30 |
+| math | ALL (Stage 4 + 7) | LR | 0.783 [0.697, 0.863] | 0.184 | 163 | 30 |
+| math | ALL (Stage 4 + 7) | RF | 0.735 [0.623, 0.841] | 0.184 | 163 | 30 |
+| math | ALL + Stage 3 | LR | 0.760 [0.667, 0.848] | 0.184 | 163 | 30 |
+| math | ALL + Stage 3 | RF | 0.775 [0.678, 0.867] | 0.184 | 163 | 30 |
+| olympiadbench | Stage 4 only | LR | 0.375 [0.280, 0.474] | 0.319 | 163 | 52 |
+| olympiadbench | Stage 4 only | RF | 0.422 [0.326, 0.522] | 0.319 | 163 | 52 |
+| olympiadbench | Stage 3 only | LR | 0.522 [0.433, 0.613] | 0.319 | 163 | 52 |
+| olympiadbench | Stage 3 only | RF | 0.613 [0.523, 0.699] | 0.319 | 163 | 52 |
+| olympiadbench | agreement only | LR | 0.599 [0.505, 0.692] | 0.319 | 163 | 52 |
+| olympiadbench | agreement only | RF | 0.558 [0.463, 0.648] | 0.319 | 163 | 52 |
+| olympiadbench | Stage 7 only (agreement + entropy) | LR | 0.709 [0.622, 0.792] | 0.319 | 163 | 52 |
+| olympiadbench | Stage 7 only (agreement + entropy) | RF | 0.659 [0.572, 0.747] | 0.319 | 163 | 52 |
+| olympiadbench | ALL (Stage 4 + 7) | LR | 0.709 [0.621, 0.792] | 0.319 | 163 | 52 |
+| olympiadbench | ALL (Stage 4 + 7) | RF | 0.671 [0.581, 0.759] | 0.319 | 163 | 52 |
+| olympiadbench | ALL + Stage 3 | LR | 0.692 [0.606, 0.774] | 0.319 | 163 | 52 |
+| olympiadbench | ALL + Stage 3 | RF | 0.668 [0.580, 0.755] | 0.319 | 163 | 52 |
+| omnimath | Stage 4 only | LR | 0.634 [0.548, 0.718] | 0.472 | 163 | 77 |
+| omnimath | Stage 4 only | RF | 0.648 [0.558, 0.728] | 0.472 | 163 | 77 |
+| omnimath | Stage 3 only | LR | 0.727 [0.645, 0.803] | 0.472 | 163 | 77 |
+| omnimath | Stage 3 only | RF | 0.716 [0.632, 0.795] | 0.472 | 163 | 77 |
+| omnimath | agreement only | LR | 0.617 [0.523, 0.711] | 0.472 | 163 | 77 |
+| omnimath | agreement only | RF | 0.606 [0.521, 0.699] | 0.472 | 163 | 77 |
+| omnimath | Stage 7 only (agreement + entropy) | LR | 0.776 [0.699, 0.845] | 0.472 | 163 | 77 |
+| omnimath | Stage 7 only (agreement + entropy) | RF | 0.749 [0.670, 0.821] | 0.472 | 163 | 77 |
+| omnimath | ALL (Stage 4 + 7) | LR | 0.794 [0.722, 0.861] | 0.472 | 163 | 77 |
+| omnimath | ALL (Stage 4 + 7) | RF | 0.747 [0.668, 0.819] | 0.472 | 163 | 77 |
+| omnimath | ALL + Stage 3 | LR | 0.819 [0.749, 0.880] | 0.472 | 163 | 77 |
+| omnimath | ALL + Stage 3 | RF | 0.776 [0.704, 0.844] | 0.472 | 163 | 77 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | LR | 0.623 [0.573, 0.670] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 only | RF | 0.602 [0.552, 0.650] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | LR | 0.730 [0.686, 0.773] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 only | RF | 0.729 [0.682, 0.772] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | LR | 0.714 [0.664, 0.763] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | agreement only | RF | 0.697 [0.646, 0.747] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 7 only (agreement + entropy) | LR | 0.829 [0.790, 0.865] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 7 only (agreement + entropy) | RF | 0.808 [0.766, 0.845] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | LR | 0.839 [0.803, 0.873] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL (Stage 4 + 7) | RF | 0.812 [0.772, 0.850] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | LR | 0.840 [0.802, 0.874] | 0.241 | 689 | 166 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | ALL + Stage 3 | RF | 0.821 [0.783, 0.856] | 0.241 | 689 | 166 |
+-> results\all_splits_hard.csv
+
+## Step level: predicted first wrong step vs the human label (sampled problems only)
+
+| group | method | n_erroneous | flagged_pct | exact_match_pct | chance_exact_pct | false_alarm_pct | precision_pct | base_rate_pct | ceiling_pct | steps_no_key_number_pct |
+|---|---|---|---|---|---|---|---|---|---|---|
+| gsm8k | Stage 3 (support_min <= 0.2) | 207 | 84.1 | 44.4 | 20.8 | 18.7 | 82.9 | 51.8 | 87.9 | 22.0 |
+| gsm8k | Stage 4 (SymPy first fail) | 207 | 8.2 | 7.2 | 20.8 | 0.0 | 100.0 | 51.8 | 61.8 | 22.0 |
+| math | Stage 3 (support_min <= 0.2) | 167 | 68.3 | 21.0 | 18.1 | 26.3 | 76.5 | 55.7 | 70.7 | 34.6 |
+| math | Stage 4 (SymPy first fail) | 167 | 12.6 | 7.2 | 18.1 | 0.8 | 95.5 | 55.7 | 48.5 | 34.6 |
+| olympiadbench | Stage 3 (support_min <= 0.2) | 189 | 66.1 | 17.5 | 13.1 | 45.0 | 71.4 | 63.0 | 65.1 | 36.0 |
+| olympiadbench | Stage 4 (SymPy first fail) | 189 | 9.0 | 2.6 | 13.1 | 1.8 | 89.5 | 63.0 | 54.5 | 36.0 |
+| omnimath | Stage 3 (support_min <= 0.2) | 214 | 65.0 | 19.6 | 14.4 | 46.5 | 77.7 | 71.3 | 56.5 | 43.5 |
+| omnimath | Stage 4 (SymPy first fail) | 214 | 13.6 | 6.1 | 14.4 | 3.5 | 90.6 | 71.3 | 46.3 | 43.5 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 3 (support_min <= 0.2) | 777 | 71.0 | 26.0 | 16.6 | 30.8 | 77.4 | 59.8 | 70.0 | 34.4 |
+| pooled (gsm8k + math + olympiadbench + omnimath) | Stage 4 (SymPy first fail) | 777 | 10.8 | 5.8 | 16.6 | 1.1 | 93.3 | 59.8 | 52.9 | 34.4 |
+-> results\all_splits_steps.csv
+
+## Generalisation: fit on the train splits, AUROC [95% CI] on the unseen test split
+
+| target | train | test | feature_set | model | auroc [95% CI] | base_rate_test |
+|---|---|---|---|---|---|---|
+| process_error | gsm8k | math | agreement only | LR | 0.901 [0.864, 0.937] | 0.557 |
+| process_error | gsm8k | math | agreement only | RF | 0.900 [0.862, 0.935] | 0.557 |
+| process_error | gsm8k | math | Stage 4 + agreement | LR | 0.900 [0.858, 0.937] | 0.557 |
+| process_error | gsm8k | math | Stage 4 + agreement | RF | 0.899 [0.859, 0.937] | 0.557 |
+| process_error | gsm8k | math | ALL (Stage 4 + 7) | LR | 0.917 [0.884, 0.950] | 0.557 |
+| process_error | gsm8k | math | ALL (Stage 4 + 7) | RF | 0.907 [0.868, 0.944] | 0.557 |
+| process_error | gsm8k | math | ALL + Stage 3 | LR | 0.910 [0.872, 0.945] | 0.557 |
+| process_error | gsm8k | math | ALL + Stage 3 | RF | 0.912 [0.876, 0.946] | 0.557 |
+| process_error | gsm8k | olympiadbench | agreement only | LR | 0.735 [0.678, 0.793] | 0.63 |
+| process_error | gsm8k | olympiadbench | agreement only | RF | 0.736 [0.679, 0.793] | 0.63 |
+| process_error | gsm8k | olympiadbench | Stage 4 + agreement | LR | 0.728 [0.664, 0.791] | 0.63 |
+| process_error | gsm8k | olympiadbench | Stage 4 + agreement | RF | 0.742 [0.682, 0.801] | 0.63 |
+| process_error | gsm8k | olympiadbench | ALL (Stage 4 + 7) | LR | 0.750 [0.691, 0.808] | 0.63 |
+| process_error | gsm8k | olympiadbench | ALL (Stage 4 + 7) | RF | 0.725 [0.661, 0.788] | 0.63 |
+| process_error | gsm8k | olympiadbench | ALL + Stage 3 | LR | 0.713 [0.648, 0.778] | 0.63 |
+| process_error | gsm8k | olympiadbench | ALL + Stage 3 | RF | 0.718 [0.653, 0.782] | 0.63 |
+| process_error | gsm8k | omnimath | agreement only | LR | 0.764 [0.702, 0.822] | 0.713 |
+| process_error | gsm8k | omnimath | agreement only | RF | 0.758 [0.697, 0.815] | 0.713 |
+| process_error | gsm8k | omnimath | Stage 4 + agreement | LR | 0.763 [0.693, 0.825] | 0.713 |
+| process_error | gsm8k | omnimath | Stage 4 + agreement | RF | 0.752 [0.683, 0.817] | 0.713 |
+| process_error | gsm8k | omnimath | ALL (Stage 4 + 7) | LR | 0.795 [0.735, 0.853] | 0.713 |
+| process_error | gsm8k | omnimath | ALL (Stage 4 + 7) | RF | 0.777 [0.713, 0.838] | 0.713 |
+| process_error | gsm8k | omnimath | ALL + Stage 3 | LR | 0.722 [0.647, 0.791] | 0.713 |
+| process_error | gsm8k | omnimath | ALL + Stage 3 | RF | 0.750 [0.683, 0.810] | 0.713 |
+| process_error | math+olympiadbench+omnimath | gsm8k | agreement only | LR | 0.949 [0.927, 0.970] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | agreement only | RF | 0.949 [0.927, 0.970] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | Stage 4 + agreement | LR | 0.955 [0.934, 0.975] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | Stage 4 + agreement | RF | 0.946 [0.921, 0.967] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | ALL (Stage 4 + 7) | LR | 0.931 [0.904, 0.956] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | ALL (Stage 4 + 7) | RF | 0.912 [0.883, 0.942] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | ALL + Stage 3 | LR | 0.932 [0.905, 0.957] | 0.518 |
+| process_error | math+olympiadbench+omnimath | gsm8k | ALL + Stage 3 | RF | 0.936 [0.912, 0.957] | 0.518 |
+| process_error | gsm8k+olympiadbench+omnimath | math | agreement only | LR | 0.901 [0.864, 0.937] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | agreement only | RF | 0.901 [0.864, 0.937] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | Stage 4 + agreement | LR | 0.918 [0.883, 0.950] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | Stage 4 + agreement | RF | 0.900 [0.859, 0.936] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | ALL (Stage 4 + 7) | LR | 0.937 [0.908, 0.963] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | ALL (Stage 4 + 7) | RF | 0.917 [0.881, 0.949] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | ALL + Stage 3 | LR | 0.932 [0.902, 0.958] | 0.557 |
+| process_error | gsm8k+olympiadbench+omnimath | math | ALL + Stage 3 | RF | 0.925 [0.893, 0.955] | 0.557 |
+| process_error | gsm8k+math+omnimath | olympiadbench | agreement only | LR | 0.735 [0.678, 0.793] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | agreement only | RF | 0.735 [0.678, 0.793] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | Stage 4 + agreement | LR | 0.763 [0.702, 0.817] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | Stage 4 + agreement | RF | 0.765 [0.706, 0.821] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | ALL (Stage 4 + 7) | LR | 0.796 [0.741, 0.846] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | ALL (Stage 4 + 7) | RF | 0.772 [0.713, 0.829] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | ALL + Stage 3 | LR | 0.788 [0.730, 0.842] | 0.63 |
+| process_error | gsm8k+math+omnimath | olympiadbench | ALL + Stage 3 | RF | 0.745 [0.681, 0.805] | 0.63 |
+| process_error | gsm8k+math+olympiadbench | omnimath | agreement only | LR | 0.764 [0.702, 0.822] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | agreement only | RF | 0.758 [0.697, 0.815] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | Stage 4 + agreement | LR | 0.796 [0.737, 0.855] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | Stage 4 + agreement | RF | 0.794 [0.737, 0.851] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | ALL (Stage 4 + 7) | LR | 0.829 [0.773, 0.881] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | ALL (Stage 4 + 7) | RF | 0.816 [0.763, 0.866] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | ALL + Stage 3 | LR | 0.821 [0.764, 0.875] | 0.713 |
+| process_error | gsm8k+math+olympiadbench | omnimath | ALL + Stage 3 | RF | 0.795 [0.735, 0.850] | 0.713 |
+| wrong_answer | gsm8k | math | agreement only | LR | 0.900 [0.866, 0.934] | 0.457 |
+| wrong_answer | gsm8k | math | agreement only | RF | 0.898 [0.864, 0.932] | 0.457 |
+| wrong_answer | gsm8k | math | Stage 4 + agreement | LR | 0.908 [0.873, 0.941] | 0.457 |
+| wrong_answer | gsm8k | math | Stage 4 + agreement | RF | 0.905 [0.869, 0.938] | 0.457 |
+| wrong_answer | gsm8k | math | ALL (Stage 4 + 7) | LR | 0.919 [0.889, 0.948] | 0.457 |
+| wrong_answer | gsm8k | math | ALL (Stage 4 + 7) | RF | 0.908 [0.874, 0.942] | 0.457 |
+| wrong_answer | gsm8k | math | ALL + Stage 3 | LR | 0.893 [0.857, 0.930] | 0.457 |
+| wrong_answer | gsm8k | math | ALL + Stage 3 | RF | 0.888 [0.851, 0.926] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | agreement only | LR | 0.727 [0.675, 0.776] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | agreement only | RF | 0.725 [0.674, 0.775] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | Stage 4 + agreement | LR | 0.701 [0.634, 0.759] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | Stage 4 + agreement | RF | 0.733 [0.673, 0.788] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | ALL (Stage 4 + 7) | LR | 0.722 [0.658, 0.779] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | ALL (Stage 4 + 7) | RF | 0.713 [0.656, 0.769] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | ALL + Stage 3 | LR | 0.688 [0.625, 0.746] | 0.457 |
+| wrong_answer | gsm8k | olympiadbench | ALL + Stage 3 | RF | 0.701 [0.639, 0.759] | 0.457 |
+| wrong_answer | gsm8k | omnimath | agreement only | LR | 0.735 [0.682, 0.783] | 0.457 |
+| wrong_answer | gsm8k | omnimath | agreement only | RF | 0.731 [0.679, 0.779] | 0.457 |
+| wrong_answer | gsm8k | omnimath | Stage 4 + agreement | LR | 0.723 [0.668, 0.779] | 0.457 |
+| wrong_answer | gsm8k | omnimath | Stage 4 + agreement | RF | 0.714 [0.658, 0.769] | 0.457 |
+| wrong_answer | gsm8k | omnimath | ALL (Stage 4 + 7) | LR | 0.739 [0.686, 0.792] | 0.457 |
+| wrong_answer | gsm8k | omnimath | ALL (Stage 4 + 7) | RF | 0.730 [0.672, 0.783] | 0.457 |
+| wrong_answer | gsm8k | omnimath | ALL + Stage 3 | LR | 0.703 [0.644, 0.760] | 0.457 |
+| wrong_answer | gsm8k | omnimath | ALL + Stage 3 | RF | 0.709 [0.651, 0.765] | 0.457 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | agreement only | LR | 0.957 [0.938, 0.975] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | agreement only | RF | 0.952 [0.932, 0.970] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | Stage 4 + agreement | LR | 0.962 [0.942, 0.979] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | Stage 4 + agreement | RF | 0.964 [0.946, 0.980] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | ALL (Stage 4 + 7) | LR | 0.961 [0.940, 0.978] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | ALL (Stage 4 + 7) | RF | 0.953 [0.935, 0.971] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | ALL + Stage 3 | LR | 0.958 [0.936, 0.977] | 0.5 |
+| wrong_answer | math+olympiadbench+omnimath | gsm8k | ALL + Stage 3 | RF | 0.958 [0.941, 0.974] | 0.5 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | agreement only | LR | 0.900 [0.866, 0.934] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | agreement only | RF | 0.903 [0.869, 0.936] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | Stage 4 + agreement | LR | 0.912 [0.879, 0.944] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | Stage 4 + agreement | RF | 0.903 [0.867, 0.938] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | ALL (Stage 4 + 7) | LR | 0.906 [0.868, 0.942] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | ALL (Stage 4 + 7) | RF | 0.911 [0.877, 0.944] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | ALL + Stage 3 | LR | 0.903 [0.866, 0.939] | 0.457 |
+| wrong_answer | gsm8k+olympiadbench+omnimath | math | ALL + Stage 3 | RF | 0.907 [0.872, 0.941] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | agreement only | LR | 0.727 [0.675, 0.776] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | agreement only | RF | 0.731 [0.679, 0.781] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | Stage 4 + agreement | LR | 0.748 [0.693, 0.800] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | Stage 4 + agreement | RF | 0.742 [0.687, 0.795] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | ALL (Stage 4 + 7) | LR | 0.752 [0.699, 0.805] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | ALL (Stage 4 + 7) | RF | 0.752 [0.698, 0.806] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | ALL + Stage 3 | LR | 0.761 [0.708, 0.812] | 0.457 |
+| wrong_answer | gsm8k+math+omnimath | olympiadbench | ALL + Stage 3 | RF | 0.745 [0.690, 0.800] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | agreement only | LR | 0.735 [0.682, 0.783] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | agreement only | RF | 0.735 [0.683, 0.783] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | Stage 4 + agreement | LR | 0.763 [0.710, 0.812] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | Stage 4 + agreement | RF | 0.747 [0.693, 0.799] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | ALL (Stage 4 + 7) | LR | 0.753 [0.699, 0.803] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | ALL (Stage 4 + 7) | RF | 0.724 [0.668, 0.778] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | ALL + Stage 3 | LR | 0.758 [0.704, 0.806] | 0.457 |
+| wrong_answer | gsm8k+math+olympiadbench | omnimath | ALL + Stage 3 | RF | 0.745 [0.691, 0.799] | 0.457 |
+-> results\all_splits_transfer.csv
