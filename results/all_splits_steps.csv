@@ -1,0 +1,9 @@
+group,method,n_erroneous,n_correct,flagged_pct,exact_match_pct,chance_exact_pct,false_alarm_pct,precision_pct,base_rate_pct,ceiling_pct,steps_no_key_number_pct,n_steps
+gsm8k,Stage 3 (support_min <= 0.2),207,193,84.1,44.4,20.8,18.7,82.9,51.8,87.9,22.0,2082
+gsm8k,Stage 4 (SymPy first fail),207,193,8.2,7.2,20.8,0.0,100.0,51.8,61.8,22.0,2082
+math,Stage 3 (support_min <= 0.2),167,133,68.3,21.0,18.1,26.3,76.5,55.7,70.7,34.6,1908
+math,Stage 4 (SymPy first fail),167,133,12.6,7.2,18.1,0.8,95.5,55.7,48.5,34.6,1908
+olympiadbench,Stage 3 (support_min <= 0.2),189,111,66.1,17.5,13.1,45.0,71.4,63.0,65.1,36.0,2655
+olympiadbench,Stage 4 (SymPy first fail),189,111,9.0,2.6,13.1,1.8,89.5,63.0,54.5,36.0,2655
+pooled (gsm8k + math + olympiadbench),Stage 3 (support_min <= 0.2),563,437,73.4,28.4,17.4,27.7,77.3,56.3,75.1,31.2,6645
+pooled (gsm8k + math + olympiadbench),Stage 4 (SymPy first fail),563,437,9.8,5.7,17.4,0.7,94.8,56.3,55.4,31.2,6645

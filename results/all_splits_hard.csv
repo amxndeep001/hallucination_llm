@@ -1,0 +1,37 @@
+group,target,feature_set,model,auroc,ci_low,ci_high,auroc_mean_over_repeats,sd_over_repeats,ap_mean_over_repeats,base_rate,n,n_pos
+math,process_error,Stage 4 only,LR,0.446,0.315,0.576,0.471,0.037,0.216,0.184,163,30
+math,process_error,Stage 4 only,RF,0.452,0.338,0.567,0.483,0.042,0.214,0.184,163,30
+math,process_error,Stage 3 only,LR,0.661,0.53,0.785,0.684,0.025,0.35,0.184,163,30
+math,process_error,Stage 3 only,RF,0.649,0.519,0.772,0.65,0.016,0.321,0.184,163,30
+math,process_error,agreement only,LR,0.63,0.474,0.773,0.706,0.019,0.378,0.184,163,30
+math,process_error,agreement only,RF,0.548,0.391,0.7,0.63,0.021,0.318,0.184,163,30
+math,process_error,Stage 7 only (agreement + entropy),LR,0.724,0.607,0.835,0.722,0.024,0.38,0.184,163,30
+math,process_error,Stage 7 only (agreement + entropy),RF,0.739,0.634,0.837,0.729,0.017,0.432,0.184,163,30
+math,process_error,ALL (Stage 4 + 7),LR,0.783,0.697,0.863,0.763,0.018,0.409,0.184,163,30
+math,process_error,ALL (Stage 4 + 7),RF,0.735,0.623,0.841,0.732,0.013,0.414,0.184,163,30
+math,process_error,ALL + Stage 3,LR,0.76,0.667,0.848,0.741,0.04,0.393,0.184,163,30
+math,process_error,ALL + Stage 3,RF,0.775,0.678,0.867,0.768,0.016,0.437,0.184,163,30
+olympiadbench,process_error,Stage 4 only,LR,0.375,0.28,0.474,0.422,0.032,0.31,0.319,163,52
+olympiadbench,process_error,Stage 4 only,RF,0.422,0.326,0.522,0.437,0.019,0.322,0.319,163,52
+olympiadbench,process_error,Stage 3 only,LR,0.522,0.433,0.613,0.534,0.037,0.333,0.319,163,52
+olympiadbench,process_error,Stage 3 only,RF,0.613,0.523,0.699,0.61,0.022,0.386,0.319,163,52
+olympiadbench,process_error,agreement only,LR,0.599,0.505,0.692,0.635,0.008,0.391,0.319,163,52
+olympiadbench,process_error,agreement only,RF,0.558,0.463,0.648,0.615,0.022,0.378,0.319,163,52
+olympiadbench,process_error,Stage 7 only (agreement + entropy),LR,0.709,0.622,0.792,0.705,0.012,0.497,0.319,163,52
+olympiadbench,process_error,Stage 7 only (agreement + entropy),RF,0.659,0.572,0.747,0.656,0.019,0.416,0.319,163,52
+olympiadbench,process_error,ALL (Stage 4 + 7),LR,0.709,0.621,0.792,0.693,0.03,0.498,0.319,163,52
+olympiadbench,process_error,ALL (Stage 4 + 7),RF,0.671,0.581,0.759,0.665,0.017,0.436,0.319,163,52
+olympiadbench,process_error,ALL + Stage 3,LR,0.692,0.606,0.774,0.677,0.03,0.462,0.319,163,52
+olympiadbench,process_error,ALL + Stage 3,RF,0.668,0.58,0.755,0.661,0.022,0.425,0.319,163,52
+pooled (gsm8k + math + olympiadbench),process_error,Stage 4 only,LR,0.609,0.536,0.68,0.603,0.021,0.274,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,Stage 4 only,RF,0.547,0.474,0.621,0.557,0.019,0.251,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,Stage 3 only,LR,0.718,0.66,0.771,0.717,0.008,0.303,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,Stage 3 only,RF,0.731,0.671,0.788,0.728,0.007,0.33,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,agreement only,LR,0.715,0.649,0.776,0.749,0.005,0.344,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,agreement only,RF,0.702,0.635,0.769,0.736,0.012,0.328,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,Stage 7 only (agreement + entropy),LR,0.814,0.766,0.862,0.813,0.004,0.444,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,Stage 7 only (agreement + entropy),RF,0.778,0.722,0.831,0.776,0.006,0.396,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,ALL (Stage 4 + 7),LR,0.825,0.778,0.868,0.816,0.012,0.461,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,ALL (Stage 4 + 7),RF,0.786,0.735,0.838,0.785,0.005,0.416,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,ALL + Stage 3,LR,0.829,0.783,0.871,0.819,0.011,0.447,0.169,526,89
+pooled (gsm8k + math + olympiadbench),process_error,ALL + Stage 3,RF,0.796,0.747,0.843,0.791,0.005,0.392,0.169,526,89
