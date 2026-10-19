@@ -87,9 +87,19 @@ python src/stage7_consistency.py data/processed/samples_<split>.jsonl data/proce
 python src/stage7_evaluate.py data/processed/s7_<split>.jsonl      # -> results/stage7_ablation_<split>.csv
 #   with the Stage 3 features added (the file above is unchanged)  -> results/stage7_ablation_<split>_with_s3.csv
 python src/stage7_evaluate.py data/processed/s7_<split>.jsonl --s3 data/processed/s3_<split>.jsonl
-# tests for the answer clustering and normalization
+# All splits: validate samples_<split>.jsonl, then Stage 2b (both answer rules), 3 and 7 for its sampled problems
+python src/run_split.py math            # gsm8k, math, olympiadbench, omnimath; logs in results/logs/
+# Evaluation over every split that has s7_ and s3_ files, per split and pooled -> results/all_splits_*.csv
+python src/evaluate_all.py
+python src/evaluate_all.py --suffix _truncnone              # truncated without \boxed = no answer
+python src/evaluate_all.py --suffix _truncnone --compare    # both side by side -> all_splits_compare_truncnone.csv
+#   Omni-MATH: drop the new data/processed/samples_omnimath.jsonl in, run run_split.py omnimath, then the three
+#   lines above; it joins every table (and the pooled rows) automatically.
+# tests
 python tests/test_stage7.py
 python tests/test_normalize.py
+python tests/test_stage3.py
+python tests/test_no_leakage.py     # no feature uses label / final_answer_correct
 ```
 
 ## Stage 3 in short
@@ -162,6 +172,118 @@ Stage 4, against the ProcessBench labels (`results/stage4_summary.csv`; byte-ide
 SymPy catches arithmetic slips with high precision but not reasoning errors, so it is one
 signal to combine with the others, not a detector on its own.
 
+### All splits (GSM8K, MATH, OlympiadBench; Omni-MATH pending re-sampling)
+
+Sampled problems only: GSM8K 400, MATH and OlympiadBench 300 each (seed 0, the same problems for every
+stage), 5 samples each from Qwen2.5-Math-1.5B-Instruct (max 768 new tokens for GSM8K, 1024 for the others).
+Source: `results/all_splits_*.csv`, written by `src/evaluate_all.py`.
+
+**Protocol.** Logistic regression (standardised, C = 1) and a random forest (200 trees, depth 4),
+stratified 5-fold cross-validation repeated 10 times (seed 0), no tuning. Each problem gets an out-of-fold
+probability in each repeat, and these are averaged over the 10 repeats. The AUROC reported is the AUROC of
+those averaged predictions. The 95% CI bootstraps the problems (2000 resamples) of the **same**
+predictions, so the point estimate and the interval describe one statistic. (The per-split
+`stage7_ablation_*.csv` files report the mean of the 10 per-repeat AUROCs instead; for near-chance feature
+sets that mean can fall outside the CI, so it is kept only as `auroc_mean_over_repeats`.) Human labels
+and `final_answer_correct` are targets only; `tests/test_no_leakage.py` checks that no feature uses them.
+
+Target: process error (label ≠ −1), logistic regression, AUROC [95% CI]:
+
+| Split | n | Erroneous (base rate) | Stage 4 only | Stage 3 only | Agreement only | Stage 4 + agreement | ALL (Stage 4 + 7) | ALL + Stage 3 |
+|---|---|---|---|---|---|---|---|---|
+| GSM8K | 400 | 207 (0.52) | 0.550 [0.496, 0.606] | 0.894 [0.859, 0.925] | 0.922 [0.889, 0.955] | 0.942 [0.915, 0.967] | 0.940 [0.912, 0.965] | 0.948 [0.921, 0.970] |
+| MATH | 300 | 167 (0.56) | 0.538 [0.474, 0.604] | 0.774 [0.720, 0.827] | 0.857 [0.805, 0.909] | 0.904 [0.865, 0.941] | 0.915 [0.879, 0.949] | 0.912 [0.875, 0.947] |
+| OlympiadBench | 300 | 189 (0.63) | 0.479 [0.411, 0.550] | 0.640 [0.574, 0.708] | 0.675 [0.600, 0.749] | 0.738 [0.676, 0.799] | 0.773 [0.715, 0.827] | 0.777 [0.722, 0.829] |
+| Pooled | 1000 | 563 (0.56) | 0.559 [0.523, 0.592] | 0.790 [0.761, 0.818] | 0.860 [0.833, 0.887] | 0.895 [0.873, 0.916] | 0.909 [0.890, 0.928] | 0.906 [0.885, 0.926] |
+
+Target: wrong final answer, logistic regression (random forest results and both targets in full: `all_splits_auroc.csv`):
+
+| Split | Wrong answers (base rate) | Agreement only | ALL (Stage 4 + 7) | ALL + Stage 3 |
+|---|---|---|---|---|
+| GSM8K | 200 (0.50) | 0.935 [0.905, 0.963] | 0.952 [0.929, 0.973] | 0.956 [0.932, 0.975] |
+| MATH | 137 (0.46) | 0.863 [0.818, 0.911] | 0.916 [0.884, 0.945] | 0.903 [0.868, 0.935] |
+| OlympiadBench | 137 (0.46) | 0.671 [0.608, 0.732] | 0.730 [0.674, 0.784] | 0.739 [0.683, 0.793] |
+| Pooled | 474 (0.47) | 0.844 [0.817, 0.870] | 0.901 [0.881, 0.919] | 0.900 [0.880, 0.919] |
+
+**Hard subset** (correct final answer but a wrong step, against fully correct solutions), process error,
+logistic regression (`all_splits_hard.csv`). **GSM8K has only 7 such cases (vs 193 fully correct),
+which is too few to train or score a classifier, so it is not evaluated on its own**; its 7 cases are
+included in the pooled row.
+
+| Split | Hard / correct | Stage 4 only | Stage 3 only | Agreement only | Stage 7 only (agreement + entropy) | ALL (Stage 4 + 7) | ALL + Stage 3 |
+|---|---|---|---|---|---|---|---|
+| GSM8K | 7 / 193 | too few | too few | too few | too few | too few | too few |
+| MATH | 30 / 133 | 0.446 [0.315, 0.576] | 0.661 [0.530, 0.785] | 0.630 [0.474, 0.773] | 0.724 [0.607, 0.835] | 0.783 [0.697, 0.863] | 0.760 [0.667, 0.848] |
+| OlympiadBench | 52 / 111 | 0.375 [0.280, 0.474] | 0.522 [0.433, 0.613] | 0.599 [0.505, 0.692] | 0.709 [0.622, 0.792] | 0.709 [0.621, 0.792] | 0.692 [0.606, 0.774] |
+| Pooled | 89 / 437 | 0.609 [0.536, 0.680] | 0.718 [0.660, 0.771] | 0.715 [0.649, 0.776] | 0.814 [0.766, 0.862] | 0.825 [0.778, 0.868] | 0.829 [0.783, 0.871] |
+
+On the hard subset the signal comes from the Stage 7 sample features: agreement *plus* the
+entropy/log-probability/length summaries. Agreement alone is weak there, as it should be, since the
+original answer is right. Stage 4 alone is at or below chance in every single split. Its 0.609 pooled
+comes from the splits differing in base rate and equation counts, not from detecting errors. MATH's 30
+hard cases give wide intervals.
+
+**Step level** (first flagged step vs the human first wrong step, `all_splits_steps.csv`):
+
+| Split | Stage 3 exact match | Chance exact match | Stage 3 false alarms on correct | Steps with no key number | Stage 4 flagged / exact / false alarms / precision |
+|---|---|---|---|---|---|
+| GSM8K | 44.4% | 20.8% | 18.7% | 22.0% | 8.2% / 7.2% / 0.0% / 100% |
+| MATH | 21.0% | 18.1% | 26.3% | 34.6% | 12.6% / 7.2% / 0.8% / 95.5% |
+| OlympiadBench | 17.5% | 13.1% | 45.0% | 36.0% | 9.0% / 2.6% / 1.8% / 89.5% |
+| Pooled | 28.4% | 17.4% | 27.7% | 31.2% | 9.8% / 5.7% / 0.7% / 94.8% |
+
+*Chance* = picking a uniformly random step of each erroneous solution. On GSM8K, Stage 3 finds the
+first wrong step about twice as often as chance. On MATH and OlympiadBench it is only 3–4 points above
+chance, with many false alarms, so **it does not localise errors on these splits**. There, its features
+help only as a solution-level signal.
+
+**Generalisation** (`all_splits_transfer.csv`, process error, ALL, logistic regression, fitted once on the
+training splits): trained on GSM8K, the model scores MATH 0.917 [0.884, 0.950] and OlympiadBench
+0.750 [0.691, 0.808]. Leaving one dataset out: GSM8K 0.932, MATH 0.936, OlympiadBench 0.791 [0.736, 0.844].
+
+**Why OlympiadBench is weak** (`all_splits_overview.csv`):
+- **Truncation.** 21.7% of its samples hit the 1024-token cap, and 56 of 300 problems have at least 3 of 5 samples truncated.
+- **Self-consistency.** Its samples agree with each other far less (mean majority share 0.59, vs 0.86 on GSM8K).
+- **Low agreement even on correct solutions.** Samples agree with *correct* original solutions only 52% of the time.
+- **Unparseable original answers.** 27 of them are strings SymPy cannot parse.
+
+Agreement separates OlympiadBench's errors with AUROC 0.83 on the 175 problems without any truncated
+sample, but only 0.50 on the 125 problems with one or more.
+
+**Truncated samples: two answer rules.** By default a sample cut off at the token cap takes the last
+number of its text as its answer. With `--truncated-no-answer` (files `*_truncnone*`), a sample that
+hit the cap without a `\boxed{}` answer has no answer. Nothing was re-sampled. Process error, logistic
+regression, default → truncnone (every row: `all_splits_compare_truncnone.csv`):
+
+| Split | No-answer samples | Stage 2 AUROC (1 − agreement) | ALL (Stage 4 + 7) | ALL + Stage 3 | Hard subset, ALL |
+|---|---|---|---|---|---|
+| GSM8K | 0.1% → 1.0% | 0.946 → 0.946 | 0.940 → 0.941 | 0.948 → 0.948 | too few |
+| MATH | 0.0% → 8.0% | 0.910 → 0.910 | 0.915 → 0.928 | 0.912 → 0.926 | 0.783 → 0.809 |
+| OlympiadBench | 0.0% → 21.4% | 0.730 → 0.737 | 0.773 → 0.776 | 0.777 → 0.780 | 0.709 → 0.728 |
+| Pooled | 0.0% → 9.2% | — | 0.909 → 0.914 | 0.906 → 0.911 | 0.825 → 0.837 |
+
+All differences are well inside the confidence intervals. Logistic regression gains slightly or is
+unchanged (largest drop 0.003, in the GSM8K → OlympiadBench transfer); the random forest moves by −0.02
+to +0.015. We recommend the truncnone rule for the
+competition splits. The last number of a cut-off text is not an answer the model gave, and the default
+rule counts it as one, which can manufacture agreement or disagreement. The truncnone rule is never
+meaningfully worse for the main model. This is a choice for correctness of the feature, not a measured improvement.
+The tables above use the default rule so that GSM8K's earlier outputs stay unchanged.
+
+**What this means.**
+- **GSM8K and MATH.** Disagreement between sampled solutions and the original answer is a strong, cheap
+  signal of a wrong solution: AUROC about 0.91–0.95. It also carries over from GSM8K to MATH without retraining.
+- **OlympiadBench.** The same signal is much weaker (about 0.77), mainly because a 1.5B model with
+  1024 tokens often cannot finish or agree with itself on olympiad problems. A more capable or
+  longer-running sampler is the obvious fix, and we have not tested it.
+- **Correct answer, wrong step.** These hard cases are detected only moderately (about 0.7–0.8 where
+  measurable), mostly through sample entropy rather than any step check.
+- **SymPy (Stage 4).** It is precise when it fires, but it fires on 10% of erroneous solutions, and
+  alone it ranks solutions no better than chance.
+- **Stage 3 (where the error is).** Step-level localisation works on GSM8K only; on MATH and
+  OlympiadBench Stage 3 is barely above chance.
+- **Omni-MATH.** Not evaluated yet, because its sample file is being regenerated.
+
 ## Layout
 
 ```
@@ -175,7 +297,7 @@ results/           exploration outputs (explore_data.py), Stage 3 summary, Stage
 
 ## Next
 
-- Stage 2 sampling on MATH, OlympiadBench, Omni-MATH (`colab/run_stage2.ipynb`, about 3 h on a T4)
-- Answer normalization for competition answers: 37% of original ProcessBench final answers
-  (fractions, radicals, tuples, intervals, text) do not reduce to a plain number with `normalize_answer`
-- Stage 3 and Stage 7 on MATH, OlympiadBench, Omni-MATH once their samples arrive; then add retrieval (A2)
+- Omni-MATH: re-sampled file pending; then `run_split.py omnimath` and `evaluate_all.py` (see Run order)
+- Answer normalization: answers with a variable prefix (`x = \sqrt{2}`, `I(6,3)=0`) are still compared
+  as whole strings (the strict rule is kept on purpose)
+- Retrieval (A2)
