@@ -1,0 +1,25 @@
+# RAG pilot (Stage 5 claims, Stage 6 evidence, rag_pilot_evaluate.py), Python 3.9.1, CPU.
+# Install on top of requirements.txt (same versions; nothing new is needed):
+#   pip install -r requirements.txt -r requirements-rag.txt
+# On Colab keep Colab's torch (see README) and install only transformers, sentence-transformers, sympy.
+torch==2.8.0                    # CPU build used for the pilot (2.8.0+cpu)
+transformers==4.57.6
+tokenizers==0.22.2
+huggingface-hub==0.36.2
+safetensors==0.7.0
+sentence-transformers==5.1.2
+sympy==1.14.0
+numpy==2.0.2
+scikit-learn==1.6.1
+joblib==1.5.3
+
+# Downloads (Hugging Face cache, ~/.cache/huggingface; never committed). Revisions used in the pilot:
+#   NLI model (sources A, A2, B, D)  MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli   rev 6f5cf0a2b5   369 MB, MIT
+#   embedding model (source D)       BAAI/bge-small-en-v1.5                         rev 5c38ec7c40   134 MB, MIT
+#   alternative NLI (downloaded, not used for results)
+#                                    cross-encoder/nli-deberta-v3-base              rev 6c749ce342   738 MB, Apache-2.0
+#   theorem corpus (source D)        dataset MaxSchulten/ProofWiki-Theorems, proof_wiki_theorems.csv, 42 MB
+#                                    -> data/external/rag_corpus/ (git-ignored); content from ProofWiki, CC BY-SA 3.0
+# The index (data/processed/rag_index/: 5,000 passages + bge embeddings) is rebuilt by
+#   python src/stage6_evidence.py build-index      and is git-ignored.
+# Not downloaded: Qwen/Qwen2.5-Math-1.5B-Instruct (3.1 GB) for the optional LLM-judge (skipped; maybe later on Colab).
