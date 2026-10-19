@@ -23,15 +23,27 @@ olympiadbench,process_error,ALL (Stage 4 + 7),LR,0.728,0.644,0.803,0.713,0.03,0.
 olympiadbench,process_error,ALL (Stage 4 + 7),RF,0.667,0.579,0.753,0.668,0.015,0.447,0.319,163,52
 olympiadbench,process_error,ALL + Stage 3,LR,0.714,0.63,0.796,0.698,0.029,0.485,0.319,163,52
 olympiadbench,process_error,ALL + Stage 3,RF,0.667,0.578,0.756,0.661,0.018,0.43,0.319,163,52
-pooled (gsm8k + math + olympiadbench),process_error,Stage 4 only,LR,0.609,0.536,0.68,0.603,0.021,0.274,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,Stage 4 only,RF,0.547,0.474,0.621,0.557,0.019,0.251,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,Stage 3 only,LR,0.718,0.66,0.771,0.717,0.008,0.303,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,Stage 3 only,RF,0.731,0.671,0.788,0.728,0.007,0.33,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,agreement only,LR,0.717,0.65,0.778,0.75,0.004,0.349,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,agreement only,RF,0.682,0.617,0.748,0.732,0.01,0.321,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,Stage 7 only (agreement + entropy),LR,0.825,0.776,0.871,0.823,0.004,0.496,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,Stage 7 only (agreement + entropy),RF,0.781,0.726,0.834,0.779,0.006,0.413,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,ALL (Stage 4 + 7),LR,0.837,0.791,0.879,0.829,0.012,0.499,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,ALL (Stage 4 + 7),RF,0.791,0.739,0.843,0.791,0.005,0.433,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,ALL + Stage 3,LR,0.837,0.791,0.878,0.829,0.011,0.486,0.169,526,89
-pooled (gsm8k + math + olympiadbench),process_error,ALL + Stage 3,RF,0.802,0.754,0.848,0.798,0.004,0.421,0.169,526,89
+omnimath,process_error,Stage 4 only,LR,0.634,0.548,0.718,0.619,0.025,0.639,0.472,163,77
+omnimath,process_error,Stage 4 only,RF,0.648,0.558,0.728,0.649,0.022,0.627,0.472,163,77
+omnimath,process_error,Stage 3 only,LR,0.727,0.645,0.803,0.728,0.012,0.739,0.472,163,77
+omnimath,process_error,Stage 3 only,RF,0.716,0.632,0.795,0.723,0.009,0.723,0.472,163,77
+omnimath,process_error,agreement only,LR,0.619,0.528,0.714,0.661,0.005,0.591,0.472,163,77
+omnimath,process_error,agreement only,RF,0.6,0.512,0.69,0.648,0.007,0.562,0.472,163,77
+omnimath,process_error,Stage 7 only (agreement + entropy),LR,0.775,0.697,0.84,0.771,0.011,0.75,0.472,163,77
+omnimath,process_error,Stage 7 only (agreement + entropy),RF,0.74,0.659,0.811,0.735,0.015,0.712,0.472,163,77
+omnimath,process_error,ALL (Stage 4 + 7),LR,0.789,0.716,0.855,0.784,0.01,0.777,0.472,163,77
+omnimath,process_error,ALL (Stage 4 + 7),RF,0.739,0.658,0.81,0.735,0.015,0.727,0.472,163,77
+omnimath,process_error,ALL + Stage 3,LR,0.813,0.74,0.876,0.806,0.011,0.803,0.472,163,77
+omnimath,process_error,ALL + Stage 3,RF,0.773,0.701,0.843,0.769,0.01,0.766,0.472,163,77
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 4 only,LR,0.623,0.573,0.67,0.616,0.007,0.349,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 4 only,RF,0.602,0.552,0.65,0.606,0.007,0.34,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 3 only,LR,0.73,0.686,0.773,0.731,0.004,0.439,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 3 only,RF,0.729,0.682,0.772,0.731,0.005,0.444,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,agreement only,LR,0.718,0.668,0.767,0.744,0.003,0.438,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,agreement only,RF,0.681,0.63,0.731,0.731,0.004,0.416,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 7 only (agreement + entropy),LR,0.839,0.802,0.874,0.838,0.003,0.622,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,Stage 7 only (agreement + entropy),RF,0.809,0.768,0.847,0.808,0.004,0.585,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,ALL (Stage 4 + 7),LR,0.849,0.813,0.883,0.847,0.003,0.644,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,ALL (Stage 4 + 7),RF,0.814,0.774,0.852,0.813,0.003,0.604,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,ALL + Stage 3,LR,0.848,0.813,0.882,0.846,0.003,0.642,0.241,689,166
+pooled (gsm8k + math + olympiadbench + omnimath),process_error,ALL + Stage 3,RF,0.824,0.786,0.859,0.822,0.004,0.61,0.241,689,166
