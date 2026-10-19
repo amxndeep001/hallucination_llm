@@ -1,0 +1,15 @@
+split,target,feature_set,n_features,model,auroc_mean,auroc_sd_over_repeats,ci_low,ci_high,ap_mean,base_rate,n
+omnimath,process_error,Stage 4 only,5,LR,0.6398,0.0148,0.5798,0.7126,0.822,0.7133,300
+omnimath,process_error,Stage 4 only,5,RF,0.6752,0.0098,0.5979,0.7265,0.8363,0.7133,300
+omnimath,process_error,Stage 2 agreement only,1,LR,0.7465,0.0047,0.6354,0.7857,0.8398,0.7133,300
+omnimath,process_error,Stage 2 agreement only,1,RF,0.7292,0.0119,0.6086,0.765,0.8297,0.7133,300
+omnimath,process_error,Stage 7 only (all but Stage 4),11,LR,0.8285,0.0034,0.7747,0.8825,0.9029,0.7133,300
+omnimath,process_error,Stage 7 only (all but Stage 4),11,RF,0.7951,0.0116,0.7416,0.8544,0.8784,0.7133,300
+omnimath,process_error,Stage 4 + agreement,6,LR,0.7891,0.005,0.7323,0.8497,0.8869,0.7133,300
+omnimath,process_error,Stage 4 + agreement,6,RF,0.7923,0.0089,0.7357,0.8527,0.8812,0.7133,300
+omnimath,process_error,ALL,16,LR,0.832,0.0038,0.7846,0.884,0.9118,0.7133,300
+omnimath,process_error,ALL,16,RF,0.7942,0.0096,0.7398,0.8542,0.8812,0.7133,300
+omnimath,process_error,ALL minus semantic_entropy,15,LR,0.8316,0.0035,0.784,0.8835,0.9121,0.7133,300
+omnimath,process_error,ALL minus semantic_entropy,15,RF,0.7949,0.0075,0.7414,0.8541,0.8838,0.7133,300
+omnimath,process_error,ALL minus Stage 4,11,LR,0.8285,0.0034,0.7747,0.8825,0.9029,0.7133,300
+omnimath,process_error,ALL minus Stage 4,11,RF,0.7951,0.0116,0.7416,0.8544,0.8784,0.7133,300

@@ -1,0 +1,60 @@
+===== Stage 3 step-level evaluation: omnimath, 300 problems, 214 with a process error, 86 correct
+chance exact match (uniformly random step of each erroneous solution): 14.4%
+chance precision of a flag (= share of erroneous solutions): 71.3%
+
+| method | flagged % | exact match % | earlier | later | false alarm % | precision % | ceiling % |
+|---|---|---|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 53.3 | 15.4 | 17 | 64 | 40.7 | 76.5 | 56.5 |
+| Stage 3 (support_min <= 0.2) | 65.0 | 19.6 | 28 | 69 | 46.5 | 77.7 | 56.5 |
+| Stage 3 (support_min <= 0.4) | 70.6 | 21.5 | 33 | 72 | 52.3 | 77.0 | 56.5 |
+| Stage 4 (SymPy first fail) | 13.6 | 6.1 | 1 | 15 | 3.5 | 90.6 | 46.3 |
+| union Stage 3 (<= 0.0) + Stage 4 | 57.0 | 18.7 | 17 | 65 | 41.9 | 77.2 | 70.1 |
+| union Stage 3 (<= 0.2) + Stage 4 | 66.4 | 22.0 | 28 | 67 | 47.7 | 77.6 | 70.1 |
+| union Stage 3 (<= 0.4) + Stage 4 | 71.0 | 22.9 | 33 | 70 | 52.3 | 77.2 | 70.1 |
+(ceiling: erroneous solutions whose human first wrong step has a key number (Stage 3) / an equation (Stage 4))
+
+## Exact match % by position of the human first wrong step (n per bucket)
+
+| method | step 0 (n=22) | step 1 (n=53) | step 2 (n=49) | step 3+ (n=90) |
+|---|---|---|---|---|
+| Stage 3 (support_min <= 0.0) | 27.3 | 13.2 | 14.3 | 14.4 |
+| Stage 3 (support_min <= 0.2) | 31.8 | 17.0 | 24.5 | 15.6 |
+| Stage 3 (support_min <= 0.4) | 36.4 | 20.8 | 24.5 | 16.7 |
+| Stage 4 (SymPy first fail) | 13.6 | 7.5 | 2.0 | 5.6 |
+| union Stage 3 (<= 0.0) + Stage 4 | 36.4 | 17.0 | 14.3 | 17.8 |
+| union Stage 3 (<= 0.2) + Stage 4 | 40.9 | 18.9 | 24.5 | 17.8 |
+| union Stage 3 (<= 0.4) + Stage 4 | 45.5 | 20.8 | 24.5 | 17.8 |
+| chance (random step) | 15.9 | 17.7 | 15.3 | 11.6 |
+
+## HARD: final answer correct but a wrong step: n = 77
+  Stage 3 (<= 0.0): flagged 38 of 77, exact first wrong step 14
+  Stage 3 (<= 0.2): flagged 48 of 77, exact first wrong step 15
+  Stage 3 (<= 0.4): flagged 49 of 77, exact first wrong step 16
+  Stage 4: flagged 7 of 77, exact 3
+
+-> results\stage3_summary_omnimath.csv
+
+## 10 most confident Stage 3 flags (support_min <= 0.2) that are NOT the human first wrong step
+(confidence: lower support_min, then lower support_mean, then more key numbers)
+
+- omnimath-241 | label 2 | flagged step 3 | key numbers ['31415.9', '30816.4', '599.5'] | support_min 0.0 mean 0.00
+    Third, subtract the smaller area from the larger area. Now, we'll find the difference between the two areas to get the area of the region between the circles:  Area_{between} = A_{large} - A_{small} \approx 31,415.9 - 30,816.4 \approx 599.5
+- omnimath-111 | label 9 | flagged step 2 | key numbers ['3', '4'] | support_min 0.0 mean 0.00
+    ## Step 2: Evaluate the expectation in the Fisher information We now evaluate the expectation in the Fisher information: I(\beta) = E[(-\frac{1}{\beta} + \frac{X}{\beta^2})^2] = E[\frac{1}{\beta^2} - \frac{2X}{\beta^3} + \frac{X^2}{\beta^4}] = \frac{1}{\beta^2} - \frac{2E[X]}{\beta^3} + \frac{E[X^2]}{\beta^4}
+- omnimath-317 | label 0 | flagged step 3 | key numbers ['2.5', '0.9375'] | support_min 0.0 mean 0.00
+    Second, when \langle n \rangle = 1: This happens when n is in the range (1, 4]. For these values of n, 2^{\langle n \rangle} + 2^{-\langle n \rangle} = 2 + \frac{1}{2} = 2.5. The contribution from this segment is  \sum_{n=2}^{3} \frac{2.5}{2^n} = \frac{2.5}{4} + \frac{2.5}{8} = \frac{5}{8} + \frac{2.5}{8} = \frac{7.5}{8}.
+- omnimath-498 | label 0 | flagged step 4 | key numbers ['151/1159', '122/14881'] | support_min 0.0 mean 0.00
+    First, if d_3 = 1: d_1 = \frac{121}{4} = 30.25 \quad (not an integer). Second, if d_3 = 2: d_1 = \frac{122}{12} = \frac{61}{6} \quad (not an integer). Third, if d_3 = 3: d_1 = \frac{123}{28} \approx 4.392857 \quad (not an integer). Fourth, if d_3 = 6: d_1 = \frac{126}{48} = \frac{21}{8} \quad (not an integer). Fifth, if d_3 = 31: d_1 = \frac{120 + 31}{2 \cdot 31 + 31^2 - 2} = \frac{151}{200 + 961 
+- omnimath-542 | label -1 | flagged step 3 | key numbers ['48', '210'] | support_min 0.0 mean 0.00
+    Fourth, evaluate the negative product case: - Three negative numbers: The smallest (most negative) numbers are -6, -4, -2. The product of these numbers is:  (-6) \times (-4) \times (-2) = -48  - One negative and two positive numbers: The smallest (most negative) number is -6, and the largest positive numbers are 5 and 7. The product is:  (-6) \times 5 \times 7 = -210
+- omnimath-142 | label 0 | flagged step 9 | key numbers ['1003'] | support_min 0.0 mean 0.00
+    The only possible values of m that satisfy this equation are m = 2k-1 for some integer k. Since m \geq 2005, we have k \geq 1003. The smallest value of m that satisfies the condition is therefore m = 2(1003) - 1 = 2005.
+- omnimath-150 | label 8 | flagged step 12 | key numbers ['30334'] | support_min 0.0 mean 0.00
+    Finally, the value of 10000a + 1000b + 100c + 10d + e is:  30334
+- omnimath-162 | label 6 | flagged step 7 | key numbers ['333333333333'] | support_min 0.0 mean 0.00
+    Applying the Result: Substituting N = 10^6:  \sum_{n=1}^{10^6} n f(n) = \frac{(10^6)^2}{3} = \frac{10^{12}}{3} = 333333333333.
+- omnimath-165 | label 2 | flagged step 1 | key numbers ['1452'] | support_min 0.0 mean 0.00
+    Given that 1547 = 23 \times 67, we can compute \phi(1547) using the formula for the totient function of a product of two distinct primes: \phi(pq) = (p-1)(q-1) where p and q are distinct prime numbers. Here, p = 23 and q = 67, so \phi(1547) = (23 - 1)(67 - 1) = 22 \times 66 = 1452
+- omnimath-184 | label 0 | flagged step 4 | key numbers ['720'] | support_min 0.0 mean 0.00
+    Therefore, the largest possible sum of the areas of triangles BP P', R P' Q', and C Q Q' is 12\sqrt{5}. To find S^2, we square this value:  S^2 = (12\sqrt{5})^2 = 144 \times 5 = 720.
+(137 such flags in total; 91 with support_min 0, tied in support -> ordered by more key numbers, then id)
