@@ -1,0 +1,96 @@
+===== Stage 5 claims: 153 solutions (150 pilot + 3 sanity extras), 2581 claims -> data/processed/rag_pilot_claims.jsonl
+
+## gsm8k: 40 solutions, 184 steps, 370 claims
+claims per step: 2.01   steps with zero claims: 8 (4.3%)
+claim types: computational 101 (27.3%), knowledge_claim 4 (1.1%), reasoning 265 (71.6%)
+10 random examples:
+  - gsm8k-293 step 1 [reasoning] Richard starts at the first bottle and places a bottle at each subsequent 3-foot interval.
+  - gsm8k-9 step 0 [computational] Rogers = Original price * (1 - Discount) = $2000 * (1 - 0.75) = $2000 * 0.25 = $500
+  - gsm8k-349 step 3 [reasoning] the orchard earned $1000 from selling 2000 apples at $5 per bag.
+  - gsm8k-278 step 2 [computational] The total number of babies who wear bows is the sum of the blue-wearing babies who wear bows and the purple-wearing babies who wear bows: 2 + 2 = 4
+  - gsm8k-179 step 0 [reasoning] Juan wants to make 4 dozen croissants per day.
+  - gsm8k-96 step 0 [computational] On Friday: 30 pairs = 30 * 2 = 60 shoes
+  - gsm8k-123 step 3 [reasoning] Dividing 570 by 9 gives us
+  - gsm8k-277 step 2 [knowledge_claim] we know that the boat takes on 2 liters of water for every 10 feet rowed.
+  - gsm8k-195 step 4 [reasoning] The answer is 15.
+  - gsm8k-312 step 1 [reasoning] We know his walking speed is 4 miles per hour.
+
+## math: 40 solutions, 236 steps, 597 claims
+claims per step: 2.53   steps with zero claims: 8 (3.4%)
+claim types: computational 172 (28.8%), knowledge_claim 12 (2.0%), reasoning 413 (69.2%)
+10 random examples:
+  - math-751 step 0 [reasoning] Using the definition of the binomial coefficient, we have that C(182, 180) = (182!)/((182-180)!180!) = (182!)/(2!180!)
+  - math-247 step 5 [computational] x = -(116 / 2)/(174 / 2) = -58/87
+  - math-720 step 2 [reasoning] The prime numbers in the set are 2, 3, 5, and 7.
+  - math-834 step 0 [reasoning] To determine for how many pages the original and renumbered page numbers share the same ones digit, we need to compare the ones digits of each pair of page numbers (n, 51-n) for n ranging from 1 to 50.
+  - math-720 step 3 [reasoning] find the combinations where ab is a prime number.
+  - math-813 step 2 [reasoning] the number of distinct diagonals of a convex hexagon is 9.
+  - math-998 step 1 [reasoning] Stacy starts with d dollars.
+  - math-204 step 1 [reasoning] If the first marble was red, there are now 3 red marbles left out of 9 total marbles.
+  - math-720 step 3 [reasoning] Sixth, (2,7): ab = 14, not prime.
+  - math-834 step 6 [reasoning] The answer is 0.
+
+## olympiadbench: 35 solutions, 322 steps, 854 claims
+claims per step: 2.65   steps with zero claims: 6 (1.9%)
+claim types: computational 306 (35.8%), knowledge_claim 18 (2.1%), reasoning 530 (62.1%)
+10 random examples:
+  - olympiadbench-523 step 2 [reasoning] the probability that the product is not divisible by 5 is
+  - olympiadbench-84 step 16 [reasoning] For m^2 + n + c to divide mc for all m and n, consider m = 1
+  - olympiadbench-849 step 4 [reasoning] Midpoint = (4, 11)
+  - olympiadbench-179 step 2 [computational] However, the coefficient of b^3 gives us: 4b^3 = 23b^3 implies b^3 = (4b^3 + 23b^3)/(23) = (29b^3)/(23).
+  - olympiadbench-802 step 0 [reasoning] 1, 2, 3, 6, 9, 17, 18, 34, 51, 102, 153, 306.
+  - olympiadbench-920 step 6 [reasoning] However, since we can generate any tuple with a single 1 using just the first two, we don't need this third tuple in its most general form.
+  - olympiadbench-921 step 4 [reasoning] For b to be an integer, 2sqrt(50a) must be an integer
+  - olympiadbench-523 step 3 [reasoning] Fourth, calculate the probability of the product being divisible by 5.
+  - olympiadbench-802 step 8 [reasoning] Since n is not an integer, k = 34 does not work.
+  - olympiadbench-749 step 10 [computational] 5x + 9 = (x+3)^2 = x^2 + 6x + 9.
+
+## omnimath: 35 solutions, 273 steps, 733 claims
+claims per step: 2.68   steps with zero claims: 4 (1.5%)
+claim types: computational 149 (20.3%), knowledge_claim 7 (1.0%), reasoning 577 (78.7%)
+10 random examples:
+  - omnimath-582 step 6 [reasoning] To guarantee a win for player A, we need to show that player B will eventually be forced to pass.
+  - omnimath-122 step 3 [reasoning] Since P != A, we discard x = 0.
+  - omnimath-119 step 1 [reasoning] Since 2n divides (m - a)(2a - 2n), it must divide one of them.
+  - omnimath-565 step 1 [reasoning] (1 - 1/n + (1)/(n(n-1)) - (1)/(n(n-1)(n-2)) +... +- (1)/(n!)).
+  - omnimath-318 step 9 [reasoning] |yf(y)| = |yf(-y)|
+  - omnimath-27 step 0 [reasoning] let's denote the matrix A as follows: A = 0 a_12... a_1n a_21 0... a_2n vdots vdots ddots vdots a_n1 a_n2... 0 where a_ij > 0 for all i != j.
+  - omnimath-851 step 3 [reasoning] For each subsequent row, because the king cannot visit the cell directly below it (same column) and needs to alternate its path efficiently, it effectively misses one potential cell per row due to the "skip" strategy.
+  - omnimath-318 step 1 [reasoning] let's substitute y = 0 into the equation
+  - omnimath-810 step 1 [reasoning] there are 540 ways to distribute the 6 cards among the 3 players such that each player gets at least one card.
+  - omnimath-791 step 3 [reasoning] calculate the points Eric has already earned
+
+## sanity cases (all claims)
+
+gsm8k-0 (not in the sample)
+  step 0.0 [reasoning] on Friday, the neighbors start with 18 pink plastic flamingos.
+  step 1.0 [computational] Since there were 18 flamingos, 1/3 * 18 = 6 flamingos are taken back.
+  step 1.1 [computational] they have 18 - 6 = 12 flamingos left in their possession.
+  step 1.2 [reasoning] they paint these 6 flamingos white and put them back out on Sue's front yard.
+  step 1.3 [reasoning] Sue has the original 12 pink flamingos plus the 6 new white ones.
+  step 1.4 [computational] by the end of Saturday, Sue has 12 + 6 = 18 pink flamingos and 6 white flamingos.
+  step 2.0 [reasoning] On Sunday, the neighbors add another 18 pink plastic flamingos to Sue's front yard.
+  step 2.1 [computational] By the end of Sunday morning, Sue has 18 + 18 = 36 pink flamingos and still 6 white flamingos.
+  step 3.0 [computational] To find the difference, subtract the number of white flamingos from the number of pink flamingos: 36 - 6 = 30.
+  step 3.1 [reasoning] at noon on Sunday, there were 30 more pink plastic flamingos out than white plastic flamingos.
+  step 3.2 [reasoning] The answer is 30.
+
+gsm8k-34 (not in the sample)
+  step 0.0 [reasoning] Let's break down the problem step by step: First, Valerie earns $5000 per month
+  step 0.1 [computational] we can set up an equation: 5000 = x/2.
+  step 0.2 [reasoning] To solve for x, we can multiply both sides by 2: 10000 = x.
+  step 0.3 [reasoning] Valerie's brother earns $10,000 per month.
+  step 1.0 [computational] To find their combined salary, we add Valerie's earnings to her brother's earnings: Combined salary = 5000 + 10000 = 15000.
+  step 2.0 [computational] since their mother earns twice their combined salary, we multiply the combined salary by 2: Mother's salary = 2 * 15000 = 30000.
+  step 3.0 [computational] we add up the monthly earnings of all three individuals to find the total amount of money they have together: Total amount = 5000 + 10000 + 30000 = 43000.
+  step 3.1 [reasoning] the total amount of money they all have together is $43,000.
+
+gsm8k-202 (not in the sample)
+  step 0.0 [reasoning] To find out how many sticks they have in total, let's break down the information given: First, there are 9 red sticks.
+  step 0.1 [reasoning] there are 5 more blue sticks than red.
+  step 0.2 [computational] the number of blue sticks is 9 + 5 = 14.
+  step 0.3 [reasoning] the number of yellow sticks is 3 less than the blue sticks.
+  step 0.4 [computational] the number of yellow sticks is 14 - 3 = 11.
+  step 1.0 [reasoning] we add up all the sticks: Red sticks: 9, Blue sticks: 14, Yellow sticks: 11.
+  step 1.1 [computational] Total number of sticks = 9 (red) + 14 (blue) + 11 (yellow) = 34.
+  step 1.2 [reasoning] the total number of sticks they have is 34.

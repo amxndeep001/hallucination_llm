@@ -1,0 +1,16 @@
+source,model,n_claims,n_pairs,seconds,sec_per_1000_claims,batch_size,cpu_threads,date,note
+C,sympy,2581,0,6.0,2.3,,4,2026-10-19 11:26,
+A,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,2581,2581,662.2,256.5,16,4,2026-10-19 11:37,
+A,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,7,7,2.0,290.0,16,4,2026-10-19 12:14,
+A2,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,1333,1333,1373.7,1030.5,16,4,2026-10-19 12:37,
+B,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,2581,12905,2847.0,1103.1,16,4,2026-10-19 14:14,
+C,sympy,2581,0,5.3,2.1,,4,2026-10-19 14:14,
+C,sympy,2581,0,14.0,5.4,,4,2026-10-19 14:32,
+C,sympy,2581,0,29.5,11.4,,4,2026-10-19 14:37,
+D-retrieval-bm25,bm25,68,26,1.3,18.6,,4,2026-10-19 14:47,26 queries incl. index build
+D-retrieval-bge,BAAI/bge-small-en-v1.5,68,26,2.3,33.8,,4,2026-10-19 14:47,26 queries
+D-nli,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,68,680,283.0,4162.1,16,4,2026-10-19 14:47,5 passages x 2 retrievers per claim
+C,sympy,259,0,1.4,5.5,,4,2026-10-19 14:47,benchmark: every 10th pilot claim
+A,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,259,259,65.3,252.1,16,4,2026-10-19 14:49,benchmark: every 10th pilot claim
+A2,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,259,259,237.7,917.7,16,4,2026-10-19 14:53,benchmark: every 10th pilot claim
+B,MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli,259,1295,375.5,1449.9,16,4,2026-10-19 14:59,benchmark: every 10th pilot claim

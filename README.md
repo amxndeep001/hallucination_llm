@@ -303,6 +303,50 @@ The tables above use the default rule so that GSM8K's earlier outputs stay uncha
 - **Stage 3 (where the error is).** Step-level localisation works on GSM8K only; on the three
   competition splits Stage 3 is barely above chance.
 
+## RAG pilot (Stages 5–6, branch `nli`)
+
+A cheap pilot to find out which evidence sources for *claims* work before building the full Stage 5–6.
+150 solutions (GSM8K 40, MATH 40, OlympiadBench 35, Omni-MATH 35; about half erroneous, 29 hard cases
+over-sampled on purpose), split once into DEV (76, thresholds only) and **TEST (74: 38 erroneous, 36 correct,
+15 hard)**. Everything below is TEST. CPU only (i5-8250U, 4 threads), NLI model
+`MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli`; versions and downloads in `requirements-rag.txt`.
+
+```bash
+python src/rag_pilot_sample.py                       # -> results/rag_pilot_sample.csv (seed 0, DEV/TEST)
+python src/stage5_claims.py                          # -> data/processed/rag_pilot_claims.jsonl (2,581 claims)
+python src/stage6_evidence.py nli --source A         # problem NLI           (resumable; --model --batch-size --device)
+python src/stage6_evidence.py nli --source A2        # problem + earlier steps
+python src/stage6_evidence.py nli --source B         # 5 samples as evidence (SelfCheck-NLI style)
+python src/stage6_evidence.py numeric                # C: numeric spot check, + all 1,300 problems -> rag_numeric_failures.csv
+python src/stage6_evidence.py build-index            # D: 5,000 ProofWiki statements, BM25 + bge-small (git-ignored)
+python src/stage6_evidence.py retrieve               # D: top-5 per knowledge_claim step, NLI, rag_retrieval_audit.csv
+python src/stage6_evidence.py benchmark              # runtime of each source alone
+python src/rag_pilot_evaluate.py                     # -> results/rag_pilot_eval.csv, results/logs/rag_pilot_evaluate.txt
+python src/rag_retrieval_precision.py                # after filling my_verdict in rag_retrieval_audit.csv
+python tests/test_rag_pilot.py
+```
+
+Solution-level AUROC vs process error, TEST (n = 74), bootstrap 95% CI; threshold set on DEV at ≤ 10% false alarms:
+
+| Source | Best score | AUROC | Hard vs correct (15 / 36) | Flagged / false alarms / precision at DEV threshold | s per 1000 claims |
+|---|---|---|---|---|---|
+| A problem NLI | 1 − min p_entail | 0.537 [0.407, 0.675] | 0.461 [0.272, 0.653] | max p_contr.: 21% / 8% / 73% (8/11) | 252 |
+| A2 problem + earlier steps | 1 − min p_entail | 0.514 [0.384, 0.649] | 0.381 [0.201, 0.569] | max p_contr.: 16% / 14% / 55% | 918 |
+| B samples NLI | 1 − min(max p_entail) | **0.747 [0.625, 0.854]** | 0.737 [0.578, 0.872] | max p_contr.: 29% / 6% / 85% (11/13) | 1,450 |
+| C numeric spot check | number of fails | 0.513 [0.500, 0.544] | constant | 1/38 / 0% / 1 of 1 | 5.5 |
+| D ProofWiki + NLI | — | not evaluable: 12 of 74 TEST solutions have a knowledge_claim step | — | — | retrieval 19–34, NLI 4,160 |
+
+- **A / A2** are at chance. The NLI model entails the wrong flamingo claim (`12 + 6 = 18 pink flamingos`, p_entail 0.95)
+  and contradicts the correct "they paint these 6 flamingos white" (p_contradict 1.00). It does not track quantities.
+  A2: 20.7% of pairs exceed 512 tokens (OlympiadBench 35%); oldest steps are dropped first; truncated and full pairs
+  are both near chance.
+- **B** carries a real signal, but it overlaps with Stage 2/7 sample agreement: of the 15 erroneous TEST solutions
+  that the existing ALL model misses (at 10% false alarms), B flags 2–3. Tiny n, exploratory only.
+- **C** fires on 23 of ~13,600 symbolic equations in all 1,300 problems (rules v2, after inspecting the v1
+  failure list; both lists in `results/`). Almost all equations with variables are conditions to solve, not identities.
+- **Step level** (exact / within one step, chance 17.2% / 47.7%): A 21% / 42%, A2 21% / 58%, B 21% / 47%.
+- D retrieval precision awaits the hand audit (`results/rag_retrieval_audit.csv`, 50 rows).
+
 ## Layout
 
 ```

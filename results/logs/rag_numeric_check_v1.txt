@@ -1,0 +1,21 @@
+
+===== Source C (numeric spot check) on all sampled problems; counts are over equations with free symbols
+
+gsm8k: 400 solutions, 3983 claims, 441 symbolic equations: pass 15, fail 2, skip 424  (10 s)
+  skip reasons: condition: one side is a constant (an equation to solve) 187; could not parse 83; condition in the claim # 54; terms run together across a space (probably two expressions) 51; definition / assignment (one side is a single name) 25; equation in the unknowns (may be a condition to solve) 14; domain issue: # points differ 10
+  claims skipped by the size guard: 0
+
+math: 300 solutions, 4560 claims, 2036 symbolic equations: pass 53, fail 25, skip 1958  (23 s)
+  skip reasons: condition: one side is a constant (an equation to solve) 759; condition in the claim # 473; could not parse 366; definition / assignment (one side is a single name) 147; equation in the unknowns (may be a condition to solve) 103; terms run together across a space (probably two expressions) 39; domain issue: # points differ 32; inequality or non-scalar value 15
+  claims skipped by the size guard: 23; equation longer than 160 characters 12; exponent of 100 or more 11
+
+olympiadbench: 300 solutions, 7044 claims, 4249 symbolic equations: pass 93, fail 49, skip 4107  (68 s)
+  skip reasons: condition: one side is a constant (an equation to solve) 1445; condition in the claim # 1158; could not parse 672; definition / assignment (one side is a single name) 301; equation in the unknowns (may be a condition to solve) 185; terms run together across a space (probably two expressions) 171; domain issue: # points differ 87; inequality or non-scalar value 52
+  claims skipped by the size guard: 31; equation longer than 160 characters 19; exponent of 100 or more 11; timed out after 10 s 1
+  slow claim (12.2 s): olympiadbench-365 step 6: n^n = (p^e)^{p^e} = p^{e p^e}
+
+omnimath: 300 solutions, 6512 claims, 2854 symbolic equations: pass 84, fail 42, skip 2728  (36 s)
+  skip reasons: condition in the claim # 896; condition: one side is a constant (an equation to solve) 801; could not parse 442; definition / assignment (one side is a single name) 233; equation in the unknowns (may be a condition to solve) 158; terms run together across a space (probably two expressions) 57; domain issue: # points differ 53; inequality or non-scalar value 38
+  claims skipped by the size guard: 49; equation longer than 160 characters 33; exponent of 100 or more 16
+
+47 failures (up to 15 random per split) -> results/rag_numeric_failures.csv

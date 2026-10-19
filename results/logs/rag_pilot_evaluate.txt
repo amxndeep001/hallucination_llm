@@ -1,0 +1,170 @@
+===== RAG pilot evaluation on TEST: 74 solutions (38 erroneous, 36 correct, 15 hard); DEV (76) is used only for thresholds
+sources with evidence: A, A2, B, C, D-bm25, D-bge
+TEST claims: 1265; claims per solution 17.1
+
+## 1. Solution level: AUROC [95% bootstrap CI] vs process error (label >= 0)
+
+| source | score | TEST all (n=74) | TEST gsm8k (n=20) | TEST math (n=20) | TEST olympiadbench (n=17) | TEST omnimath (n=17) | HARD vs correct (15 / 36) |
+|---|---|---|---|---|---|---|---|
+| A | max_pc | 0.510 [0.376, 0.634] | 0.660 [0.374, 0.890] | 0.270 [0.053, 0.525] | 0.431 [0.150, 0.750] | 0.681 [0.394, 0.924] | 0.457 [0.269, 0.661] |
+| A | 1-min_pe | 0.537 [0.407, 0.675] | 0.580 [0.312, 0.833] | 0.550 [0.270, 0.818] | 0.556 [0.250, 0.847] | 0.333 [0.076, 0.625] | 0.461 [0.272, 0.653] |
+| A2 | max_pc | 0.442 [0.313, 0.572] | 0.480 [0.219, 0.758] | 0.330 [0.101, 0.607] | 0.375 [0.100, 0.667] | 0.597 [0.292, 0.871] | 0.341 [0.160, 0.549] |
+| A2 | 1-min_pe | 0.514 [0.384, 0.649] | 0.520 [0.242, 0.792] | 0.440 [0.190, 0.727] | 0.639 [0.314, 0.914] | 0.556 [0.257, 0.833] | 0.381 [0.201, 0.569] |
+| B | max_pc | 0.668 [0.539, 0.789] | 0.830 [0.607, 0.990] | 0.680 [0.417, 0.917] | 0.347 [0.083, 0.652] | 0.653 [0.333, 0.909] | 0.633 [0.463, 0.802] |
+| B | 1-min_pe | 0.747 [0.625, 0.854] | 0.880 [0.667, 1.000] | 0.740 [0.452, 0.988] | 0.625 [0.319, 0.889] | 0.764 [0.486, 0.970] | 0.737 [0.578, 0.872] |
+| C | n_fail | 0.513 [0.500, 0.544] | constant score | constant score | constant score | 0.556 [0.500, 0.667] | constant score |
+| D-bm25 | max_pc | 0.545 [0.463, 0.627] | 0.450 [0.333, 0.500] | 0.570 [0.365, 0.778] | 0.549 [0.375, 0.736] | 0.611 [0.500, 0.769] | 0.504 [0.419, 0.609] |
+| D-bm25 | 1-min_pe | 0.549 [0.469, 0.631] | 0.450 [0.333, 0.500] | 0.600 [0.393, 0.807] | 0.549 [0.375, 0.736] | 0.611 [0.500, 0.769] | 0.511 [0.420, 0.625] |
+| D-bge | max_pc | 0.551 [0.470, 0.633] | 0.450 [0.333, 0.500] | 0.580 [0.375, 0.792] | 0.563 [0.389, 0.750] | 0.611 [0.500, 0.769] | 0.511 [0.421, 0.625] |
+| D-bge | 1-min_pe | 0.551 [0.471, 0.635] | 0.450 [0.333, 0.500] | 0.600 [0.393, 0.807] | 0.549 [0.375, 0.736] | 0.611 [0.500, 0.769] | 0.513 [0.421, 0.627] |
+
+D-bm25: only 12 of 74 TEST solutions have a knowledge_claim step (8 erroneous); all others score 0, so its AUROC above mostly measures who has such a step, not evidence
+
+D-bge: only 12 of 74 TEST solutions have a knowledge_claim step (8 erroneous); all others score 0, so its AUROC above mostly measures who has such a step, not evidence
+
+## 2. Step level (erroneous TEST solutions): highest-scoring step vs the human first wrong step
+
+n = 38; chance: exact 17.2%, within one step 47.7%
+
+| source | solutions with a prediction | exact | within one step |
+|---|---|---|---|
+| A | 38 | 8 (21.1%) | 16 (42.1%) |
+| A2 | 38 | 8 (21.1%) | 22 (57.9%) |
+| B | 38 | 8 (21.1%) | 18 (47.4%) |
+| C | 1 | 1 (2.6%) | 1 (2.6%) |
+| D-bm25 | 8 | 1 (2.6%) | 3 (7.9%) |
+| D-bge | 8 | 1 (2.6%) | 3 (7.9%) |
+
+## 3. Threshold chosen on DEV correct solutions (<= 10% flagged), applied to TEST
+
+| source | score | threshold | DEV false alarms | TEST erroneous flagged | TEST false alarms | TEST precision |
+|---|---|---|---|---|---|---|
+| A | max_pc | 0.979 | 7.9% | 8/38 (21.1%) | 3/36 (8.3%) | 72.7% (8/11) |
+| A | 1-min_pe | 0.9991 | 7.9% | 4/38 (10.5%) | 6/36 (16.7%) | 40.0% (4/10) |
+| A2 | max_pc | 0.9852 | 7.9% | 6/38 (15.8%) | 5/36 (13.9%) | 54.5% (6/11) |
+| A2 | 1-min_pe | 0.9992 | 7.9% | 0/38 (0.0%) | 1/36 (2.8%) | 0.0% (0/1) |
+| B | max_pc | 0.9617 | 7.9% | 11/38 (28.9%) | 2/36 (5.6%) | 84.6% (11/13) |
+| B | 1-min_pe | 0.9978 | 5.3% | 6/38 (15.8%) | 3/36 (8.3%) | 66.7% (6/9) |
+| C | n_fail | 0 | 0.0% | 1/38 (2.6%) | 0/36 (0.0%) | 100.0% (1/1) |
+| D-bm25 | max_pc | 0.06233 | 7.9% | 7/38 (18.4%) | 4/36 (11.1%) | 63.6% (7/11) |
+| D-bm25 | 1-min_pe | 0.8465 | 7.9% | 4/38 (10.5%) | 3/36 (8.3%) | 57.1% (4/7) |
+| D-bge | max_pc | 0.03129 | 7.9% | 8/38 (21.1%) | 3/36 (8.3%) | 72.7% (8/11) |
+| D-bge | 1-min_pe | 0.9474 | 7.9% | 3/38 (7.9%) | 1/36 (2.8%) | 75.0% (3/4) |
+
+## 4. NLI argmax label on TEST claims (share entail / neutral / contradict), by claim type
+
+| source | claim type | n | entail | neutral | contradict |
+|---|---|---|---|---|---|
+| A | computational | 328 | 38.1% | 32.9% | 29.0% |
+| A | reasoning | 917 | 28.5% | 48.3% | 23.2% |
+| A | knowledge_claim | 20 | 20.0% | 50.0% | 30.0% |
+| A | all | 1265 | 30.8% | 44.3% | 24.8% |
+| A2 | computational | 328 | 53.0% | 17.7% | 29.3% |
+| A2 | reasoning | 917 | 54.4% | 23.9% | 21.7% |
+| A2 | knowledge_claim | 20 | 30.0% | 40.0% | 30.0% |
+| A2 | all | 1265 | 53.7% | 22.5% | 23.8% |
+| B | computational | 1640 | 40.1% | 22.1% | 37.8% |
+| B | reasoning | 4585 | 40.6% | 32.1% | 27.2% |
+| B | knowledge_claim | 100 | 57.0% | 18.0% | 25.0% |
+| B | all | 6325 | 40.7% | 29.3% | 29.9% |
+| D-bm25 | reasoning | 105 | 21.0% | 63.8% | 15.2% |
+| D-bm25 | knowledge_claim | 50 | 16.0% | 66.0% | 18.0% |
+| D-bm25 | all | 155 | 19.4% | 64.5% | 16.1% |
+| D-bge | reasoning | 105 | 23.8% | 72.4% | 3.8% |
+| D-bge | knowledge_claim | 50 | 16.0% | 70.0% | 14.0% |
+| D-bge | all | 155 | 21.3% | 71.6% | 7.1% |
+(B: one count per (claim, sample) pair; D: one per (claim, passage) pair)
+C claim status on TEST claims: {'none': 809, 'skip': 441, 'pass': 14, 'fail': 1}
+
+## 4b. A2 premise length: problem + all earlier steps + claim over 512 tokens?
+
+(shortening: keep the problem and the nearest earlier steps, drop the oldest steps first ('dropped_oldest'); if even problem + nearest step is too long, the end of the premise is cut ('cut'); the claim is never cut)
+
+| group | claims | full | dropped_oldest | cut | share over the limit |
+|---|---|---|---|---|---|
+| all pilot | 2554 | 2025 | 505 | 24 | 20.7% |
+| pilot gsm8k | 370 | 362 | 8 | 0 | 2.2% |
+| pilot math | 597 | 543 | 54 | 0 | 9.0% |
+| pilot olympiadbench | 854 | 552 | 278 | 24 | 35.4% |
+| pilot omnimath | 733 | 568 | 165 | 0 | 22.5% |
+| TEST | 1265 | 971 | 270 | 24 | 23.2% |
+
+A2 solution scores from one kind of pair only (TEST; a solution without such pairs scores 0):
+
+| pairs used | solutions with >= 1 such pair (erroneous / correct) | score | AUROC [95% CI] on those solutions |
+|---|---|---|---|
+| not truncated (full) | 73 (38 / 35) | max_pc | 0.408 [0.274, 0.535] |
+| not truncated (full) | 73 (38 / 35) | 1-min_pe | 0.467 [0.337, 0.602] |
+| truncated (dropped_oldest or cut) | 26 (16 / 10) | max_pc | 0.481 [0.256, 0.708] |
+| truncated (dropped_oldest or cut) | 26 (16 / 10) | 1-min_pe | 0.594 [0.363, 0.819] |
+(truncated pairs belong to late steps of long solutions, so the two groups differ in more than truncation)
+A2 full pairs on TEST: n=971, entail 56.1%, neutral 24.2%, contradict 19.7%
+A2 truncated pairs on TEST: n=294, entail 45.6%, neutral 17.0%, contradict 37.4%
+
+## 5. Complementarity with the existing pipeline (EXPLORATORY: tiny n, no conclusions)
+
+pipeline = ALL (Stage 4 + 7) LR out-of-fold probability; per-split AUROC (should match all_splits_auroc.csv): gsm8k 0.940, math 0.915, olympiadbench 0.773, omnimath 0.835
+pipeline threshold 0.798 (10% false alarms on 487 correct solutions outside TEST: 9.9%); on TEST it flags 23/38 erroneous and 3/36 correct
+
+erroneous TEST solutions missed by the pipeline: 15 (10 of them hard)
+
+| source | score | flags among the pipeline's misses | misses among the pipeline's catches | TEST false alarms |
+|---|---|---|---|---|
+| A | max_pc | 4/15 | 19/23 | 3/36 |
+| A | 1-min_pe | 1/15 | 20/23 | 6/36 |
+| A2 | max_pc | 2/15 | 19/23 | 5/36 |
+| A2 | 1-min_pe | 0/15 | 23/23 | 1/36 |
+| B | max_pc | 3/15 | 15/23 | 2/36 |
+| B | 1-min_pe | 2/15 | 19/23 | 3/36 |
+| C | n_fail | 0/15 | 22/23 | 0/36 |
+| D-bm25 | max_pc | 2/15 | 18/23 | 4/36 |
+| D-bm25 | 1-min_pe | 1/15 | 20/23 | 3/36 |
+| D-bge | max_pc | 2/15 | 17/23 | 3/36 |
+| D-bge | 1-min_pe | 1/15 | 21/23 | 1/36 |
+
+## 6. Runtime per 1000 claims (CPU)
+
+(benchmark rows: each source timed alone on a fixed claim subset)
+
+| source | model | claims | pairs | seconds | s per 1000 claims | threads | note |
+|---|---|---|---|---|---|---|---|
+| C | sympy | 259 | 0 | 1.4 | 5.5 | 4 | benchmark: every 10th pilot claim |
+| A | MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli | 259 | 259 | 65.3 | 252.1 | 4 | benchmark: every 10th pilot claim |
+| A2 | MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli | 259 | 259 | 237.7 | 917.7 | 4 | benchmark: every 10th pilot claim |
+| B | MoritzLaurer/DeBERTa-v3-base-mnli-fever-anli | 259 | 1295 | 375.5 | 1449.9 | 4 | benchmark: every 10th pilot claim |
+
+## Sanity cases: every claim with its scores (A, A2, B: p_entail / p_contradict; C: status)
+
+gsm8k-0 (not in the pilot sample)
+  0.0 [reas] A 1.00/0.00 | A2 1.00/0.00 | B 0.95/0.18 | C none | on Friday, the neighbors start with 18 pink plastic flamingos.
+  1.0 [comp] A 0.90/0.09 | A2 0.99/0.01 | B 0.88/0.20 | C none | Since there were 18 flamingos, 1/3 * 18 = 6 flamingos are taken back.
+  1.1 [comp] A 0.74/0.25 | A2 0.99/0.01 | B 0.91/0.00 | C none | they have 18 - 6 = 12 flamingos left in their possession.
+  1.2 [reas] A 0.00/1.00 | A2 0.04/0.95 | B 0.95/0.33 | C none | they paint these 6 flamingos white and put them back out on Sue's front yard.
+  1.3 [reas] A 0.08/0.91 | A2 0.86/0.06 | B 0.99/0.00 | C none | Sue has the original 12 pink flamingos plus the 6 new white ones.
+  1.4 [comp] A 0.95/0.04 | A2 0.99/0.01 | B 0.33/0.39 | C none | by the end of Saturday, Sue has 12 + 6 = 18 pink flamingos and 6 white flamingos.
+  2.0 [reas] A 0.99/0.00 | A2 0.99/0.00 | B 0.99/0.00 | C none | On Sunday, the neighbors add another 18 pink plastic flamingos to Sue's front yard.
+  2.1 [comp] A 0.91/0.04 | A2 0.94/0.03 | B 0.02/0.36 | C none | By the end of Sunday morning, Sue has 18 + 18 = 36 pink flamingos and still 6 white flamingos.
+  3.0 [comp] A 0.90/0.06 | A2 0.93/0.06 | B 0.81/0.62 | C none | To find the difference, subtract the number of white flamingos from the number of pink flamingos: 36 - 6 = 30.
+  3.1 [reas] A 0.02/0.14 | A2 0.24/0.34 | B 0.98/0.60 | C none | at noon on Sunday, there were 30 more pink plastic flamingos out than white plastic flamingos.
+  3.2 [reas] A 0.00/0.00 | A2 0.02/0.04 | B 0.63/0.06 | C none | The answer is 30.
+
+gsm8k-34 (not in the pilot sample)
+  0.0 [reas] A 0.80/0.03 | A2 0.80/0.03 | B 0.99/0.01 | C none | Let's break down the problem step by step: First, Valerie earns $5000 per month
+  0.1 [comp] A 0.87/0.03 | A2 0.87/0.03 | B 0.41/0.49 | C skip | we can set up an equation: 5000 = x/2.
+  0.2 [reas] A 0.50/0.19 | A2 0.50/0.19 | B 0.89/0.09 | C skip | To solve for x, we can multiply both sides by 2: 10000 = x.
+  0.3 [reas] A 0.01/0.00 | A2 0.01/0.00 | B 0.99/0.02 | C none | Valerie's brother earns $10,000 per month.
+  1.0 [comp] A 0.08/0.02 | A2 0.57/0.01 | B 0.99/0.03 | C none | To find their combined salary, we add Valerie's earnings to her brother's earnings: Combined salary = 5000 + 1
+  2.0 [comp] A 0.20/0.02 | A2 0.43/0.04 | B 0.97/0.02 | C none | since their mother earns twice their combined salary, we multiply the combined salary by 2: Mother's salary = 
+  3.0 [comp] A 0.20/0.04 | A2 0.78/0.02 | B 0.01/0.09 | C none | we add up the monthly earnings of all three individuals to find the total amount of money they have together: 
+  3.1 [reas] A 0.00/0.01 | A2 0.02/0.01 | B 0.00/0.59 | C none | the total amount of money they all have together is $43,000.
+
+gsm8k-202 (not in the pilot sample)
+  0.0 [reas] A 0.99/0.00 | A2 0.99/0.00 | B 0.99/0.37 | C none | To find out how many sticks they have in total, let's break down the information given: First, there are 9 red
+  0.1 [reas] A 0.99/0.00 | A2 0.99/0.00 | B 0.99/0.00 | C none | there are 5 more blue sticks than red.
+  0.2 [comp] A 0.79/0.06 | A2 0.79/0.06 | B 0.97/0.19 | C none | the number of blue sticks is 9 + 5 = 14.
+  0.3 [reas] A 0.99/0.00 | A2 0.99/0.00 | B 0.99/0.00 | C none | the number of yellow sticks is 3 less than the blue sticks.
+  0.4 [comp] A 0.97/0.02 | A2 0.97/0.02 | B 0.99/0.05 | C none | the number of yellow sticks is 14 - 3 = 11.
+  1.0 [reas] A 0.26/0.04 | A2 0.85/0.12 | B 0.98/0.01 | C none | we add up all the sticks: Red sticks: 9, Blue sticks: 14, Yellow sticks: 11.
+  1.1 [comp] A 0.91/0.04 | A2 0.68/0.07 | B 0.97/0.03 | C none | Total number of sticks = 9 (red) + 14 (blue) + 11 (yellow) = 34.
+  1.2 [reas] A 0.00/0.00 | A2 0.00/0.00 | B 0.99/0.00 | C none | the total number of sticks they have is 34.
+
