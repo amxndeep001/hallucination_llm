@@ -17,6 +17,9 @@ git clone https://github.com/DIYANAPV/SelfCheckAgent data/external/SelfCheckAgen
 git clone https://github.com/openai/prm800k data/external/prm800k
 ```
 
+Also verified on Python 3.11 (3.11.18) on macOS (Apple silicon, CPU): the pinned `requirements.txt` and
+`requirements-rag.txt` install unchanged and all 49 tests pass (`python -m pytest -q tests`).
+
 On Colab (Stage 2), do not install `requirements.txt`: it pins torch 2.8.0, which breaks Colab's
 preinstalled CUDA libraries and torchvision. Stage 2 needs only torch (Colab's own), transformers and tqdm:
 
